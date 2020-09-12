@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="customAttrs">
+        <attr name="menuNavigationIcon" format="reference" />
+        <attr name="languageIcon" format="reference" />
+        <attr name="searchIcon" format="reference" />
+        <attr name="card_bg_color" format="reference" />
+        <attr name="tabs_bg_color" format="reference" />
+        <attr name="side_menu_bg_color" format="reference" />
+        <attr name="bottom_nav_icon_color_selector" format="reference" />
+        <attr name="search_grey" format="reference" />
+        <attr name="side_menu_divider_color" format="reference" />
+        <attr name="previous" format="reference" />
+        <attr name="next" format="reference" />
+        <attr name="searchbar_background" format="reference" />
+        <attr name="featuresBg" format="reference" />
+        <attr name="joke_bg_color_even_position" format="reference" />
+        <attr name="joke_bg_color_odd_position" format="reference" />
+        <attr name="title_color" format="reference" />
+        <attr name="round_image_bg" format="reference" />
+        <attr name="view_line_color" format="reference" />
+        <attr name="color_mode_bag" format="reference" />
+        <attr name="mode_text_color" format="reference" />
+        <attr name="side_menu_view_bg" format="reference" />
+        <attr name="share_round_icon" format="reference" />
+        <attr name="text_color" format="reference" />
+        <attr name="text_color_reverse" format="reference"/>
+        <attr name="bottom_tab_bg" format="reference" />
+        <attr name="bottom_tab_text" format="reference" />
+        <attr name="icon_feather" format="reference" />
+        <attr name="icon_minus" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="DiscreteScrollView">
+        <attr name="dsv_orientation" format="enum">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+    </declare-styleable>
+
+</resources>

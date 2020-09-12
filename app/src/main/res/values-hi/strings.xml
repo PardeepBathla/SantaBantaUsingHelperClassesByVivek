@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">SantaBanta</string>
+
+    <string name="SmsTab">एसएमएस</string>
+    <string name="HomeTab">होम</string>
+    <string name="JokesTab">चुटकुले</string>
+    <string name="share">शेयर:</string>
+    <string name="VideosTab">वीडियो</string>
+    <string name="MemesTab">मेमें</string>
+    <string name="home">होम </string>
+    <string name="light">लाइट मोड</string>
+    <string name="dark">डार्क मोड</string>
+    <string name="no_content">एपीआई से कोई सामग्री नहीं</string>
+    <string name="search_text">सांताबंटा खोजें</string>
+
+    <string name="dsv_ex_msg_dont_set_lm">You should not set LayoutManager on DiscreteScrollView.class instance. Library uses a special one. Just don\'t call the method.</string>
+    <string name="dsv_ex_msg_adapter_wrong_recycler">InfiniteScrollAdapter is supposed to work only with DiscreteScrollView</string>
+
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="internet_error">अपने इंटरनेट कनेक्शन की जाँच करें और पुन: प्रयास करें</string>
+    <string name="alert">चेतावनी</string>
+    <string name="ok">ठीक</string>
+    <string name="cancel">रद्द करना</string>
+
+    <string name="No_Data">आपके द्वारा चयनित श्रेणी के लिए कोई डेटा उपलब्ध नहीं है</string>
+    <string name="are_you_sure">क्या आप वाकई 18+ के हैं?</string>
+    <string name="yes">हाँ</string>
+    <string name="no">नहीं</string>
+</resources>

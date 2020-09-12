@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_200sdp"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/_10sdp"
+    android:orientation="vertical">
+
+    <include layout="@layout/theme_change_view"/>
+
+</LinearLayout>

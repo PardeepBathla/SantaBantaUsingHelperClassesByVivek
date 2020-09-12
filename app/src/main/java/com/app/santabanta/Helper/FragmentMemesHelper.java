@@ -1,5 +1,6 @@
 package com.app.santabanta.Helper;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -11,9 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.santabanta.Adapter.HomeCategoriesAdapter;
+import com.app.santabanta.Adapter.MemesCategoryAdapter;
 import com.app.santabanta.Adapter.MemesItemAdapter;
 import com.app.santabanta.AppController;
 import com.app.santabanta.Callbacks.MemesCallback;
@@ -21,6 +24,7 @@ import com.app.santabanta.Fragment.FragmentMemes;
 import com.app.santabanta.Modals.AddFavouriteRequest;
 import com.app.santabanta.Modals.memesModel.MemesDetailModel;
 import com.app.santabanta.Modals.memesModel.MemesFavouriteModel;
+import com.app.santabanta.Modals.memesModel.MemesFeaturedCategory;
 import com.app.santabanta.Modals.memesModel.MemesResposeModel;
 import com.app.santabanta.R;
 import com.app.santabanta.RestClient.Webservices;
@@ -49,14 +53,15 @@ public class FragmentMemesHelper {
     ProgressBar progressBar;
     View view;
     ArrayList<MemesDetailModel> memesList = new ArrayList<>();
-    Context context;
+    Activity context;
     private FragmentMemes mFragment;
     private Webservices mInterface_method = AppController.getRetroInstance().create(Webservices.class);
     private SwipeRefreshLayout swipeContainer;
     private LinearLayoutManager mLinearLayoutManager;
     private MemesExoPlayerRecyclerView recyclerMemes;
+    private RecyclerView rvSubCategory;
 
-    public FragmentMemesHelper(Context context, FragmentMemes mFragment, View view) {
+    public FragmentMemesHelper(Activity context, FragmentMemes mFragment, View view) {
         this.mFragment = mFragment;
         this.view = view;
         this.context = context;
@@ -103,6 +108,7 @@ public class FragmentMemesHelper {
 
     private void findViews() {
 
+        rvSubCategory = view.findViewById(R.id.rvSubCategory);
         progressBar = view.findViewById(R.id.progress_bar);
         swipeContainer = view.findViewById(R.id.swipeContainer);
         recyclerMemes = view.findViewById(R.id.recyclerMemes);
@@ -126,8 +132,19 @@ public class FragmentMemesHelper {
         call.enqueue(new Callback<MemesResposeModel>() {
             @Override
             public void onResponse(Call<MemesResposeModel> call, Response<MemesResposeModel> response) {
-                if (response.isSuccessful())
-                    memesCallback.onMemesFetched(response.body());
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        memesCallback.onMemesFetched(response.body());
+
+                        rvSubCategory.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false));
+                        rvSubCategory.setAdapter(new MemesCategoryAdapter(context, response.body().getFeaturedCategories(), new MemesCategoryAdapter.MemeCategoryClickListener() {
+                            @Override
+                            public void onClicked(MemesFeaturedCategory model) {
+
+                            }
+                        }));
+                    }
+                }
 
             }
 
@@ -251,15 +268,15 @@ public class FragmentMemesHelper {
         });
     }
 
-            private void removeFavItemFromModel(int position, MemesDetailModel obj) {
-                ArrayList<MemesDetailModel> pagedLists = null;
-                pagedLists = memesItemAdapter.getCurrentList();
+    private void removeFavItemFromModel(int position, MemesDetailModel obj) {
+        ArrayList<MemesDetailModel> pagedLists = null;
+        pagedLists = memesItemAdapter.getCurrentList();
 
-                pagedLists.get(position).setFavourites(null);
-                obj.setFavCount(obj.getFavCount() - 1);
-                memesItemAdapter.updateList(pagedLists); //paging method
-                memesItemAdapter.notifyDataSetChanged();
-            }
+        pagedLists.get(position).setFavourites(null);
+        obj.setFavCount(obj.getFavCount() - 1);
+        memesItemAdapter.updateList(pagedLists); //paging method
+        memesItemAdapter.notifyDataSetChanged();
+    }
 
 
-        }
+}

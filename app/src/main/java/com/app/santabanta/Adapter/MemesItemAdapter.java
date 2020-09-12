@@ -190,7 +190,6 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private void setMemeImage(String url, AspectRatioImageView ivMeme) {
-
         Utils.loadGlideImage(mCtx, ivMeme, url);
     }
 

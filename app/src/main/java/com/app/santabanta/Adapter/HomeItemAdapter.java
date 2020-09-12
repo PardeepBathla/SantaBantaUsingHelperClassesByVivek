@@ -1,9 +1,11 @@
 package com.app.santabanta.Adapter;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.WallpaperColors;
 import android.content.Intent;
 import android.media.Image;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -306,8 +309,61 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                 }
             });
+
+          tvContent.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View view) {
+
+                  Dialog dialog = new Dialog(mActivity, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+                  dialog.setCancelable(true);
+                  dialog.setContentView(R.layout.full_screen_joke_dialog);
+
+                  TextView tv_content = dialog.findViewById(R.id.tvContent);
+                  LinearLayout ll_share_joke = dialog.findViewById(R.id.ll_share_joke);
+                  LinearLayout ll_share_options_joke = dialog.findViewById(R.id.ll_share_options_joke);
+                  TextView tv_title = dialog.findViewById(R.id.tv_title);
+                  TextView tv_categories = dialog.findViewById(R.id.tv_categories);
+                  ImageView iv_close = dialog.findViewById(R.id.iv_close);
+                  TextView tv_fav_count = dialog.findViewById(R.id.tv_fav_count);
+                  ProgressBar progress_bar = dialog.findViewById(R.id.progress_bar);
+                  ScrollView content_scroll = dialog.findViewById(R.id.content_scroll);
+
+                  tv_fav_count.setText(String.valueOf(model.getFavCount()));
+                  iv_close.setOnClickListener(v -> dialog.dismiss());
+                  CheckBox cb_like = dialog.findViewById(R.id.cb_like);
+                  tv_content.setText(Html.fromHtml(model.getContent().replaceAll("<br/><br/>","")));
+                  tv_title.setText(Html.fromHtml(model.getTitle()));
+
+                  if (model.getCategories() != null && model.getCategories().size() != 0) {
+                      tv_categories.setText(Html.fromHtml(model.getCategories().get(0).getName()));
+                  }
+
+                  cb_like.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+
+                      if (isChecked){
+                          if (!tv_fav_count.getText().toString().equals("")) {
+                              tv_fav_count.setText(String.valueOf(Integer.parseInt(tv_fav_count.getText().toString())+1));
+                          }else {
+                              tv_fav_count.setText("0");
+                          }
+                      }else {
+                          if (!tv_fav_count.getText().equals("0")) {
+                              tv_fav_count.setText(String.valueOf(Integer.parseInt(tv_fav_count.getText().toString())-1));
+                          }
+                      }
+                      progress_bar.setVisibility(View.VISIBLE);
+                      cb_like.setClickable(false);
+
+                  });
+
+                  dialog.show();
+              }
+          });
         }
+
     }
+
 
     class SmsViewHolder extends RecyclerView.ViewHolder{
 

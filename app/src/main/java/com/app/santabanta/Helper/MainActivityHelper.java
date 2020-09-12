@@ -79,9 +79,12 @@ public class MainActivityHelper {
 
         name.setText(iSelectedThemeLight() ? ResUtils.getString(R.string.light) : ResUtils.getString(R.string.dark));
 
-        getHomeCategories(response -> {
-            recyclerViewItems.setLayoutManager(new LinearLayoutManager(mActivity));
-            recyclerViewItems.setAdapter(new SideMenuAdapter(mActivity,response.getData()));
+        getHomeCategories(new CategoriesCallback() {
+            @Override
+            public void onCategoriesFetched(NavMenuResponse response) {
+                recyclerViewItems.setLayoutManager(new LinearLayoutManager(mActivity));
+                recyclerViewItems.setAdapter(new SideMenuAdapter(mActivity, response.getData()));
+            }
         });
 
     }

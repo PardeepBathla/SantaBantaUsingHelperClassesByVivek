@@ -33,6 +33,11 @@ public class MainActivity extends BaseActivity {
     public NavFragment navFragment;
     public MainActivityHelper mHelper;
 
+    public Object getSystemService() {
+
+        return getSystemService(VIBRATOR_SERVICE);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

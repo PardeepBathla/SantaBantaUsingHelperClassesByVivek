@@ -2,14 +2,22 @@ package com.app.santabanta.Utils;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.app.santabanta.Activites.MainActivity;
 import com.app.santabanta.AppController;
 import com.app.santabanta.R;
 import com.bumptech.glide.Glide;
@@ -19,10 +27,26 @@ import com.bumptech.glide.request.RequestOptions;
 
 public class Utils {
 
+    public static ProgressDialog progressDialog;
+
     public static SharedPreferences getSharedPref(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    public static void showLog(String tag, String msg) {
+        if (msg != null)
+            Log.e(tag, msg);
+    }
+
+    public static void ShowToast(Context context,String message){
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+
+    public static String getMyDeviceId(Context activity) {
+
+        return Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
     public static Dialog getProgressDialog(Activity mActivity) {
         Dialog progressDialog ;
         if (mActivity == null)
@@ -48,4 +72,31 @@ public class Utils {
                     .into(profileImageCircleImageView);
         }
     }
+
+    public static void vibrate(Context mCtx) {
+
+        Vibrator v = (Vibrator) ((MainActivity)mCtx).getSystemService();
+// Vibrate for 500 milliseconds
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            //deprecated in API 26
+            v.vibrate(100);
+        }
+    }
+
+    public static void showProgressDialog(Context context){
+
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Loading....");
+        progressDialog.show();
+    }
+    public static void _dismissProgressDialog() {
+
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
+
 }

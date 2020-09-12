@@ -5,6 +5,7 @@ import com.app.santabanta.Modals.HomeDetailsModel;
 import com.app.santabanta.Modals.JokesDataModel;
 import com.app.santabanta.Modals.NavMenuResponse;
 import com.app.santabanta.Modals.SmsResponseModel;
+import com.app.santabanta.Modals.memesModel.MemesResposeModel;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -36,5 +37,11 @@ public interface Webservices {
 
     @GET("jokes/latest/{language}")
     Call<JokesDataModel> getJokesList(@Path("language") String lang, @Query(value = "name", encoded = true) String slugname, @Query("page") int page_num);
+
+    @GET("newmemes/{slug}")
+    Call<MemesResposeModel> getMemesNewList(@Path(value = "slug", encoded =true) String slug, @Query("page") int page_num);
+
+    @GET("memes/latest/{language}")
+    Call<MemesResposeModel> getMemesList(@Path("language") String lang, @Query("page") int page_num);
 
 }

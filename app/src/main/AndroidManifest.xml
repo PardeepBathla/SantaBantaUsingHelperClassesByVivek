@@ -18,7 +18,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@drawable/ic_santa_banta_logo"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar"
+        android:theme="@style/AppThemeDark"
         android:usesCleartextTraffic="true">
         <activity android:name=".Activites.Splash">
 

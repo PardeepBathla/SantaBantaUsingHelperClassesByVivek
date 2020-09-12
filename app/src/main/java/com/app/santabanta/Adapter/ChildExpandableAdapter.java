@@ -1,18 +1,23 @@
 package com.app.santabanta.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.Image;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.app.santabanta.Callbacks.DrawerMenuClickListener;
 import com.app.santabanta.Modals.NavMenuResponse;
 import com.app.santabanta.R;
+import com.app.santabanta.Utils.Utils;
 
 import java.util.ArrayList;
 
@@ -21,14 +26,19 @@ import butterknife.ButterKnife;
 
 public class ChildExpandableAdapter extends RecyclerView.Adapter<ChildExpandableAdapter.ViewHolder>{
 
-    Context context;
-    ArrayList<NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo.NavMenuDetailChildSubInfo> children;
-    String name;
+    private Activity context;
+    private ArrayList<NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo.NavMenuDetailChildSubInfo> children;
+    private String name;
+    private DrawerMenuClickListener menuClickListener;
+    private int parentPosition = 0;
 
-    public ChildExpandableAdapter(Context context, ArrayList<NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo.NavMenuDetailChildSubInfo> children, String name) {
+    public ChildExpandableAdapter(Activity context, ArrayList<NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo.NavMenuDetailChildSubInfo> children
+            , String name,DrawerMenuClickListener menuClickListener,int parentPosition) {
         this.context = context;
         this.children = children;
         this.name = name;
+        this.menuClickListener = menuClickListener;
+        this.parentPosition = parentPosition;
     }
 
     @NonNull
@@ -63,6 +73,13 @@ public class ChildExpandableAdapter extends RecyclerView.Adapter<ChildExpandable
 
         void bindData(NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo.NavMenuDetailChildSubInfo model){
             text.setText(model.getName());
+            Utils.loadGlideImage(context,iv_cat,model.getIcon());
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    menuClickListener.onSmsClicked(model.getSlug(), String.valueOf(model.getId()),parentPosition == 0 ? "Veg" : "");
+                }
+            });
         }
     }
 }

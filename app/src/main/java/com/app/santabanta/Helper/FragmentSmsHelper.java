@@ -55,13 +55,7 @@ public class FragmentSmsHelper {
         getSms("English", "", "");
     }
 
-    private void enterSubCategorySms(SmsFeaturedCategory model) {
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(GlobalConstants.INTENT_PARAMS.IS_SUB_CATEGORY_SMS, true);
-        bundle.putString(GlobalConstants.INTENT_PARAMS.SMS_SLUG, model.getSlug());
-        FragmentSms fragmentSms1 = FragmentSms.newInstance(bundle);
-        Utils.switchFragment(fragmentSms.getChildFragmentManager().beginTransaction(), fragmentSms1, R.id.frameSms);
-    }
+
 
     private void getSms(String language, String slug, String selectedCategory) {
         Call<SmsResponseModel> call;
@@ -85,7 +79,7 @@ public class FragmentSmsHelper {
                     fragmentSms.rvSubCategorySms.setAdapter(new SmsCategoriesAdapter(response.body().getFeaturedCategories(), mActivity, new SmsCategoriesAdapter.HomeCategoryClickListener() {
                         @Override
                         public void onItemClicked(SmsFeaturedCategory model) {
-                            enterSubCategorySms(model);
+                            fragmentSms.enterSubCategorySms(true,model.getSlug());
                         }
                     }));
 

@@ -1,5 +1,6 @@
 package com.app.santabanta.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.app.santabanta.Callbacks.DrawerMenuClickListener;
 import com.app.santabanta.Modals.NavMenuResponse;
 import com.app.santabanta.R;
 
@@ -24,11 +26,12 @@ import butterknife.ButterKnife;
 public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAdapter.ViewHolder>{
 
     public SharedPreferences pref;
-    Context context;
-    ArrayList<NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo> navMenuChildDetails;
+    private Activity context;
+    private ArrayList<NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo> navMenuChildDetails;
+    private DrawerMenuClickListener menuClickListener;
 
-    public ExpandableViewAdapter(Context context, ArrayList<NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo> navMenuChildDetails) {
-
+    public ExpandableViewAdapter(Activity context, ArrayList<NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo> navMenuChildDetails,DrawerMenuClickListener menuClickListener) {
+        this.menuClickListener = menuClickListener;
         this.context = context;
         this.navMenuChildDetails = navMenuChildDetails;
     }
@@ -72,7 +75,7 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
         void bindData(NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo model){
             name.setText(model.getName());
             recycler.setLayoutManager(new LinearLayoutManager(context));
-            recycler.setAdapter(new ChildExpandableAdapter(context,model.getInfo(),model.getName()));
+            recycler.setAdapter(new ChildExpandableAdapter(context,model.getInfo(),model.getName(),menuClickListener,getAdapterPosition() ));
             viewMoreBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -1,5 +1,6 @@
 package com.app.santabanta.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.app.santabanta.Callbacks.DrawerMenuClickListener;
 import com.app.santabanta.Modals.NavMenuResponse;
 import com.app.santabanta.R;
 import com.app.santabanta.Utils.ResUtils;
@@ -25,13 +27,15 @@ import butterknife.ButterKnife;
 
 public class SideMenuAdapter extends RecyclerView.Adapter<SideMenuAdapter.ViewHolder>{
 
-    Context context;
-    ArrayList<NavMenuResponse.NavMenuDetail> list ;
-    int currentSelectedItem = 999;
+    private Activity context;
+    private ArrayList<NavMenuResponse.NavMenuDetail> list ;
+    private int currentSelectedItem = 999;
+    private DrawerMenuClickListener menuClickListener;
 
-    public SideMenuAdapter(Context context, ArrayList<NavMenuResponse.NavMenuDetail> list) {
+    public SideMenuAdapter(Activity context, ArrayList<NavMenuResponse.NavMenuDetail> list,DrawerMenuClickListener menuClickListener) {
         this.context = context;
         this.list = list;
+        this.menuClickListener = menuClickListener;
     }
 
     @NonNull
@@ -73,7 +77,7 @@ public class SideMenuAdapter extends RecyclerView.Adapter<SideMenuAdapter.ViewHo
         void bindData(NavMenuResponse.NavMenuDetail model){
             name.setText(model.getName());
             recycler.setLayoutManager(new LinearLayoutManager(context));
-            recycler.setAdapter(new ExpandableViewAdapter(context,model.getInfo()));
+            recycler.setAdapter(new ExpandableViewAdapter(context,model.getInfo(),menuClickListener));
             viewMoreBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

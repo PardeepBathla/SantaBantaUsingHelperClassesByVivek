@@ -1,6 +1,10 @@
 package com.app.santabanta.Fragment;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +18,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.santabanta.Helper.FragmentSmsHelper;
+import com.app.santabanta.Modals.SmsFeaturedCategory;
 import com.app.santabanta.R;
 import com.app.santabanta.Utils.GlobalConstants;
+import com.app.santabanta.Utils.Utils;
 import com.app.santabanta.base.BaseFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.app.santabanta.Utils.GlobalConstants.INTENT_PARAMS.SHOW_SMS_FRAGMENT;
 
 public class FragmentSms extends BaseFragment {
 
@@ -52,6 +60,16 @@ public class FragmentSms extends BaseFragment {
         return myFragment;
     }
 
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String slug = intent.getStringExtra(GlobalConstants.INTENT_PARAMS.SMS_SLUG);
+            String category = intent.getStringExtra(GlobalConstants.INTENT_PARAMS.SMS_CATEGORY);
+
+            enterSubCategorySms(true,slug,category);
+        }
+    };
 
     @Override
     public View getFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -63,15 +81,46 @@ public class FragmentSms extends BaseFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        getActivity().registerReceiver(receiver, new IntentFilter(SHOW_SMS_FRAGMENT));
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        getActivity().unregisterReceiver(receiver);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null)
             if (getArguments().containsKey(GlobalConstants.INTENT_PARAMS.IS_SUB_CATEGORY_SMS)) {
                 IS_SUB_CATEGORY = getArguments().getBoolean(GlobalConstants.INTENT_PARAMS.IS_SUB_CATEGORY_SMS);
                 subCatSlug = getArguments().getString(GlobalConstants.INTENT_PARAMS.SMS_SLUG);
-
+                if (getArguments().containsKey(GlobalConstants.INTENT_PARAMS.SMS_CATEGORY))
+                    selectedCategory = getArguments().getString(GlobalConstants.INTENT_PARAMS.SMS_CATEGORY);
             }
     }
 
+
+    public void enterSubCategorySms(boolean isSubCategorySms, String slug, String category) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(GlobalConstants.INTENT_PARAMS.IS_SUB_CATEGORY_SMS, isSubCategorySms);
+        bundle.putString(GlobalConstants.INTENT_PARAMS.SMS_SLUG, slug);
+        bundle.putString(GlobalConstants.INTENT_PARAMS.SMS_CATEGORY,category);
+        FragmentSms fragmentSms1 = FragmentSms.newInstance(bundle);
+        Utils.switchFragment(getChildFragmentManager().beginTransaction(), fragmentSms1, R.id.frameSms);
+    }
+
+
+    public void enterSubCategorySms(boolean isSubCategorySms, String slug) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(GlobalConstants.INTENT_PARAMS.IS_SUB_CATEGORY_SMS, isSubCategorySms);
+        bundle.putString(GlobalConstants.INTENT_PARAMS.SMS_SLUG, slug);
+        FragmentSms fragmentSms1 = FragmentSms.newInstance(bundle);
+        Utils.switchFragment(getChildFragmentManager().beginTransaction(), fragmentSms1, R.id.frameSms);
+    }
 
 }

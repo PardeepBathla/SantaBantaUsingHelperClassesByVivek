@@ -77,7 +77,11 @@ public class SideMenuAdapter extends RecyclerView.Adapter<SideMenuAdapter.ViewHo
             viewMoreBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    currentSelectedItem = getAdapterPosition();
+                    if (layoutExpand.getVisibility() == View.VISIBLE){
+                        currentSelectedItem = 999;
+                    }else {
+                        currentSelectedItem = getAdapterPosition();
+                    }
                     notifyDataSetChanged();
                 }
             });

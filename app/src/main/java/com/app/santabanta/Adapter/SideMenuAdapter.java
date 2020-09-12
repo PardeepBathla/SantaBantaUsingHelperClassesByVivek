@@ -77,7 +77,7 @@ public class SideMenuAdapter extends RecyclerView.Adapter<SideMenuAdapter.ViewHo
         void bindData(NavMenuResponse.NavMenuDetail model){
             name.setText(model.getName());
             recycler.setLayoutManager(new LinearLayoutManager(context));
-            recycler.setAdapter(new ExpandableViewAdapter(context,model.getInfo(),menuClickListener));
+            recycler.setAdapter(new ExpandableViewAdapter(context,model.getInfo(),menuClickListener,getAdapterPosition()));
             viewMoreBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

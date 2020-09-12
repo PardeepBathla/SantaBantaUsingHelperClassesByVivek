@@ -17,8 +17,11 @@ public interface GlobalConstants {
 
     interface INTENT_PARAMS{
         String IS_SUB_CATEGORY_SMS = "is_sub_category_sms";
+        String IS_SUB_CATEGORY_JOKES = "is_sub_category_jokes";
         String SMS_SLUG = "sms_slug";
+        String JOKE_SLUG = "joke_slug";
         String SMS_CATEGORY = "sms_category";
         String SHOW_SMS_FRAGMENT = "show_sms_fragment";
+        String SHOW_JOKES_FRAGMENT = "show_jokes_fragment";
     }
 }

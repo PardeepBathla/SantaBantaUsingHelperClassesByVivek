@@ -21,7 +21,6 @@ public class FragmentMemes extends BaseFragment {
     private Activity mActivity;
     private FragmentMemesHelper mHelper;
 
-
     public static FragmentMemes newInstance(Bundle bundle) {
         FragmentMemes myFragment = new FragmentMemes();
         myFragment.setArguments(bundle);
@@ -40,5 +39,6 @@ public class FragmentMemes extends BaseFragment {
     private void initFragment(View view) {
         mHelper = new FragmentMemesHelper(getActivity(),FragmentMemes.this,view);
     }
+
 
 }

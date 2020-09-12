@@ -165,38 +165,40 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
     }
 
     private void setBreadCrumbs(JokesDetailModel obj, LinearLayout llbreadcrumbs) {
-        TextView[] textView = new TextView[obj.getBreadcrumbs().size()];
+       if (obj.getBreadcrumbs() != null && obj.getBreadcrumbs().size() >0){
+           TextView[] textView = new TextView[obj.getBreadcrumbs().size()];
 
-        if(llbreadcrumbs.getChildCount()>0)
-            llbreadcrumbs.removeAllViews();
+           if(llbreadcrumbs.getChildCount()>0)
+               llbreadcrumbs.removeAllViews();
 
 
-        for (int i = 0; i < obj.getBreadcrumbs().size(); i++){
-            textView[i] = new TextView(mActivity);
+           for (int i = 0; i < obj.getBreadcrumbs().size(); i++){
+               textView[i] = new TextView(mActivity);
 
-            if (i==0){
-                textView[i].setText(obj.getBreadcrumbs().get(i).getLabel());
+               if (i==0){
+                   textView[i].setText(obj.getBreadcrumbs().get(i).getLabel());
 
-            }else {
-                textView[i].setText(" > "+obj.getBreadcrumbs().get(i).getLabel());
+               }else {
+                   textView[i].setText(" > "+obj.getBreadcrumbs().get(i).getLabel());
 
-            }
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
+               }
+               LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                       LinearLayout.LayoutParams.WRAP_CONTENT,
+                       LinearLayout.LayoutParams.WRAP_CONTENT
 
-            );
-            llbreadcrumbs.setOrientation(LinearLayout.HORIZONTAL);
-            params.setMargins(3,3,3,3);
-            textView[i].setLayoutParams(params);
-            llbreadcrumbs.addView(textView[i]);
+               );
+               llbreadcrumbs.setOrientation(LinearLayout.HORIZONTAL);
+               params.setMargins(3,3,3,3);
+               textView[i].setLayoutParams(params);
+               llbreadcrumbs.addView(textView[i]);
 
-            int finalI = i;
-            textView[i].setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
+               int finalI = i;
+               textView[i].setOnClickListener(new View.OnClickListener() {
+                   public void onClick(View v) {
 
-                }
-            });
-        }
+                   }
+               });
+           }
+       }
     }
 }

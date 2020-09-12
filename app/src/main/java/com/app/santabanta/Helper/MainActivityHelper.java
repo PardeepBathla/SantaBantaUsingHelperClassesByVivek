@@ -40,6 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.app.santabanta.Utils.GlobalConstants.INTENT_PARAMS.SHOW_JOKES_FRAGMENT;
 import static com.app.santabanta.Utils.GlobalConstants.INTENT_PARAMS.SHOW_SMS_FRAGMENT;
 
 public class MainActivityHelper {
@@ -101,7 +102,7 @@ public class MainActivityHelper {
 
                 @Override
                 public void onJokesClicked(String slug, String slugId) {
-
+                    openJokesFragment(slug);
                 }
 
                 @Override
@@ -113,7 +114,14 @@ public class MainActivityHelper {
 
     }
 
+    private void openJokesFragment(String slug){
+        drawer.closeDrawer(Gravity.LEFT);
+        mActivity.navFragment.mPager.setCurrentItem(2);
+        mActivity.sendBroadcast(new Intent().setAction(SHOW_JOKES_FRAGMENT).putExtra(GlobalConstants.INTENT_PARAMS.JOKE_SLUG,slug));
+    }
+
     private void openSmsFragment(String slug,String category){
+        drawer.closeDrawer(Gravity.LEFT);
         mActivity.navFragment.mPager.setCurrentItem(1);
         mActivity.sendBroadcast(new Intent().setAction(SHOW_SMS_FRAGMENT).putExtra(GlobalConstants.INTENT_PARAMS.SMS_CATEGORY, category).putExtra(GlobalConstants.INTENT_PARAMS.SMS_SLUG,slug));
     }

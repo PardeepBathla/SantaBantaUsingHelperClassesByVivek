@@ -76,20 +76,23 @@ public class FragmentSms extends BaseFragment {
         mActivity = getActivity();
         View view = inflater.inflate(R.layout.fragment_sms, parent, false);
         ButterKnife.bind(this, view);
+        try {
+            getActivity().registerReceiver(receiver, new IntentFilter(SHOW_SMS_FRAGMENT));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         mHelper = new FragmentSmsHelper(mActivity,this);
         return view;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        getActivity().registerReceiver(receiver, new IntentFilter(SHOW_SMS_FRAGMENT));
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        getActivity().unregisterReceiver(receiver);
+    public void onDestroyView() {
+        super.onDestroyView();
+        try {
+            getActivity().unregisterReceiver(receiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

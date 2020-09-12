@@ -1,7 +1,6 @@
 package com.app.santabanta.Adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,17 +22,19 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAdapter.ViewHolder>{
+public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAdapter.ViewHolder> {
 
     public SharedPreferences pref;
     private Activity context;
     private ArrayList<NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo> navMenuChildDetails;
     private DrawerMenuClickListener menuClickListener;
+    private int parentPosition;
 
-    public ExpandableViewAdapter(Activity context, ArrayList<NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo> navMenuChildDetails,DrawerMenuClickListener menuClickListener) {
+    public ExpandableViewAdapter(Activity context, ArrayList<NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo> navMenuChildDetails, DrawerMenuClickListener menuClickListener, int parentPosition) {
         this.menuClickListener = menuClickListener;
         this.context = context;
         this.navMenuChildDetails = navMenuChildDetails;
+        this.parentPosition = parentPosition;
     }
 
     @NonNull
@@ -54,7 +55,7 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
         return navMenuChildDetails.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.iv_item_logo)
         ImageView iv_item_logo;
@@ -69,18 +70,32 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
 
-        void bindData(NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo model){
+        void bindData(NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo model) {
             name.setText(model.getName());
             recycler.setLayoutManager(new LinearLayoutManager(context));
-            recycler.setAdapter(new ChildExpandableAdapter(context,model.getInfo(),model.getName(),menuClickListener,getAdapterPosition() ));
+            recycler.setAdapter(new ChildExpandableAdapter(context, model.getInfo(), model.getName(), menuClickListener, getAdapterPosition()));
             viewMoreBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     layoutExpand.setVisibility(layoutExpand.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                 }
+            });
+
+            if (parentPosition == 1 || parentPosition == 2)
+                viewMoreBtn.setVisibility(View.GONE);
+            else
+                viewMoreBtn.setVisibility(View.VISIBLE);
+
+            itemView.setOnClickListener(view -> {
+                // for jokes
+                if (parentPosition == 1)
+                    menuClickListener.onJokesClicked(model.getSlug(), model.getId());
+                else // for memes
+                    if (parentPosition == 2)
+                        menuClickListener.onMemesClicked(model.getSlug(), model.getId());
             });
         }
     }

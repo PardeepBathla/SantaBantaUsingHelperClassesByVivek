@@ -45,15 +45,20 @@ public class FragmentJokesHelper {
         fragmentJokes.swipeRefreshJokes.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getJokes("English","");
+                getJokes("English",fragmentJokes.slugName);
             }
         });
 
-        getJokes("English","");
+        //Todo Implement dynamic language
+        getJokes("English",fragmentJokes.slugName);
     }
 
     private void getJokes(String language, String slug) {
-        Call<JokesDataModel> call = mInterface_method.getJokesList(language,slug,1);
+        Call<JokesDataModel> call;
+        if (fragmentJokes.IS_SUB_CAT)
+            call = mInterface_method.getJokesListNew(slug,1);
+        else
+            call = mInterface_method.getJokesList(language,slug,1);
         Dialog dialog = Utils.getProgressDialog(mActivity);
         dialog.show();
         call.enqueue(new Callback<JokesDataModel>() {
@@ -70,7 +75,7 @@ public class FragmentJokesHelper {
                     fragmentJokes.rvSubCategoryJokes.setAdapter(new JokesCategoriesAdapter(response.body().getFeaturedCategories(), mActivity, new JokesCategoriesAdapter.JokesCategoryClickListener() {
                         @Override
                         public void onItemClicked(JokesFeaturedCategory model) {
-
+                            fragmentJokes.enterSubCategoryJoke(true,model.getSlug());
                         }
                     }));
 

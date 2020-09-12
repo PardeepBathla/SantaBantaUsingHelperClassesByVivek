@@ -18,13 +18,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.app.santabanta.Callbacks.BitmapLoadedCallback;
 import com.app.santabanta.Fragment.FragmentMemes;
 import com.app.santabanta.Helper.FragmentMemesHelper;
 import com.app.santabanta.Modals.memesModel.MemesDetailModel;
 import com.app.santabanta.Modals.memesModel.MemesFavouriteModel;
 import com.app.santabanta.R;
 import com.app.santabanta.Utils.AspectRatioImageView;
-import com.app.santabanta.Utils.BitmapLoadedCallback;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.LoadImageBitmap;
 import com.app.santabanta.Utils.ShareableIntents;

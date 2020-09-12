@@ -72,7 +72,7 @@ public class Utils {
                     .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
                     .error(R.mipmap.ic_launcher)
                     .priority(Priority.HIGH)
-                    .placeholder(R.mipmap.ic_launcher)
+                    .placeholder(R.drawable.ic_santa_banta_logo)
                     .into(profileImageCircleImageView);
         }
     }

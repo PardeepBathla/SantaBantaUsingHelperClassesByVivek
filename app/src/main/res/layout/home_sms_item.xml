@@ -14,6 +14,7 @@
         app:cardElevation="@dimen/_4sdp">
 
         <RelativeLayout
+            android:id="@+id/rl_sms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -70,6 +71,14 @@
                         android:checked="false"
                         android:stateListAnimator="@animator/scale" />
 
+
+                    <TextView
+                        android:id="@+id/tv_like_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:fontFamily="@font/roboto_regular"
+                        android:textSize="@dimen/_10ssp" />
 
                 </LinearLayout>
 

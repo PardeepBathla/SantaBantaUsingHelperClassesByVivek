@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
+import com.app.santabanta.Callbacks.BitmapLoadedCallback;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -24,7 +26,7 @@ public class LoadImageBitmap extends AsyncTask<URL, String, Bitmap> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        Utils.showProgressDialog(context);
+//        Utils.showProgressDialog(context);
     }
 
     @Override
@@ -42,6 +44,6 @@ public class LoadImageBitmap extends AsyncTask<URL, String, Bitmap> {
         super.onPostExecute(bitmap);
 
         bitmapLoadedCallback.onBitmapLoaded(bitmap,platform);
-        Utils._dismissProgressDialog();
+//        Utils._dismissProgressDialog();
     }
 }

@@ -2,7 +2,9 @@ package com.app.santabanta.RestClient;
 
 import com.app.santabanta.Modals.AddFavouriteRequest;
 import com.app.santabanta.Modals.HomeDetailsModel;
+import com.app.santabanta.Modals.JokesDataModel;
 import com.app.santabanta.Modals.NavMenuResponse;
+import com.app.santabanta.Modals.SmsResponseModel;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -25,4 +27,14 @@ public interface Webservices {
 
     @GET("favourites/delete/{id}")
     Call<ResponseBody> removeJokeFromFav(@Path("id") int id);
+
+    @GET("sms/latest/{language}")
+    Call<SmsResponseModel> getSmsList(@Path("language") String lang, @Query(value = "slug1", encoded = true) String slug, @Query("page") int page_num, @Query("selected_category") String selected_category);
+
+    @GET("newjokes/{slug}")
+    Call<JokesDataModel> getJokesListNew(@Path(value = "slug", encoded =true) String slug, @Query("page") int page_num);
+
+    @GET("jokes/latest/{language}")
+    Call<JokesDataModel> getJokesList(@Path("language") String lang, @Query(value = "name", encoded = true) String slugname, @Query("page") int page_num);
+
 }

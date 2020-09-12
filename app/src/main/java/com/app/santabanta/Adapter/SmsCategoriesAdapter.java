@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.app.santabanta.Helper.FragmentSmsHelper;
 import com.app.santabanta.Modals.FeaturedCategory;
 import com.app.santabanta.Modals.SmsFeaturedCategory;
 import com.app.santabanta.R;
@@ -27,10 +28,12 @@ public class SmsCategoriesAdapter extends RecyclerView.Adapter<SmsCategoriesAdap
     private Activity mActivity;
     private SmsCategoriesAdapter.HomeCategoryClickListener mClickListener;
 
+
     public SmsCategoriesAdapter(ArrayList<SmsFeaturedCategory> mList, Activity mActivity, SmsCategoriesAdapter.HomeCategoryClickListener mClickListener) {
         this.mList = mList;
         this.mActivity = mActivity;
         this.mClickListener = mClickListener;
+
     }
 
     @NonNull

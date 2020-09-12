@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:layout_marginVertical="@dimen/_2sdp"
-        android:layout_width="match_parent"
-        app:cardCornerRadius="8dp"
         app:cardBackgroundColor="@color/off_black"
-        app:cardElevation="@dimen/_4sdp"
-        android:layout_height="wrap_content">
+        app:cardCornerRadius="8dp"
+        app:cardElevation="@dimen/_4sdp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <LinearLayout
+                android:id="@+id/llbreadcrumbs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/_4sdp"
                 android:layout_margin="@dimen/_2sdp"
-                android:id="@+id/llbreadcrumbs"/>
+                android:orientation="vertical"
+                android:padding="@dimen/_4sdp" />
 
             <RelativeLayout
                 android:id="@+id/rl_image"
                 android:layout_width="match_parent"
-                android:layout_below="@+id/llbreadcrumbs"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/llbreadcrumbs">
 
                 <com.app.santabanta.Utils.AspectRatioImageView
                     android:id="@+id/ivMeme"
                     android:layout_width="match_parent"
-                    android:src="@mipmap/app_logo"
                     android:layout_height="@dimen/_250sdp"
                     android:scaleType="centerCrop"
-                   />
+                    android:src="@mipmap/app_logo" />
 
             </RelativeLayout>
 
@@ -66,11 +66,9 @@
                         android:id="@+id/cb_like"
                         android:layout_width="@dimen/_16sdp"
                         android:layout_height="@dimen/_16sdp"
-                        android:background="@null"
                         android:button="@drawable/like_icon"
                         android:checked="false"
                         android:stateListAnimator="@animator/scale" />
-
 
 
                 </LinearLayout>
@@ -88,7 +86,7 @@
                         android:layout_width="@dimen/_16sdp"
                         android:layout_height="@dimen/_16sdp"
                         android:src="@drawable/ic_share_alt"
-                        app:tint="@color/dark_mode_text_color" />
+                        />
 
                     <TextView
                         android:id="@+id/tv_share_count"
@@ -97,9 +95,9 @@
                         android:layout_marginStart="@dimen/_5sdp"
                         android:fontFamily="@font/roboto_regular"
                         android:text="20"
-                        android:visibility="gone"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_10ssp" />
+                        android:textSize="@dimen/_10ssp"
+                        android:visibility="gone" />
                 </LinearLayout>
 
 
@@ -107,10 +105,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:visibility="gone"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:gravity="center_vertical|end"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/share"
@@ -142,33 +140,33 @@
                 android:layout_height="@dimen/_36sdp"
                 android:layout_above="@+id/rl_fav_and_share"
                 android:layout_alignParentStart="true"
-                android:weightSum="6"
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginBottom="-10dp"
                 android:background="@drawable/share_round_corner_bg_new"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:weightSum="6">
 
 
                 <ImageView
                     android:id="@+id/iv_whatsapp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="@dimen/_8sdp"
-                    android:layout_weight="1"
                     android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_weight="1"
                     android:onClick="slideToBottom"
+                    android:padding="@dimen/_8sdp"
                     android:src="@drawable/ic_santabanta_icon_whatsapp" />
 
                 <ImageView
                     android:id="@+id/iv_facebook"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="@dimen/_8sdp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_weight="1"
+                    android:padding="@dimen/_8sdp"
                     android:src="@drawable/ic_facebook"
                     app:tint="@color/fb_blue" />
 
@@ -176,9 +174,9 @@
                     android:id="@+id/iv_twitter"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="@dimen/_8sdp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_weight="1"
+                    android:padding="@dimen/_8sdp"
                     android:src="@drawable/ic_twitter"
                     app:tint="@color/twitter_blue" />
 
@@ -186,18 +184,18 @@
                     android:id="@+id/iv_instagram"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="@dimen/_8sdp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_weight="1"
+                    android:padding="@dimen/_8sdp"
                     android:src="@drawable/ic_santabanta_icon_instagram" />
 
                 <ImageView
                     android:id="@+id/iv_pintrest"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="@dimen/_8sdp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_weight="1"
+                    android:padding="@dimen/_8sdp"
                     android:src="@drawable/ic_pinterest"
                     app:tint="@color/pintrest_red" />
 
@@ -205,18 +203,19 @@
                     android:id="@+id/iv_snapchat"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="@dimen/_8sdp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_weight="1"
+                    android:padding="@dimen/_8sdp"
                     android:src="@drawable/ic_snapchat" />
 
             </LinearLayout>
+
             <ProgressBar
                 android:id="@+id/progress_bar"
                 android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:layout_centerInParent="true"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </RelativeLayout>
 

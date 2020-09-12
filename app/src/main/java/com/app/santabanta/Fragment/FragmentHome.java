@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.santabanta.Helper.FragmentHomeHelper;
 import com.app.santabanta.R;
+import com.app.santabanta.Utils.HomeMemesExoPlayerRecyclerview;
 import com.app.santabanta.base.BaseFragment;
 
 import butterknife.BindView;
@@ -28,6 +29,8 @@ public class FragmentHome extends BaseFragment {
     public ImageView ivNext;
     @BindView(R.id.rlSubCategories)
     public RelativeLayout rlSubCategories;
+    @BindView(R.id.recyclerHome)
+    public HomeMemesExoPlayerRecyclerview recyclerHome;
     private Activity mActivity;
     private FragmentHomeHelper mHelper;
 

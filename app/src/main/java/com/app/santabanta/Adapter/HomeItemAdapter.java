@@ -1,19 +1,27 @@
 package com.app.santabanta.Adapter;
 
 import android.app.Activity;
+import android.app.WallpaperColors;
+import android.content.Intent;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.santabanta.Modals.HomeDetailList;
 import com.app.santabanta.R;
+import com.app.santabanta.Utils.AspectRatioImageView;
+import com.app.santabanta.Utils.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
@@ -92,9 +100,69 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     }
 
+
+    public void setNewList(List<HomeDetailList> mList){
+        this.mList = mList;
+        notifyDataSetChanged();
+    }
+
+    public void add(HomeDetailList item){
+        this.mList.add(item);
+        notifyItemInserted(mList.size() - 1);
+    }
+
+
+    public void remove(HomeDetailList datum) {
+        int position = mList.indexOf(datum);
+        if (position > -1) {
+            mList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof SmsViewHolder) {
+            ((SmsViewHolder)holder).bindData(mList.get(position));
+        }else if (holder instanceof JokesHolder){
+            ((JokesHolder)holder).bindData(mList.get(position));
+        }else if (holder instanceof MemesImageHolder){
+            ((MemesImageHolder)holder).bindData(mList.get(position));
+        }else if (holder instanceof MemesVideoViewHolder){
+            ((MemesVideoViewHolder)holder).bindData(mList.get(position));
+        }else if (holder instanceof LoadingVH){
 
+        }
+    }
+
+
+    public void addLoadingFooter() {
+        isLoadingAdded = true;
+        HomeDetailList model = new HomeDetailList();
+        add(model);
+    }
+
+    private HomeDetailList getItem(int position) {
+        return mList.get(position);
+    }
+
+    public void removeLoadingFooter() {
+        isLoadingAdded = false;
+
+        int position = mList.size() - 1;
+        HomeDetailList item = getItem(position);
+
+        if (item != null) {
+            mList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
@@ -103,6 +171,36 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     class MemesImageHolder extends RecyclerView.ViewHolder{
+        @BindView(R.id.llbreadcrumbs)
+        LinearLayout llbreadcrumbs;
+        @BindView(R.id.ivMeme)
+        AspectRatioImageView ivMeme;
+        @BindView(R.id.ll_like_dislike)
+        LinearLayout ll_like_dislikel;
+        @BindView(R.id.cb_like)
+        CheckBox cb_like;
+        @BindView(R.id.ll_share_home)
+        LinearLayout ll_share_home;
+        @BindView(R.id.tv_share_count)
+        TextView tv_share_count;
+        @BindView(R.id.share)
+        ImageView share;
+        @BindView(R.id.tv_categories)
+        TextView tv_categories;
+        @BindView(R.id.ll_share_options_home)
+        LinearLayout ll_share_options_home;
+        @BindView(R.id.iv_whatsapp)
+        ImageView iv_whatsapp;
+        @BindView(R.id.iv_facebook)
+        ImageView iv_facebook;
+        @BindView(R.id.iv_twitter)
+        ImageView iv_twitter;
+        @BindView(R.id.iv_instagram)
+        ImageView iv_instagram;
+        @BindView(R.id.iv_pintrest)
+        ImageView iv_pintrest;
+        @BindView(R.id.iv_snapchat)
+        ImageView iv_snapchat;
 
         public MemesImageHolder(@NonNull View itemView) {
             super(itemView);
@@ -110,7 +208,18 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         void bindData(HomeDetailList model){
-
+            Utils.loadGlideImage(mActivity,ivMeme, model.getImage());
+            setBreadCrumbs(model, llbreadcrumbs);
+            ll_share_home.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (ll_share_options_home.getVisibility() == View.VISIBLE){
+                        ll_share_options_home.setVisibility(View.GONE);
+                    }else {
+                        ll_share_options_home.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
         }
     }
 
@@ -135,7 +244,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     .setDefaultRequestOptions(new RequestOptions());
         }
 
-        void onBind(RequestManager requestManager){
+        void bindData(HomeDetailList model){
 
         }
     }
@@ -143,25 +252,114 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     class JokesHolder extends RecyclerView.ViewHolder{
 
+        @BindView(R.id.llbreadcrumbs)
+        LinearLayout llbreadcrumbs;
+        @BindView(R.id.tv_title)
+        TextView tv_title;
+        @BindView(R.id.tvContent)
+        TextView tvContent;
+        @BindView(R.id.rl_fav_and_share)
+        RelativeLayout rl_fav_and_share;
+        @BindView(R.id.ll_like_dislike)
+        LinearLayout ll_like_dislike;
+        @BindView(R.id.cb_like)
+        CheckBox cb_like;
+        @BindView(R.id.ll_share_home)
+        LinearLayout ll_share_home;
+        @BindView(R.id.tv_share_count)
+        TextView tv_share_count;
+        @BindView(R.id.share)
+        ImageView share;
+        @BindView(R.id.tv_categories)
+        TextView tv_categories;
+        @BindView(R.id.ll_share_options_home)
+        LinearLayout ll_share_options_home;
+        @BindView(R.id.iv_whatsapp)
+        ImageView iv_whatsapp;
+        @BindView(R.id.iv_facebook)
+        ImageView iv_facebook;
+        @BindView(R.id.iv_twitter)
+        ImageView iv_twitter;
+        @BindView(R.id.iv_instagram)
+        ImageView iv_instagram;
+        @BindView(R.id.iv_pintrest)
+        ImageView iv_pintrest;
+        @BindView(R.id.iv_snapchat)
+        ImageView iv_snapchat;
+
         public JokesHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
         }
 
         void bindData(HomeDetailList model){
-
+            tv_title.setText(model.getTitle());
+            tvContent.setText(model.getContent());
+            setBreadCrumbs(model, llbreadcrumbs);
+            ll_share_home.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (ll_share_options_home.getVisibility() == View.VISIBLE){
+                        ll_share_options_home.setVisibility(View.GONE);
+                    }else {
+                        ll_share_options_home.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
         }
     }
 
     class SmsViewHolder extends RecyclerView.ViewHolder{
+
+        @BindView(R.id.ivMeme)
+        AspectRatioImageView ivMeme;
+        @BindView(R.id.cb_like)
+        CheckBox cb_like;
+        @BindView(R.id.tv_share_count)
+        TextView tvShareCount;
+        @BindView(R.id.share)
+        ImageView share;
+        @BindView(R.id.tv_categories)
+        TextView tvCategories;
+        @BindView(R.id.ll_share_options_home)
+        LinearLayout ll_share_options_home;
+        @BindView(R.id.iv_whatsapp)
+        ImageView iv_whatsapp;
+        @BindView(R.id.iv_facebook)
+        ImageView iv_facebook;
+        @BindView(R.id.iv_twitter)
+        ImageView iv_twitter;
+        @BindView(R.id.iv_instagram)
+        ImageView iv_instagram;
+        @BindView(R.id.iv_pintrest)
+        ImageView iv_pintrest;
+        @BindView(R.id.iv_snapchat)
+        ImageView iv_snapchat;
+        @BindView(R.id.llbreadcrumbs)
+        LinearLayout llbreadcrumbs;
+        @BindView(R.id.ll_share_home)
+        LinearLayout ll_share_home;
 
         public SmsViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
         }
 
-        void bindData(HomeDetailList model){
 
+
+        void bindData(HomeDetailList model){
+            Utils.loadGlideImage(mActivity,ivMeme,model.getImage());
+            setBreadCrumbs(model, llbreadcrumbs);
+            ll_share_home.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (ll_share_options_home.getVisibility() == View.VISIBLE){
+                        ll_share_options_home.setVisibility(View.GONE);
+                    }else {
+                        ll_share_options_home.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
         }
     }
 
@@ -169,6 +367,42 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         LoadingVH(View itemView) {
             super(itemView);
+        }
+    }
+
+    private void setBreadCrumbs(HomeDetailList obj, LinearLayout llbreadcrumbs) {
+        TextView[] textView = new TextView[obj.getBreadcrumbs().size()];
+
+        if(llbreadcrumbs.getChildCount()>0)
+            llbreadcrumbs.removeAllViews();
+
+
+        for (int i = 0; i < obj.getBreadcrumbs().size(); i++){
+            textView[i] = new TextView(mActivity);
+
+            if (i==0){
+                textView[i].setText(obj.getBreadcrumbs().get(i).getLabel());
+
+            }else {
+                textView[i].setText(" > "+obj.getBreadcrumbs().get(i).getLabel());
+
+            }
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+
+            );
+            llbreadcrumbs.setOrientation(LinearLayout.HORIZONTAL);
+            params.setMargins(3,3,3,3);
+            textView[i].setLayoutParams(params);
+            llbreadcrumbs.addView(textView[i]);
+
+            int finalI = i;
+            textView[i].setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+
+                }
+            });
         }
     }
 }

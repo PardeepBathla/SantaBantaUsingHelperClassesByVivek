@@ -11,10 +11,13 @@ import android.widget.TextView;
 
 import com.app.santabanta.Activites.MainActivity;
 import com.app.santabanta.Adapter.ViewPagerAdapter;
+import com.app.santabanta.AppController;
 import com.app.santabanta.Fragment.NavFragment;
 import com.app.santabanta.R;
+import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.NonSwipeableViewPager;
 import com.app.santabanta.Utils.ResUtils;
+import com.app.santabanta.Utils.Utils;
 import com.google.android.material.tabs.TabLayout;
 
 public class NavFragmentHelper {
@@ -44,6 +47,12 @@ public class NavFragmentHelper {
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 0){
+
+                    ((ImageView) tab.getCustomView().findViewById(R.id.IconImageView)).setImageResource(R.drawable.ic_home);
+                }
+                ((TextView) tab.getCustomView().findViewById(R.id.tvMenuTitle)).setTextColor(ResUtils.getColor(R.color.light_mode_title_color));
+
                 switch (tab.getPosition()){
                     case 0:
                         ((MainActivity)mActivity).getTitleView().setText(ResUtils.getString(R.string.HomeTab));
@@ -66,7 +75,20 @@ public class NavFragmentHelper {
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
 
+                if (tab.getPosition() == 0){
 
+                    if (Utils.getSharedPref(AppController.getInstance()).getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
+                        ((ImageView) tab.getCustomView().findViewById(R.id.IconImageView)).setImageResource(R.drawable.ic_home_black);
+                    } else {
+                        ((ImageView) tab.getCustomView().findViewById(R.id.IconImageView)).setImageResource(R.drawable.ic_home_white);
+                    }
+
+                }
+                if (Utils.getSharedPref(AppController.getInstance()).getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
+                    ((TextView) tab.getCustomView().findViewById(R.id.tvMenuTitle)).setTextColor(ResUtils.getColor(R.color.black));
+                } else {
+                    ((TextView) tab.getCustomView().findViewById(R.id.tvMenuTitle)).setTextColor(ResUtils.getColor(R.color.white));
+                }
             }
 
             @Override

@@ -2,16 +2,21 @@ package com.app.santabanta.Utils;
 
 public interface GlobalConstants {
 
-    interface API{
+    interface API {
         String BASE_URL = "https://santabantaapi.techpss.com/api/v1/";
     }
 
-    interface COMMON{
+    interface COMMON {
         String THEME_MODE_LIGHT = "theme_mode_light";
         String LANGUAGE_SELECTED = "english";
-         String SHOW_SMS = "SHOW_SMS";
+        String SHOW_SMS = "SHOW_SMS";
         String WHATSAPP = "WHATSAPP";
         String TWITTER = "TWITTER";
-         String SHOW_MEMES_SELECED_DATA = "SHOW_MEMES_SELECED_DATA";
+        String SHOW_MEMES_SELECED_DATA = "SHOW_MEMES_SELECED_DATA";
+    }
+
+    interface INTENT_PARAMS{
+        String IS_SUB_CATEGORY_SMS = "is_sub_category_sms";
+        String SMS_SLUG = "sms_slug";
     }
 }

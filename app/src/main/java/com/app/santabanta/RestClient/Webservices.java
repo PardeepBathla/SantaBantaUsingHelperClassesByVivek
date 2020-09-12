@@ -17,6 +17,9 @@ import retrofit2.http.Query;
 
 public interface Webservices {
 
+    @GET("newsms/{slug}")
+    Call<SmsResponseModel> getCategorySms(@Path(value = "slug", encoded = true) String slug, @Query("page") int page_num);
+
     @GET("categories/all/{language}")
     Call<NavMenuResponse> getNavList(@Path("language") String lang) ;
 

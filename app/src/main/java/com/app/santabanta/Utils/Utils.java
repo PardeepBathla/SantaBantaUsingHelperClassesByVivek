@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -17,9 +18,12 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentTransaction;
+
 import com.app.santabanta.Activites.MainActivity;
 import com.app.santabanta.AppController;
 import com.app.santabanta.R;
+import com.app.santabanta.base.BaseFragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -71,6 +75,24 @@ public class Utils {
                     .placeholder(R.mipmap.ic_launcher)
                     .into(profileImageCircleImageView);
         }
+    }
+
+    public static void switchFragment(FragmentTransaction transaction, BaseFragment fragment, int containerViewId) {
+
+//        transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out);
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    transaction.addToBackStack(null);
+                    transaction.add(containerViewId, fragment).commit();
+                } catch (Exception e) {
+                    e.printStackTrace();
+//                    showToast("Error!");
+                }
+            }
+        });
+
     }
 
     public static void vibrate(Context mCtx) {

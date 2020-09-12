@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.santabanta.Adapter.HomeCategoriesAdapter;
 import com.app.santabanta.Adapter.HomeItemAdapter;
@@ -45,19 +46,32 @@ public class FragmentHomeHelper {
 
     private void initViews() {
 
+        fragmentHome.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getHomeData("English");
+            }
+        });
+        getHomeData("English");
+    }
+
+    private void getHomeData(String language) {
         Dialog progressDialog = Utils.getProgressDialog(mActivity);
         progressDialog.show();
 
         //// TODO: 9/12/20  make language dynamic
-        Call<HomeDetailsModel> call  = mInterface_method.getHomeList("English",currentPage);
+        Call<HomeDetailsModel> call  = mInterface_method.getHomeList(language,currentPage);
         call.enqueue(new Callback<HomeDetailsModel>() {
             @Override
             public void onResponse(Call<HomeDetailsModel> call, Response<HomeDetailsModel> response) {
                 if (progressDialog.isShowing())
                     progressDialog.dismiss();
 
+                if (fragmentHome.swipeRefreshLayout != null && fragmentHome.swipeRefreshLayout.isRefreshing())
+                    fragmentHome.swipeRefreshLayout.setRefreshing(false);
+
                 if (response.isSuccessful()){
-                    fragmentHome.rvSubCategory.setLayoutManager(new LinearLayoutManager(mActivity,RecyclerView.HORIZONTAL,false));
+                    fragmentHome.rvSubCategory.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL,false));
                     fragmentHome.rvSubCategory.setAdapter(new HomeCategoriesAdapter(response.body().getFeaturedCategories(), mActivity, new HomeCategoriesAdapter.HomeCategoryClickListener() {
                         @Override
                         public void onItemClicked(FeaturedCategory model) {
@@ -115,6 +129,10 @@ public class FragmentHomeHelper {
 
             @Override
             public void onFailure(Call<HomeDetailsModel> call, Throwable t) {
+
+                if (fragmentHome.swipeRefreshLayout != null && fragmentHome.swipeRefreshLayout.isRefreshing())
+                    fragmentHome.swipeRefreshLayout.setRefreshing(false);
+
                 if (progressDialog.isShowing())
                     progressDialog.dismiss();
             }

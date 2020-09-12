@@ -5,6 +5,7 @@ import android.app.Dialog;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.santabanta.Adapter.HomeCategoriesAdapter;
 import com.app.santabanta.Adapter.SmsCategoriesAdapter;
@@ -44,6 +45,17 @@ public class FragmentSmsHelper {
 
     private void initViews() {
 
+        fragmentSms.swipeRefreshSms.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getSms("English","","");
+            }
+        });
+
+        getSms("English","","");
+    }
+
+    private void getSms(String language, String slug, String selectedCategory) {
         Call<SmsResponseModel> call = mInterface_method.getSmsList("English","",1,"");
         Dialog progressDialog = Utils.getProgressDialog(mActivity);
         progressDialog.show();
@@ -52,6 +64,9 @@ public class FragmentSmsHelper {
             public void onResponse(Call<SmsResponseModel> call, Response<SmsResponseModel> response) {
                 if (progressDialog.isShowing())
                     progressDialog.dismiss();
+
+                if (fragmentSms.swipeRefreshSms != null && fragmentSms.swipeRefreshSms.isRefreshing())
+                    fragmentSms.swipeRefreshSms.setRefreshing(false);
 
                 if (response.isSuccessful() && response.body() != null) {
 
@@ -73,6 +88,9 @@ public class FragmentSmsHelper {
             public void onFailure(Call<SmsResponseModel> call, Throwable t) {
                 if (progressDialog.isShowing())
                     progressDialog.dismiss();
+
+                if (fragmentSms.swipeRefreshSms != null && fragmentSms.swipeRefreshSms.isRefreshing())
+                    fragmentSms.swipeRefreshSms.setRefreshing(false);
             }
         });
     }

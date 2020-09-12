@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.santabanta.Adapter.JokesCategoriesAdapter;
 import com.app.santabanta.Adapter.JokesHomeAdapter;
@@ -41,7 +42,18 @@ public class FragmentJokesHelper {
 
     private void initViews() {
 
-        Call<JokesDataModel> call = mInterface_method.getJokesList("English","",1);
+        fragmentJokes.swipeRefreshJokes.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getJokes("English","");
+            }
+        });
+
+        getJokes("English","");
+    }
+
+    private void getJokes(String language, String slug) {
+        Call<JokesDataModel> call = mInterface_method.getJokesList(language,slug,1);
         Dialog dialog = Utils.getProgressDialog(mActivity);
         dialog.show();
         call.enqueue(new Callback<JokesDataModel>() {
@@ -49,6 +61,9 @@ public class FragmentJokesHelper {
             public void onResponse(Call<JokesDataModel> call, Response<JokesDataModel> response) {
                 if (dialog.isShowing())
                     dialog.dismiss();
+
+                if (fragmentJokes.swipeRefreshJokes != null && fragmentJokes.swipeRefreshJokes.isRefreshing())
+                    fragmentJokes.swipeRefreshJokes.setRefreshing(false);
 
                 if (response.isSuccessful()){
                     fragmentJokes.rvSubCategoryJokes.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL,false));
@@ -69,6 +84,9 @@ public class FragmentJokesHelper {
             public void onFailure(Call<JokesDataModel> call, Throwable t) {
                 if (dialog.isShowing())
                     dialog.dismiss();
+
+                if (fragmentJokes.swipeRefreshJokes != null && fragmentJokes.swipeRefreshJokes.isRefreshing())
+                    fragmentJokes.swipeRefreshJokes.setRefreshing(false);
             }
         });
     }

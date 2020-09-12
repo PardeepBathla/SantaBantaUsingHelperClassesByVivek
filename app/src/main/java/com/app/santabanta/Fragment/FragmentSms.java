@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.santabanta.Helper.FragmentSmsHelper;
 import com.app.santabanta.R;
@@ -30,6 +31,8 @@ public class FragmentSms extends BaseFragment {
     public RelativeLayout rlSubCategories;
     @BindView(R.id.recyclerSms)
     public RecyclerView recyclerSms;
+    @BindView(R.id.swipeRefreshSms)
+    public SwipeRefreshLayout swipeRefreshSms;
     private Activity mActivity;
     private FragmentSmsHelper mHelper;
 

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.santabanta.Helper.FragmentJokesHelper;
 import com.app.santabanta.R;
@@ -30,6 +31,8 @@ public class FragmentJokes extends BaseFragment {
     public RelativeLayout rlSubCategories;
     @BindView(R.id.recyclerJokes)
     public RecyclerView recyclerJokes;
+    @BindView(R.id.swipeRefreshJokes)
+    public SwipeRefreshLayout swipeRefreshJokes;
     private Activity mActivity;
     private FragmentJokesHelper mHelper;
 

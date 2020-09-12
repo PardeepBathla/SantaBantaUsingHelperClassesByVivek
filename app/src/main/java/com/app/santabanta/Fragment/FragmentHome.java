@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.santabanta.Helper.FragmentHomeHelper;
 import com.app.santabanta.R;
@@ -31,6 +32,8 @@ public class FragmentHome extends BaseFragment {
     public RelativeLayout rlSubCategories;
     @BindView(R.id.recyclerHome)
     public HomeMemesExoPlayerRecyclerview recyclerHome;
+    @BindView(R.id.swipeRefreshHome)
+    public SwipeRefreshLayout swipeRefreshLayout;
     private Activity mActivity;
     private FragmentHomeHelper mHelper;
 

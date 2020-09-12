@@ -4,47 +4,60 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <RelativeLayout
-        android:id="@+id/rlSubCategories"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshSms"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_60sdp"
-        android:layout_below="@+id/rootView"
-        android:layout_marginHorizontal="@dimen/_5sdp"
-        android:layout_marginVertical="@dimen/_4sdp"
-        android:gravity="center_vertical">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/ivPrevious"
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:padding="@dimen/_5sdp"
-            android:src="@drawable/ic_previous_white" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvSubCategorySms"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/ivNext"
-            android:layout_toRightOf="@+id/ivPrevious"
-            android:orientation="horizontal" />
+            android:orientation="vertical"
+            android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/ivNext"
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:padding="@dimen/_5sdp"
-            android:src="@drawable/ic_forward_white" />
-    </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rlSubCategories"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_60sdp"
+                android:layout_below="@+id/rootView"
+                android:layout_marginHorizontal="@dimen/_5sdp"
+                android:layout_marginVertical="@dimen/_4sdp"
+                android:gravity="center_vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerSms"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+                <ImageView
+                    android:id="@+id/ivPrevious"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:padding="@dimen/_5sdp"
+                    android:src="@drawable/ic_previous_white" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvSubCategorySms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/ivNext"
+                    android:layout_toRightOf="@+id/ivPrevious"
+                    android:orientation="horizontal" />
+
+                <ImageView
+                    android:id="@+id/ivNext"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:padding="@dimen/_5sdp"
+                    android:src="@drawable/ic_forward_white" />
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerSms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

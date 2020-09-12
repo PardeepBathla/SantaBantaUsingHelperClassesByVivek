@@ -47,6 +47,7 @@ public class FragmentHomeHelper {
             public void onResponse(Call<HomeDetailsModel> call, Response<HomeDetailsModel> response) {
                 if (progressDialog.isShowing())
                     progressDialog.dismiss();
+
                 if (response.isSuccessful()){
                     fragmentHome.rvSubCategory.setLayoutManager(new LinearLayoutManager(mActivity,RecyclerView.HORIZONTAL,false));
                     fragmentHome.rvSubCategory.setAdapter(new HomeCategoriesAdapter(response.body().getFeaturedCategories(), mActivity, new HomeCategoriesAdapter.HomeCategoryClickListener() {

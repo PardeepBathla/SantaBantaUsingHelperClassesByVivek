@@ -2,11 +2,13 @@ package com.app.santabanta.Adapter;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.santabanta.Callbacks.DrawerMenuClickListener;
 import com.app.santabanta.Modals.NavMenuResponse;
 import com.app.santabanta.R;
+import com.app.santabanta.Utils.GlobalConstants;
+import com.app.santabanta.Utils.ResUtils;
+import com.app.santabanta.Utils.Utils;
 
 import java.util.ArrayList;
 
@@ -35,6 +40,7 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
         this.context = context;
         this.navMenuChildDetails = navMenuChildDetails;
         this.parentPosition = parentPosition;
+        pref = Utils.getSharedPref(context);
     }
 
     @NonNull
@@ -67,6 +73,8 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
         RecyclerView recycler;
         @BindView(R.id.layoutExpand)
         LinearLayout layoutExpand;
+        @BindView(R.id.parent)
+        RelativeLayout parent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -74,6 +82,25 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
         }
 
         void bindData(NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo model) {
+
+            if (model.getIcon() !=null && model.getIcon().length()>0)
+                Utils.loadGlideImage(context,iv_item_logo,model.getIcon());
+            if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
+                parent.setBackgroundColor(Color.parseColor("#B2B0B1"));
+                if (layoutExpand.getVisibility() == View.VISIBLE)
+                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_minus));
+                else
+                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_icon_feather_plus));
+
+            } else {
+                parent.setBackgroundColor(Color.parseColor("#B2B0B1"));
+                if (layoutExpand.getVisibility() == View.VISIBLE)
+                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_minus_black));
+                else
+                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_icon_feater_plus_black));
+
+            }
+
             name.setText(model.getName());
             recycler.setLayoutManager(new LinearLayoutManager(context));
             recycler.setAdapter(new ChildExpandableAdapter(context, model.getInfo(), model.getName(), menuClickListener, getAdapterPosition()));

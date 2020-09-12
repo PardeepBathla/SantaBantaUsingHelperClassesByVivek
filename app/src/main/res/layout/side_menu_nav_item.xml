@@ -32,7 +32,7 @@
             android:layout_toRightOf="@+id/iv_item_logo"
             android:fontFamily="@font/roboto_regular"
             android:textAllCaps="true"
-            android:textColor="@android:color/white"
+            android:textColor="?text_color_reverse"
             android:textSize="@dimen/_12ssp" />
 
 
@@ -50,7 +50,7 @@
 
     <LinearLayout
         android:id="@+id/layoutExpand"
-        android:layout_marginLeft="@dimen/_10sdp"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"

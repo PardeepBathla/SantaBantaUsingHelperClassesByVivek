@@ -32,7 +32,7 @@
             android:fontFamily="@font/roboto_regular"
             android:padding="@dimen/_3sdp"
             android:text="www"
-            android:textColor="@android:color/white"
+            android:textColor="?text_color_reverse"
             android:textSize="15sp" />
 
 

@@ -23,6 +23,7 @@ public class AppController extends Application {
     private static AppController mInstance;
     public static boolean SHOW_ADULT_DIALOG = true;
     private static OkHttpClient okHttpClient = null;
+    public static  String LANGUAGE_SELECTED = "language_selected";
 
     public static synchronized AppController getInstance() {
         return mInstance;

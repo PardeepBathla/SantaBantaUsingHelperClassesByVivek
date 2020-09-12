@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <View
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:background="@color/light_mode_title_color"
         android:layout_height="0.3dp"/>
@@ -38,8 +39,7 @@
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:textSize="@dimen/_12ssp"
-        android:textColor="@color/white"
-
+        android:textColor="?text_color"
         android:layout_height="wrap_content" />
 
 </RelativeLayout>

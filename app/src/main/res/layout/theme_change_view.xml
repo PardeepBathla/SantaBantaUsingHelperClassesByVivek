@@ -30,7 +30,7 @@
             android:layout_height="@dimen/_30sdp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:padding="@dimen/_6sdp"
+            android:padding="@dimen/_3sdp"
             android:src="@drawable/ic_dark_mode" />
 
         <CheckBox

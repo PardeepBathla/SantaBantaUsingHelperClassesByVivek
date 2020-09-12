@@ -2,10 +2,7 @@ package com.app.santabanta.Helper;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.media.Image;
-import android.os.Handler;
-import android.util.Log;
-import android.widget.ImageView;
+import android.content.Intent;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,8 +15,8 @@ import com.app.santabanta.Fragment.FragmentHome;
 import com.app.santabanta.Modals.FeaturedCategory;
 import com.app.santabanta.Modals.HomeDetailsModel;
 import com.app.santabanta.RestClient.Webservices;
+import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.Utils;
-import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,7 +35,7 @@ public class FragmentHomeHelper {
     private int currentPage = PAGE_START;
     private LinearLayoutManager mLinearLayoutManager;
 
-    public FragmentHomeHelper(Activity mActivity,FragmentHome fragmentHome) {
+    public FragmentHomeHelper(Activity mActivity, FragmentHome fragmentHome) {
         this.mActivity = mActivity;
         this.fragmentHome = fragmentHome;
         initViews();
@@ -60,7 +57,7 @@ public class FragmentHomeHelper {
         progressDialog.show();
 
         //// TODO: 9/12/20  make language dynamic
-        Call<HomeDetailsModel> call  = mInterface_method.getHomeList(language,currentPage);
+        Call<HomeDetailsModel> call = mInterface_method.getHomeList(language, currentPage);
         call.enqueue(new Callback<HomeDetailsModel>() {
             @Override
             public void onResponse(Call<HomeDetailsModel> call, Response<HomeDetailsModel> response) {
@@ -70,16 +67,31 @@ public class FragmentHomeHelper {
                 if (fragmentHome.swipeRefreshLayout != null && fragmentHome.swipeRefreshLayout.isRefreshing())
                     fragmentHome.swipeRefreshLayout.setRefreshing(false);
 
-                if (response.isSuccessful()){
-                    fragmentHome.rvSubCategory.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL,false));
+                if (response.isSuccessful()) {
+                    fragmentHome.rvSubCategory.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false));
                     fragmentHome.rvSubCategory.setAdapter(new HomeCategoriesAdapter(response.body().getFeaturedCategories(), mActivity, new HomeCategoriesAdapter.HomeCategoryClickListener() {
                         @Override
                         public void onItemClicked(FeaturedCategory model) {
+                            switch (model.getType()) {
+                                case "sms":
+                                    mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"sms").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,model.getSlug()));
+                                    break;
 
+                                case "jokes":
+                                    mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,model.getSlug()));
+                                    break;
+
+                                case "memes":
+                                    mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"memes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,model.getSlug()));
+                                    break;
+                            }
                         }
                     }));
 
-                    mAdapter = new HomeItemAdapter(mActivity,response.body().getData());
+                    mAdapter = new HomeItemAdapter(mActivity, response.body().getData());
                     mAdapter.setHasStableIds(true);
                     mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
                     fragmentHome.recyclerHome.setLayoutManager(mLinearLayoutManager);

@@ -116,6 +116,8 @@ public class FragmentMemesHelper {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mFragment.IS_FROM_MENU = false;
+                mFragment.subcat_slug_name = "";
                 getApiData();
 
             }
@@ -124,8 +126,8 @@ public class FragmentMemesHelper {
 
     private void getMemesData(MemesCallback memesCallback) {
         Call<MemesResposeModel> call = null;
-        if (FragmentMemes.IS_FROM_MENU) {
-            call = mInterface_method.getMemesNewList(FragmentMemes.subcat_slug_name, 1);
+        if (mFragment.IS_FROM_MENU) {
+            call = mInterface_method.getMemesNewList(mFragment.subcat_slug_name, 1);
         } else {
             call = mInterface_method.getMemesList(GlobalConstants.COMMON.LANGUAGE_SELECTED, 1);
         }
@@ -140,7 +142,7 @@ public class FragmentMemesHelper {
                         rvSubCategory.setAdapter(new MemesCategoryAdapter(context, response.body().getFeaturedCategories(), new MemesCategoryAdapter.MemeCategoryClickListener() {
                             @Override
                             public void onClicked(MemesFeaturedCategory model) {
-
+                                mFragment.enterSubCategoryMemes(true,model.getSlug());
                             }
                         }));
                     }

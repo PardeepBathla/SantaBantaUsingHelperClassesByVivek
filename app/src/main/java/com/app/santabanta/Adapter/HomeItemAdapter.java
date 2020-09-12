@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.WallpaperColors;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -19,11 +20,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.santabanta.Modals.HomeDetailList;
 import com.app.santabanta.R;
 import com.app.santabanta.Utils.AspectRatioImageView;
+import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -44,10 +47,12 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Activity mActivity;
     private List<HomeDetailList> mList;
     private boolean isLoadingAdded = false;
+    public SharedPreferences pref;
 
     public HomeItemAdapter(Activity mActivity, List<HomeDetailList> mList) {
         this.mActivity = mActivity;
         this.mList = mList;
+        pref = Utils.getSharedPref(mActivity);
     }
 
 
@@ -289,13 +294,39 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView iv_pintrest;
         @BindView(R.id.iv_snapchat)
         ImageView iv_snapchat;
+        @BindView(R.id.cardView)
+        CardView cardView;
+
+        int TAB_WHITE = 0;
+        int TAB_OFF_WHITE = 0;
+        int TAB_BROWN = 0;
+        int TAB_PURPLE = 0;
 
         public JokesHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
+            TAB_WHITE = mActivity.getResources().getColor(R.color.light_gray);
+            TAB_OFF_WHITE = mActivity.getResources().getColor(R.color.off_white);
+            TAB_BROWN = mActivity.getResources().getColor(R.color.brown);
+            TAB_PURPLE = mActivity.getResources().getColor(R.color.purple);
         }
 
         void bindData(HomeDetailList model){
+            if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
+                if (getAdapterPosition() % 2 == 0) {
+                    cardView.setCardBackgroundColor(TAB_WHITE);
+                } else {
+                    cardView.setCardBackgroundColor(TAB_OFF_WHITE);
+                }
+            } else {
+                if (getAdapterPosition() % 2 == 0) {
+                    cardView.setCardBackgroundColor(TAB_BROWN);
+                } else {
+                    cardView.setCardBackgroundColor(TAB_PURPLE);
+                }
+            }
+
+
             tv_title.setText(model.getTitle());
             tvContent.setText(model.getContent());
             setBreadCrumbs(model, llbreadcrumbs);

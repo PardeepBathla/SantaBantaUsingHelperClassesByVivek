@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--<data>
+        <variable
+            name="featuredListModel"
+            type="com.app.santabanta.fragments.home.homeModel.FeaturedCategory" />
+        <import type="android.text.Html"/>
+        <import type="android.view.View"/>
+    </data>-->
+
+  <RelativeLayout
+      android:layout_width="wrap_content"
+      android:background="?android:windowBackground"
+      android:gravity="center_vertical"
+      android:id="@+id/rlFeaturedItem"
+      android:layout_marginHorizontal="@dimen/_2sdp"
+      android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivRoot"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/sub_category_background" />
+      <de.hdodenhof.circleimageview.CircleImageView
+          android:id="@+id/ivSubCategory"
+          android:layout_width="@dimen/_38sdp"
+          android:layout_height="@dimen/_38sdp"
+          android:layout_marginTop="@dimen/_1sdp"
+          android:layout_centerHorizontal="true"
+          android:background="?featuresBg"
+          android:padding="@dimen/_7sdp"/>
+
+      <!--
+                  android:src="@{featuredListModel.icon!=null?featuredListModel.icon:null}"
+      -->
+        <TextView
+            android:id="@+id/tv_sub_cat_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivSubCategory"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:textAllCaps="true"
+            android:textColor="?android:textColor"
+            android:singleLine="true"
+            android:fontFamily="@font/roboto_regular"
+            android:textSize="@dimen/_9sdp" />
+<!--
+            android:text="@{Html.fromHtml(featuredListModel.name!=null ? featuredListModel.name:null)}"
+-->
+
+  </RelativeLayout>
+</layout>

@@ -46,10 +46,10 @@ public class FragmentHomeHelper {
         fragmentHome.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getHomeData("English");
+                getHomeData(AppController.LANGUAGE_SELECTED);
             }
         });
-        getHomeData("English");
+        getHomeData(AppController.LANGUAGE_SELECTED);
     }
 
     private void getHomeData(String language) {

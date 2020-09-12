@@ -25,6 +25,7 @@ import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.LocaleHelper;
 import com.app.santabanta.Utils.NonSwipeableViewPager;
 import com.app.santabanta.Utils.ResUtils;
+import com.app.santabanta.Utils.SimpleDividerItemDecoration;
 import com.app.santabanta.Utils.Utils;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -151,6 +152,7 @@ public class MainActivityHelper {
                     openMemesFragment(slug);
                 }
             }));
+            recyclerViewItems.addItemDecoration(new SimpleDividerItemDecoration(mActivity));
         });
 
     }

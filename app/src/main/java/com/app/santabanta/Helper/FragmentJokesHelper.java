@@ -45,12 +45,13 @@ public class FragmentJokesHelper {
         fragmentJokes.swipeRefreshJokes.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getJokes("English",fragmentJokes.slugName);
+//                fragmentJokes.IS_SUB_CAT = false;
+//                fragmentJokes.slugName = "";
+                getJokes(AppController.LANGUAGE_SELECTED,fragmentJokes.slugName);
             }
         });
 
-        //Todo Implement dynamic language
-        getJokes("English",fragmentJokes.slugName);
+        getJokes(AppController.LANGUAGE_SELECTED,fragmentJokes.slugName);
     }
 
     private void getJokes(String language, String slug) {

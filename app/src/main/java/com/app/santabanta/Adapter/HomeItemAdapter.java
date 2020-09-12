@@ -217,7 +217,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         void bindData(HomeDetailList model){
             Utils.loadGlideImage(mActivity,ivMeme, model.getImage());
-            setBreadCrumbs(model, llbreadcrumbs);
+            setBreadCrumbs(model, llbreadcrumbs,"memes");
             ll_share_home.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -329,7 +329,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             tv_title.setText(model.getTitle());
             tvContent.setText(model.getContent());
-            setBreadCrumbs(model, llbreadcrumbs);
+            setBreadCrumbs(model, llbreadcrumbs,"jokes");
             ll_share_home.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -436,7 +436,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         void bindData(HomeDetailList model){
             Utils.loadGlideImage(mActivity,ivMeme,model.getImage());
-            setBreadCrumbs(model, llbreadcrumbs);
+            setBreadCrumbs(model, llbreadcrumbs,"sms");
             ll_share_home.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -457,7 +457,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    private void setBreadCrumbs(HomeDetailList obj, LinearLayout llbreadcrumbs) {
+    private void setBreadCrumbs(HomeDetailList obj, LinearLayout llbreadcrumbs,String type) {
         TextView[] textView = new TextView[obj.getBreadcrumbs().size()];
 
         if(llbreadcrumbs.getChildCount()>0)
@@ -484,10 +484,25 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             textView[i].setLayoutParams(params);
             llbreadcrumbs.addView(textView[i]);
 
-            int finalI = i;
+            String slug = obj.getBreadcrumbs().get(i).getLink();
             textView[i].setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
+                    switch (type){
+                        case "sms":
+                            mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                    .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"sms").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug));
+                            break;
 
+                        case "jokes":
+                            mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                    .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug));
+                            break;
+
+                        case "memes":
+                            mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                    .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"memes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug));
+                            break;
+                    }
                 }
             });
         }

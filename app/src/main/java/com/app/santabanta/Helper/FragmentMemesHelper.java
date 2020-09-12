@@ -116,8 +116,8 @@ public class FragmentMemesHelper {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mFragment.IS_FROM_MENU = false;
-                mFragment.subcat_slug_name = "";
+//                mFragment.IS_FROM_MENU = false;
+//                mFragment.subcat_slug_name = "";
                 getApiData();
 
             }

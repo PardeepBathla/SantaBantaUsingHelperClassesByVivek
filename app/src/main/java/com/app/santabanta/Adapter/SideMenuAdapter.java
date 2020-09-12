@@ -22,6 +22,7 @@ import com.app.santabanta.Modals.NavMenuResponse;
 import com.app.santabanta.R;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.ResUtils;
+import com.app.santabanta.Utils.SimpleDividerItemDecoration;
 import com.app.santabanta.Utils.Utils;
 
 import org.w3c.dom.Text;
@@ -116,6 +117,7 @@ public class SideMenuAdapter extends RecyclerView.Adapter<SideMenuAdapter.ViewHo
 
             recycler.setLayoutManager(new LinearLayoutManager(context));
             recycler.setAdapter(new ExpandableViewAdapter(context,model.getInfo(),menuClickListener,getAdapterPosition()));
+            recycler.addItemDecoration(new SimpleDividerItemDecoration(context));
             viewMoreBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/frameHome"
-    android:background="?card_bg_color"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:id="@+id/frameJokes"
+    android:background="?card_bg_color"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshHome"
+        android:id="@+id/swipeRefreshJokes"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
 
             <RelativeLayout
@@ -36,7 +36,7 @@
                     android:src="@drawable/ic_previous_white" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvSubCategory"
+                    android:id="@+id/rvSubCategoryJokes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -55,18 +55,16 @@
                     android:src="@drawable/ic_forward_white" />
             </RelativeLayout>
 
-
             <View
                 android:layout_width="match_parent"
                 android:layout_marginVertical="@dimen/_2sdp"
                 android:background="?view_line_color"
-                android:layout_height="0.5dp"/>
+                android:layout_height="1dp"/>
 
-            <com.app.santabanta.Utils.HomeMemesExoPlayerRecyclerview
-                android:id="@+id/recyclerHome"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerJokes"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

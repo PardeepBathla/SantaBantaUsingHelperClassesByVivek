@@ -44,4 +44,6 @@ public interface Webservices {
     @GET("memes/latest/{language}")
     Call<MemesResposeModel> getMemesList(@Path("language") String lang, @Query("page") int page_num);
 
+
+
 }

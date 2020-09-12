@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.santabanta.Fragment.FragmentMemes;
+import com.app.santabanta.Helper.FragmentMemesHelper;
 import com.app.santabanta.Modals.memesModel.MemesDetailModel;
 import com.app.santabanta.Modals.memesModel.MemesFavouriteModel;
 import com.app.santabanta.R;
@@ -53,14 +54,16 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private boolean isSharelayoutVisible = false;
     private boolean isDialogSharelayoutVisible = false;
     private SharedPreferences pref;
+    FragmentMemesHelper fragmentMemesHelper;
 
-    public MemesItemAdapter(Activity mCtx, FragmentMemes memesFragment, ProgressBar progressBar, ArrayList<MemesDetailModel> memesList) {
+    public MemesItemAdapter(Activity mCtx, FragmentMemes memesFragment, ProgressBar progressBar, ArrayList<MemesDetailModel> memesList, FragmentMemesHelper fragmentMemesHelper) {
         this.memesFragment = memesFragment;
         MemesItemAdapter.mCtx = mCtx;
         this.progressBar = progressBar;
         shareableIntents = new ShareableIntents(mCtx);
         pref = Utils.getSharedPref(mCtx);
         this.memesData = memesList;
+        this.fragmentMemesHelper = fragmentMemesHelper;
         setHasStableIds(true);
     }
 
@@ -74,7 +77,7 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         switch (viewType) {
             case VIDEO:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.memes_video_item, parent, false);
-                viewHolder = new PlayerViewHolder(mCtx, view, memesFragment);
+                viewHolder = new PlayerViewHolder(mCtx, view, memesFragment,fragmentMemesHelper);
                 viewHolder.setIsRecyclable(false);
 
                 break;
@@ -170,20 +173,20 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private void onFavCheckChanged(boolean isChecked, MemesDetailModel obj, int position, CheckBox cbLike, ProgressBar progress_bar) {
-       /* if (isChecked) {
-            memesFragment.addJokeToFav(obj, position, cbLike, progress_bar);
+        if (isChecked) {
+            fragmentMemesHelper.addJokeToFav(obj, position, cbLike, progress_bar);
         } else {
             if (obj.getFavourites() != null) {
                 for (MemesFavouriteModel favouriteModel : obj.getFavourites()) {
                     if (favouriteModel.getDeviceId().equals(Utils.getMyDeviceId(mCtx))) {
-                        memesFragment.removeFromFav(obj, favouriteModel.getId(), position, cbLike, progress_bar);
+                        fragmentMemesHelper.removeFromFav(obj, favouriteModel.getId(), position, cbLike, progress_bar);
                         break;
 
                     }
                 }
             }
 
-        }*/
+        }
     }
 
     private void setMemeImage(String url, AspectRatioImageView ivMeme) {

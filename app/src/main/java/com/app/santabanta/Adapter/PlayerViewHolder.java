@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.santabanta.AppController;
 import com.app.santabanta.Callbacks.MemesCallback;
 import com.app.santabanta.Fragment.FragmentMemes;
+import com.app.santabanta.Helper.FragmentMemesHelper;
 import com.app.santabanta.Modals.AddFavouriteRequest;
 import com.app.santabanta.Modals.memesModel.MemesDetailModel;
 import com.app.santabanta.Modals.memesModel.MemesFavouriteModel;
@@ -99,14 +100,16 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
     private boolean isDialogSharelayoutVisible = false;
     private MemesDetailModel memeTOBeShared;
     private Webservices mInterface_method = AppController.getRetroInstance().create(Webservices.class);
+    FragmentMemesHelper fragmentMemesHelper;
 
-    public PlayerViewHolder(Context mCtx, View memesVideoItemBinding, FragmentMemes memesFragment) {
+    public PlayerViewHolder(Context mCtx, View memesVideoItemBinding, FragmentMemes memesFragment, FragmentMemesHelper fragmentMemesHelper) {
         super(memesVideoItemBinding);
         this.memesVideoItemBinding = memesVideoItemBinding;
         this.memesFragment = memesFragment;
         parent = memesVideoItemBinding;
         PlayerViewHolder.mCtx = mCtx;
         pref = Utils.getSharedPref(mCtx);
+        this.fragmentMemesHelper = fragmentMemesHelper;
         ButterKnife.bind(this, memesVideoItemBinding);
         shareableIntents = new ShareableIntents(mCtx);
 
@@ -272,20 +275,20 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void onFavCheckChanged(boolean isChecked, MemesDetailModel obj, int position, CheckBox cbLike, ProgressBar progress_bar) {
-       /* if (isChecked) {
-            addJokeToFav(obj, position, cbLike, progress_bar);
+        if (isChecked) {
+            fragmentMemesHelper.addJokeToFav(obj, position, cbLike, progress_bar);
         } else {
             if (obj.getFavourites() != null) {
                 for (MemesFavouriteModel favouriteModel : obj.getFavourites()) {
                     if (favouriteModel.getDeviceId().equals(Utils.getMyDeviceId(mCtx))) {
-                        memesFragment.removeFromFav(obj, favouriteModel.getId(), position, cbLike, progress_bar);
+                        fragmentMemesHelper.removeFromFav(obj, favouriteModel.getId(), position, cbLike, progress_bar);
                         break;
 
                     }
                 }
             }
 
-        }*/
+        }
     }
 
 

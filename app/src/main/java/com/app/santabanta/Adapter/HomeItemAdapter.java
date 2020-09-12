@@ -2,9 +2,11 @@ package com.app.santabanta.Adapter;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.WallpaperColors;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.media.Image;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -23,36 +25,50 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.app.santabanta.Callbacks.BitmapLoadedCallback;
+import com.app.santabanta.Helper.FragmentHomeHelper;
+import com.app.santabanta.Modals.Favourite;
 import com.app.santabanta.Modals.HomeDetailList;
 import com.app.santabanta.R;
 import com.app.santabanta.Utils.AspectRatioImageView;
 import com.app.santabanta.Utils.GlobalConstants;
+import com.app.santabanta.Utils.CheckPermissions;
+import com.app.santabanta.Utils.GlobalConstants;
+import com.app.santabanta.Utils.LoadImageBitmap;
+import com.app.santabanta.Utils.ShareableIntents;
 import com.app.santabanta.Utils.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
     private static final int JOKE_POST = 0;
     private static final int SMS_POST = 1;
     private static final int MEMES_VIDEO_POST = 2;
     private static final int MEMES_IMAGE_POST = 3;
     private static final int LOADING = 4;
-    private Activity mActivity;
+    public Activity mActivity;
     private List<HomeDetailList> mList;
     private boolean isLoadingAdded = false;
-    public SharedPreferences pref;
+    private SharedPreferences pref;
+    FragmentHomeHelper fragmentHomeHelper;
 
-    public HomeItemAdapter(Activity mActivity, List<HomeDetailList> mList) {
+    public HomeItemAdapter(Activity mActivity, List<HomeDetailList> mList, FragmentHomeHelper fragmentHomeHelper) {
         this.mActivity = mActivity;
         this.mList = mList;
         pref = Utils.getSharedPref(mActivity);
+        this.fragmentHomeHelper = fragmentHomeHelper;
+
     }
 
 
@@ -61,24 +77,24 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder = null;
 
-        switch (viewType){
+        switch (viewType) {
             case SMS_POST:
-                viewHolder = new SmsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.home_sms_item,parent,false));
+                viewHolder = new SmsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.home_sms_item, parent, false));
                 viewHolder.setIsRecyclable(false);
                 break;
 
             case JOKE_POST:
-                viewHolder = new JokesHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.home_jokes_item,parent,false));
+                viewHolder = new JokesHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.home_jokes_item, parent, false));
                 viewHolder.setIsRecyclable(false);
                 break;
 
             case MEMES_IMAGE_POST:
-                viewHolder = new MemesImageHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.home_memes_image_item,parent,false));
+                viewHolder = new MemesImageHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.home_memes_image_item, parent, false));
                 viewHolder.setIsRecyclable(false);
                 break;
 
             case MEMES_VIDEO_POST:
-                viewHolder = new MemesVideoViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.home_memes_video_item,parent,false));
+                viewHolder = new MemesVideoViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.home_memes_video_item, parent, false));
                 viewHolder.setIsRecyclable(false);
                 break;
 
@@ -98,10 +114,10 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return JOKE_POST;
         else if (type.equalsIgnoreCase("sms"))
             return SMS_POST;
-        else if (type.equalsIgnoreCase("memes")){
-            if (mList.get(position).getImage().endsWith(".mp4")){
+        else if (type.equalsIgnoreCase("memes")) {
+            if (mList.get(position).getImage().endsWith(".mp4")) {
                 return MEMES_VIDEO_POST;
-            }else
+            } else
                 return MEMES_IMAGE_POST;
         }
         return 0;
@@ -109,12 +125,12 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
-    public void setNewList(List<HomeDetailList> mList){
+    public void setNewList(List<HomeDetailList> mList) {
         this.mList = mList;
         notifyDataSetChanged();
     }
 
-    public void add(HomeDetailList item){
+    public void add(HomeDetailList item) {
         this.mList.add(item);
         notifyItemInserted(mList.size() - 1);
     }
@@ -131,14 +147,14 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof SmsViewHolder) {
-            ((SmsViewHolder)holder).bindData(mList.get(position));
-        }else if (holder instanceof JokesHolder){
-            ((JokesHolder)holder).bindData(mList.get(position));
-        }else if (holder instanceof MemesImageHolder){
-            ((MemesImageHolder)holder).bindData(mList.get(position));
-        }else if (holder instanceof MemesVideoViewHolder){
-            ((MemesVideoViewHolder)holder).bindData(mList.get(position));
-        }else if (holder instanceof LoadingVH){
+            ((SmsViewHolder) holder).bindData(mList.get(position), position);
+        } else if (holder instanceof JokesHolder) {
+            ((JokesHolder) holder).bindData(mList.get(position), position);
+        } else if (holder instanceof MemesImageHolder) {
+            ((MemesImageHolder) holder).bindData(mList.get(position), position);
+        } else if (holder instanceof MemesVideoViewHolder) {
+            ((MemesVideoViewHolder) holder).bindData(mList.get(position), position);
+        } else if (holder instanceof LoadingVH) {
 
         }
     }
@@ -167,7 +183,6 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
-
     @Override
     public long getItemId(int position) {
         return position;
@@ -178,7 +193,21 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mList.size();
     }
 
-    class MemesImageHolder extends RecyclerView.ViewHolder{
+
+
+    public ArrayList<HomeDetailList> getCurrentList() {
+        return (ArrayList<HomeDetailList>) mList;
+    }
+
+    public void updateList(ArrayList<HomeDetailList> pagedLists) {
+        mList = pagedLists;
+        notifyDataSetChanged();
+    }
+
+
+
+
+    class MemesImageHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.llbreadcrumbs)
         LinearLayout llbreadcrumbs;
         @BindView(R.id.ivMeme)
@@ -212,26 +241,37 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public MemesImageHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
 
-        void bindData(HomeDetailList model){
-            Utils.loadGlideImage(mActivity,ivMeme, model.getImage());
+        void bindData(HomeDetailList model, int position) {
+            Utils.loadGlideImage(mActivity, ivMeme, model.getImage());
             setBreadCrumbs(model, llbreadcrumbs,"memes");
-            ll_share_home.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (ll_share_options_home.getVisibility() == View.VISIBLE){
-                        ll_share_options_home.setVisibility(View.GONE);
-                    }else {
-                        ll_share_options_home.setVisibility(View.VISIBLE);
+
+//            imageTOBeShared = obj;
+
+
+            if (model.getFavourites() != null && model.getFavourites().size() != 0) {
+                for (Favourite favouriteModel : model.getFavourites()) {
+                    if (favouriteModel.getDeviceId().equals(Utils.getMyDeviceId(mActivity))) {
+                        cb_like.setChecked(true);
+                        break;
+
+                    } else {
+                        cb_like.setChecked(false);
                     }
                 }
-            });
+            } else {
+                cb_like.setChecked(false);
+            }
+
+//            smsItemListeners(model, position);
+
+
         }
     }
 
-    public class MemesVideoViewHolder extends RecyclerView.ViewHolder{
+    public class MemesVideoViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.ivMediaCoverImage)
         public ImageView ivMediaCoverImage;
@@ -247,18 +287,18 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public MemesVideoViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
-            Glide.with(mActivity)
-                    .setDefaultRequestOptions(new RequestOptions());
+            ButterKnife.bind(this, itemView);
+            Glide.with(mActivity).setDefaultRequestOptions(new RequestOptions());
         }
 
-        void bindData(HomeDetailList model){
+        void bindData(HomeDetailList model, int position) {
+
+
 
         }
     }
 
-
-    class JokesHolder extends RecyclerView.ViewHolder{
+    class JokesHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.llbreadcrumbs)
         LinearLayout llbreadcrumbs;
@@ -294,24 +334,56 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView iv_pintrest;
         @BindView(R.id.iv_snapchat)
         ImageView iv_snapchat;
-        @BindView(R.id.cardView)
-        CardView cardView;
-
         int TAB_WHITE = 0;
         int TAB_OFF_WHITE = 0;
         int TAB_BROWN = 0;
         int TAB_PURPLE = 0;
+        @BindView(R.id.cardview)
+        CardView cardView;
+        @BindView(R.id.tv_like_count)
+        TextView tv_like_count;
+
+        private ShareableIntents shareableIntents;
+        private boolean isSharelayoutVisible = false;
+        private boolean isDialogSharelayoutVisible = false;
 
         public JokesHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
+            shareableIntents = new ShareableIntents(mActivity);
             TAB_WHITE = mActivity.getResources().getColor(R.color.light_gray);
             TAB_OFF_WHITE = mActivity.getResources().getColor(R.color.off_white);
             TAB_BROWN = mActivity.getResources().getColor(R.color.brown);
             TAB_PURPLE = mActivity.getResources().getColor(R.color.purple);
         }
 
-        void bindData(HomeDetailList model){
+        void bindData(HomeDetailList model, int position) {
+
+
+            if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
+                if (getAdapterPosition() % 2 == 0) {
+                    cardView.setCardBackgroundColor(TAB_WHITE);
+                } else {
+                    cardView.setCardBackgroundColor(TAB_OFF_WHITE);
+                }
+            } else {
+                if (getAdapterPosition() % 2 == 0) {
+                    cardView.setCardBackgroundColor(TAB_BROWN);
+                } else {
+                    cardView.setCardBackgroundColor(TAB_PURPLE);
+                }
+            }
+
+
+            if (model.getFavCount() == 0) {
+                tv_like_count.setVisibility(View.GONE);
+            } else {
+                tv_like_count.setVisibility(View.VISIBLE);
+                tv_like_count.setText(String.valueOf(model.getFavCount()));
+            }
+
+
+
             if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
                 if (getAdapterPosition() % 2 == 0) {
                     cardView.setCardBackgroundColor(TAB_WHITE);
@@ -333,70 +405,204 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ll_share_home.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (ll_share_options_home.getVisibility() == View.VISIBLE){
+                    if (ll_share_options_home.getVisibility() == View.VISIBLE) {
                         ll_share_options_home.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         ll_share_options_home.setVisibility(View.VISIBLE);
                     }
                 }
             });
 
-          tvContent.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View view) {
-
-                  Dialog dialog = new Dialog(mActivity, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-                  dialog.setCancelable(true);
-                  dialog.setContentView(R.layout.full_screen_joke_dialog);
-
-                  TextView tv_content = dialog.findViewById(R.id.tvContent);
-                  LinearLayout ll_share_joke = dialog.findViewById(R.id.ll_share_joke);
-                  LinearLayout ll_share_options_joke = dialog.findViewById(R.id.ll_share_options_joke);
-                  TextView tv_title = dialog.findViewById(R.id.tv_title);
-                  TextView tv_categories = dialog.findViewById(R.id.tv_categories);
-                  ImageView iv_close = dialog.findViewById(R.id.iv_close);
-                  TextView tv_fav_count = dialog.findViewById(R.id.tv_fav_count);
-                  ProgressBar progress_bar = dialog.findViewById(R.id.progress_bar);
-                  ScrollView content_scroll = dialog.findViewById(R.id.content_scroll);
-
-                  tv_fav_count.setText(String.valueOf(model.getFavCount()));
-                  iv_close.setOnClickListener(v -> dialog.dismiss());
-                  CheckBox cb_like = dialog.findViewById(R.id.cb_like);
-                  tv_content.setText(Html.fromHtml(model.getContent().replaceAll("<br/><br/>","")));
-                  tv_title.setText(Html.fromHtml(model.getTitle()));
-
-                  if (model.getCategories() != null && model.getCategories().size() != 0) {
-                      tv_categories.setText(Html.fromHtml(model.getCategories().get(0).getName()));
-                  }
-
-                  cb_like.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
 
-                      if (isChecked){
-                          if (!tv_fav_count.getText().toString().equals("")) {
-                              tv_fav_count.setText(String.valueOf(Integer.parseInt(tv_fav_count.getText().toString())+1));
-                          }else {
-                              tv_fav_count.setText("0");
-                          }
-                      }else {
-                          if (!tv_fav_count.getText().equals("0")) {
-                              tv_fav_count.setText(String.valueOf(Integer.parseInt(tv_fav_count.getText().toString())-1));
-                          }
-                      }
-                      progress_bar.setVisibility(View.VISIBLE);
-                      cb_like.setClickable(false);
+            if (model.getFavourites() != null && model.getFavourites().size() != 0) {
+                for (Favourite favouriteModel : model.getFavourites()) {
+                    if (favouriteModel.getDeviceId().equals(Utils.getMyDeviceId(mActivity))) {
+                        cb_like.setChecked(true);
+                        break;
 
-                  });
+                    } else {
+                        cb_like.setChecked(false);
+                    }
+                }
+            } else {
+                cb_like.setChecked(false);
+            }
 
-                  dialog.show();
-              }
-          });
+            jokesItemListener(model, position);
+
         }
+
+        private void jokesItemListener(HomeDetailList obj, int position) {
+
+            iv_whatsapp.setOnClickListener(v -> {
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+                shareableIntents.shareOnWhatsapp(obj.getContent());
+
+            });
+            iv_facebook.setOnClickListener(v -> {
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+                shareableIntents.shareOnFbMesenger(obj.getContent());
+
+            });
+            iv_twitter.setOnClickListener(v -> {
+                shareableIntents.shareOnTwitter(v, obj.getContent());
+                Utils.vibrate(mActivity);
+                shareLayoutGone();
+            });
+            iv_instagram.setOnClickListener(v -> {
+                shareableIntents.shareOnInstagram(obj.getContent());
+                Utils.vibrate(mActivity);
+                shareLayoutGone();
+            });
+            iv_pintrest.setOnClickListener(v -> {
+                shareableIntents.shareOnPintrest(v, obj.getContent());
+                Utils.vibrate(mActivity);
+                shareLayoutGone();
+            });
+            iv_snapchat.setOnClickListener(v -> {
+                shareableIntents.shareOnSnapChat(obj.getContent());
+                Utils.vibrate(mActivity);
+                shareLayoutGone();
+            });
+
+            tvContent.setOnClickListener(v -> {
+                shareLayoutGone();
+                fullScreenDialog(obj, position, cb_like.isChecked());
+            });
+
+            cb_like.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (buttonView.isPressed()) {
+
+                    Dialog dialog = Utils.getProgressDialog(mActivity);
+                    dialog.show();
+
+                    cb_like.setClickable(false);
+                    onFavCheckChanged(isChecked, obj, position, cb_like, dialog);
+                }
+                //FUNCTIONALITY NOT IN SCOPE FOR THE TIME BEING
+            });
+
+
+            ll_share_home.setOnClickListener(v -> {
+
+                Utils.vibrate(mActivity);
+
+                if (isSharelayoutVisible) {
+                    shareLayoutGone();
+                } else {
+                    if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
+                        ll_share_home.setBackgroundDrawable(mActivity.getDrawable(R.drawable.share_round_corner_bg_light));
+                        int padding = (int) mActivity.getResources().getDimension(R.dimen._10sdp);
+                        ll_share_home.setPadding(padding, padding, padding, padding);
+                        ll_share_options_home.setVisibility(View.VISIBLE);
+                        isSharelayoutVisible = true;
+                    } else {
+                        ll_share_home.setBackgroundDrawable(mActivity.getDrawable(R.drawable.bottom_round_corner_bg));
+                        int padding = (int) mActivity.getResources().getDimension(R.dimen._10sdp);
+                        ll_share_home.setPadding(padding, padding, padding, padding);
+                        ll_share_options_home.setVisibility(View.VISIBLE);
+                        isSharelayoutVisible = true;
+                    }
+
+                }
+            });
+        }
+
+        private void shareLayoutGone() {
+
+            isSharelayoutVisible = false;
+            ll_share_home.setBackground(null);
+            ll_share_options_home.setVisibility(View.GONE);
+        }
+
+        public void fullScreenDialog(HomeDetailList model, int position, boolean ischecked) {
+            Dialog dialog = new Dialog(mActivity, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.full_screen_joke_dialog);
+            TextView tv_content = dialog.findViewById(R.id.tvContent);
+            LinearLayout ll_share_joke = dialog.findViewById(R.id.ll_share_joke);
+            LinearLayout ll_share_options_joke = dialog.findViewById(R.id.ll_share_options_joke);
+            TextView tv_title = dialog.findViewById(R.id.tv_title);
+            TextView tv_categories = dialog.findViewById(R.id.tv_categories);
+            ImageView iv_close = dialog.findViewById(R.id.iv_close);
+            TextView tv_fav_count = dialog.findViewById(R.id.tv_fav_count);
+            ProgressBar progress_bar = dialog.findViewById(R.id.progress_bar);
+            ScrollView content_scroll = dialog.findViewById(R.id.content_scroll);
+
+            if (model.getFavCount() != null && !model.getFavCount().equals(0)) {
+                tv_fav_count.setVisibility(View.VISIBLE);
+                tv_fav_count.setText(String.valueOf(model.getFavCount()));
+            } else {
+                tv_fav_count.setVisibility(View.GONE);
+            }
+
+            ll_share_joke.setOnClickListener(v -> {
+                if (isDialogSharelayoutVisible) {
+                    DialogshareLayoutGone(ll_share_joke, ll_share_options_joke);
+                } else {
+                    ll_share_joke.setBackgroundDrawable(mActivity.getDrawable(R.drawable.bottom_round_corner_bg));
+                    int padding = (int) mActivity.getResources().getDimension(R.dimen._10sdp);
+                    ll_share_joke.setPadding(padding, padding, padding, padding);
+                    ll_share_options_joke.setVisibility(View.VISIBLE);
+                    isDialogSharelayoutVisible = true;
+                }
+            });
+            content_scroll.setOnClickListener(v -> DialogshareLayoutGone(ll_share_joke, ll_share_options_joke));
+            iv_close.setOnClickListener(v -> dialog.dismiss());
+            CheckBox cb_like = dialog.findViewById(R.id.cb_like);
+            cb_like.setChecked(ischecked);
+
+            tv_content.setText(Html.fromHtml(model.getContent().replaceAll("<br/><br/>", "")));
+            if (model.getTitle() != null && !model.getTitle().equals(""))
+                tv_title.setText(Html.fromHtml(model.getTitle()));
+            if (model.getCategories() != null && model.getCategories().size() != 0) {
+                tv_categories.setText(Html.fromHtml(model.getCategories().get(0).getName()));
+            }
+
+            cb_like.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+                Utils.vibrate(mActivity);
+
+                Dialog dialog1 = Utils.getProgressDialog(mActivity);
+                progress_bar.setVisibility(View.VISIBLE);
+                cb_like.setClickable(false);
+                onFavCheckChanged(isChecked, model, position, cb_like, dialog1);
+                //FUNCTIONALITY NOT IN SCOPE FOR THE TIME BEING
+//                    SmsRepository.getInstance().InsertFavourite(obj,fragmentSms);
+            });
+            dialog.show();
+        }
+
+        private void DialogshareLayoutGone(LinearLayout ll_share_joke, LinearLayout ll_share_options_joke) {
+            isDialogSharelayoutVisible = false;
+            ll_share_joke.setBackground(null);
+            ll_share_options_joke.setVisibility(View.GONE);
+        }
+
+        private void onFavCheckChanged(boolean isChecked, HomeDetailList obj, int position, CheckBox cbLike, Dialog progress_bar) {
+            if (isChecked) {
+                fragmentHomeHelper.addToFav(obj, position, "jokes", cbLike, progress_bar);
+            } else {
+                if (obj.getFavourites() != null) {
+                    for (Favourite favouriteModel : obj.getFavourites()) {
+                        if (favouriteModel.getDeviceId().equals(Utils.getMyDeviceId(mActivity))) {
+                            fragmentHomeHelper.removeFromFav(obj, favouriteModel.getId(), position, cbLike, progress_bar);
+                            break;
+
+                        }
+                    }
+                }
+
+            }
+        }
+
 
     }
 
-
-    class SmsViewHolder extends RecyclerView.ViewHolder{
+    class SmsViewHolder extends RecyclerView.ViewHolder implements BitmapLoadedCallback{
 
         @BindView(R.id.ivMeme)
         AspectRatioImageView ivMeme;
@@ -426,52 +632,206 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         LinearLayout llbreadcrumbs;
         @BindView(R.id.ll_share_home)
         LinearLayout ll_share_home;
+        @BindView(R.id.tv_like_count)
+        TextView tv_like_count;
+        private boolean isSharelayoutVisible = false;
+
+        ShareableIntents shareableIntents;
+        HomeDetailList imageTOBeShared;
 
         public SmsViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
+            shareableIntents = new ShareableIntents(mActivity);
+        }
+
+
+        void bindData(HomeDetailList model, int position) {
+
+            if (model.getFavCount() == 0) {
+                tv_like_count.setVisibility(View.GONE);
+            } else {
+                tv_like_count.setVisibility(View.VISIBLE);
+                tv_like_count.setText(String.valueOf(model.getFavCount()));
+            }
+
+            imageTOBeShared = model;
+            Utils.loadGlideImage(mActivity, ivMeme, model.getImage());
+            setBreadCrumbs(model, llbreadcrumbs,"sms");
+            if (model.getFavourites() != null && model.getFavourites().size() != 0) {
+                for (Favourite favouriteModel : model.getFavourites()) {
+                    if (favouriteModel.getDeviceId().equals(Utils.getMyDeviceId(mActivity))) {
+                        cb_like.setChecked(true);
+                        break;
+
+                    } else {
+                        cb_like.setChecked(false);
+                    }
+                }
+            } else {
+                cb_like.setChecked(false);
+            }
+
+            smsItemListeners(model, position);
+
+
         }
 
 
 
-        void bindData(HomeDetailList model){
-            Utils.loadGlideImage(mActivity,ivMeme,model.getImage());
-            setBreadCrumbs(model, llbreadcrumbs,"sms");
-            ll_share_home.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (ll_share_options_home.getVisibility() == View.VISIBLE){
-                        ll_share_options_home.setVisibility(View.GONE);
-                    }else {
-                        ll_share_options_home.setVisibility(View.VISIBLE);
+        private void smsItemListeners(HomeDetailList obj, int position) {
+
+            iv_whatsapp.setOnClickListener(v -> {
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+                if (CheckPermissions.isStoragePermissionGranted(mActivity)) {
+                    BitmapConversion(obj, GlobalConstants.COMMON.WHATSAPP);
+                }
+            });
+            iv_facebook.setOnClickListener(v -> {
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+                shareableIntents.shareOnFbMesenger(imageTOBeShared.getImage());
+
+            });
+            iv_twitter.setOnClickListener(v -> {
+                shareableIntents.shareOnTwitter(v, imageTOBeShared.getImage());
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+            });
+            iv_instagram.setOnClickListener(v -> {
+                shareableIntents.shareOnInstagram(imageTOBeShared.getImage());
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+            });
+            iv_pintrest.setOnClickListener(v -> {
+                shareableIntents.shareOnPintrest(v, imageTOBeShared.getImage());
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+            });
+            iv_snapchat.setOnClickListener(v -> {
+                shareableIntents.shareOnSnapChat(imageTOBeShared.getImage());
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+            });
+       /* binding.ivSms.setOnClickListener(v -> {
+            shareLayoutGone();
+
+        });*/
+       /* binding.rlSms.setOnClickListener(v -> {
+            shareLayoutGone();
+        });
+*/
+            cb_like.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+                Utils.vibrate(mActivity);
+
+                Dialog dialog = Utils.getProgressDialog(mActivity);
+                dialog.show();
+                cb_like.setClickable(false);
+                if (isChecked) {
+                    fragmentHomeHelper.addToFav(obj, position, "sms", cb_like, dialog);
+                } else {
+                    for (Favourite favouriteModel : obj.getFavourites()) {
+                        if (favouriteModel.getDeviceId().equals(Utils.getMyDeviceId(mActivity))) {
+                            fragmentHomeHelper.removeFromFav(obj, favouriteModel.getId(), position, cb_like, dialog);
+                            break;
+
+                        }
                     }
+
+                }
+                //FUNCTIONALITY NOT IN SCOPE FOR THE TIME BEING
+//                    SmsRepository.getInstance().InsertFavourite(obj,fragmentSms);
+            });
+            ll_share_home.setOnClickListener(v -> {
+                Utils.vibrate(mActivity);
+                if (isSharelayoutVisible) {
+                    shareLayoutGone();
+                } else {
+                    if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
+                        ll_share_home.setBackgroundDrawable(mActivity.getDrawable(R.drawable.share_round_corner_bg_light));
+                        int padding = (int) mActivity.getResources().getDimension(R.dimen._10sdp);
+                        ll_share_home.setPadding(padding, padding, padding, padding);
+                        ll_share_options_home.setVisibility(View.VISIBLE);
+                        isSharelayoutVisible = true;
+                    } else {
+                        ll_share_home.setBackgroundDrawable(mActivity.getDrawable(R.drawable.bottom_round_corner_bg));
+                        int padding = (int) mActivity.getResources().getDimension(R.dimen._10sdp);
+                        ll_share_home.setPadding(padding, padding, padding, padding);
+                        ll_share_options_home.setVisibility(View.VISIBLE);
+                        isSharelayoutVisible = true;
+                    }
+
                 }
             });
         }
-    }
 
-    class LoadingVH extends RecyclerView.ViewHolder {
+        private void BitmapConversion(HomeDetailList obj, String platform) {
+            shareLayoutGone();
+            try {
+                URL url = new URL(obj.getImage());
+                new LoadImageBitmap(mActivity, this::onBitmapLoaded, platform).execute(url);
 
-        LoadingVH(View itemView) {
-            super(itemView);
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+
+        private void shareLayoutGone() {
+
+            isSharelayoutVisible = false;
+            ll_share_home.setBackground(null);
+            ll_share_options_home.setVisibility(View.GONE);
+        }
+
+
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, String platform) {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(mActivity.getContentResolver(), bitmap, "SantaBantaShare", null);
+            Uri imageUri = Uri.parse(path);
+
+            switch (platform) {
+                case GlobalConstants.COMMON.WHATSAPP:
+                shareableIntents.shareOnWhatsapp(imageUri);
+                    break;
+            /*    case Constants.COMMON.FACEBOOK :
+                shareableIntents.shareOnWhatsapp(imageUri);
+                break;*/
+                case GlobalConstants.COMMON.TWITTER:
+//                shareableIntents.shareOnTwi1tter(imageUri);
+                    break;
+               /* case Constants.COMMON.INSTAGRAM :
+                shareableIntents.shareOnWhatsapp(imageUri);
+                break;
+                case Constants.COMMON.PINTREST :
+                shareableIntents.shareOnWhatsapp(imageUri);
+                break;
+                case Constants.COMMON.SNAPCHAT :
+                shareableIntents.shareOnWhatsapp(imageUri);
+                break;*/
+            }
         }
     }
+
 
     private void setBreadCrumbs(HomeDetailList obj, LinearLayout llbreadcrumbs,String type) {
         TextView[] textView = new TextView[obj.getBreadcrumbs().size()];
 
-        if(llbreadcrumbs.getChildCount()>0)
+        if (llbreadcrumbs.getChildCount() > 0)
             llbreadcrumbs.removeAllViews();
 
 
-        for (int i = 0; i < obj.getBreadcrumbs().size(); i++){
+        for (int i = 0; i < obj.getBreadcrumbs().size(); i++) {
             textView[i] = new TextView(mActivity);
 
-            if (i==0){
+            if (i == 0) {
                 textView[i].setText(obj.getBreadcrumbs().get(i).getLabel());
 
-            }else {
-                textView[i].setText(" > "+obj.getBreadcrumbs().get(i).getLabel());
+            } else {
+                textView[i].setText(" > " + obj.getBreadcrumbs().get(i).getLabel());
 
             }
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -480,7 +840,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             );
             llbreadcrumbs.setOrientation(LinearLayout.HORIZONTAL);
-            params.setMargins(3,3,3,3);
+            params.setMargins(3, 3, 3, 3);
             textView[i].setLayoutParams(params);
             llbreadcrumbs.addView(textView[i]);
 
@@ -507,4 +867,11 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
         }
     }
+    class LoadingVH extends RecyclerView.ViewHolder {
+
+        LoadingVH(View itemView) {
+            super(itemView);
+        }
+    }
 }
+

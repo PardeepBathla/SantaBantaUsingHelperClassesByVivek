@@ -21,7 +21,7 @@ public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
         if (Utils.getSharedPref(AppController.getInstance()).getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
             mDivider = context.getResources().getDrawable(R.drawable.line_divider);
         } else {
-            mDivider = context.getResources().getDrawable(R.drawable.line_divider_black);
+            mDivider = context.getResources().getDrawable(R.drawable.line_divider_blackk);
         }
     }
 

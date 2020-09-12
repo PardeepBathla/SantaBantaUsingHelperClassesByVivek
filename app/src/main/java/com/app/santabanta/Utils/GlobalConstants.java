@@ -15,6 +15,7 @@ public interface GlobalConstants {
         String SHOW_MEMES_SELECED_DATA = "SHOW_MEMES_SELECED_DATA";
         String ENGLISH = "english";
         String HINDI = "hindi";
+        String SHOW_SMS_SELECED_DATA = "SHOW_SMS_SELECED_DATA";
     }
 
     interface INTENT_PARAMS{

@@ -2,14 +2,13 @@ package com.app.santabanta.Helper;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.os.Handler;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.Bundle;
 
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;

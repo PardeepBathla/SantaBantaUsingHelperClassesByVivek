@@ -292,7 +292,6 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
         }
 
         private void shareLayoutGone() {
-
             isSharelayoutVisible = false;
             ll_share_home.setBackground(null);
                ll_share_options_home.setVisibility(View.GONE);

@@ -142,7 +142,7 @@ public class SideMenuAdapter extends RecyclerView.Adapter<SideMenuAdapter.ViewHo
 
             } else {
                 if (currentSelectedItem == getAdapterPosition()) {
-                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_minus_black));
+                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_minus_black_new));
                     layoutExpand.setVisibility(View.VISIBLE);
 
                 } else {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/frameHome"
     android:background="?card_bg_color"
     android:layout_width="match_parent"
@@ -33,7 +34,8 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:padding="@dimen/_5sdp"
-                    android:src="@drawable/ic_previous_white" />
+                    android:src="@drawable/ic_previous_white"
+                    app:tint="?share_icon_color" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvSubCategory"
@@ -52,6 +54,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:padding="@dimen/_5sdp"
+                    app:tint="?share_icon_color"
                     android:src="@drawable/ic_forward_white" />
             </RelativeLayout>
 

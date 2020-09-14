@@ -40,12 +40,14 @@
         <item name="bottom_tab_bg">@color/off_black</item>
         <item name="bottom_tab_text">@color/white</item>
         <item name="icon_feather">@drawable/ic_icon_feater_plus_black</item>
+        <item name="share_icon_color">@color/white</item>
 <!--        <item name="icon_minus">@drawable/ic_minus_black</item>-->
 
     </style>
 
     <style name="AppThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="share_icon_color">@color/gery_color</item>
         <item name="colorPrimary">@color/white</item>
         <item name="android:textColor">#4d4d4d</item>
         <item name="colorPrimaryDark">@color/white</item>

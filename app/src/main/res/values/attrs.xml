@@ -2,6 +2,7 @@
 <resources>
 
     <declare-styleable name="customAttrs">
+        <attr name="share_icon_color" format="reference" />
         <attr name="menuNavigationIcon" format="reference" />
         <attr name="languageIcon" format="reference" />
         <attr name="searchIcon" format="reference" />

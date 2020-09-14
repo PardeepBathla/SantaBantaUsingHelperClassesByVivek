@@ -31,6 +31,7 @@
         <attr name="bottom_tab_text" format="reference" />
         <attr name="icon_feather" format="reference" />
         <attr name="icon_minus" format="reference" />
+        <attr name="shre_icon_color" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="DiscreteScrollView">

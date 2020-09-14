@@ -144,7 +144,7 @@
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginBottom="-10dp"
-                android:background="@drawable/share_round_corner_bg_new"
+                android:background="?share_round_icon"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:visibility="gone"

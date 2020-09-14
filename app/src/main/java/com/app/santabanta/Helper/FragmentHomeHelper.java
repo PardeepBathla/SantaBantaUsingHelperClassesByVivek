@@ -3,9 +3,13 @@ package com.app.santabanta.Helper;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.media.Image;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +28,7 @@ import com.app.santabanta.Modals.HomeDetailList;
 import com.app.santabanta.Modals.HomeDetailsModel;
 import com.app.santabanta.RestClient.Webservices;
 import com.app.santabanta.Utils.GlobalConstants;
+import com.app.santabanta.Utils.PaginationScrollListener;
 import com.app.santabanta.Utils.Utils;
 
 import org.json.JSONException;
@@ -50,6 +55,8 @@ public class FragmentHomeHelper {
     private boolean isLastPage = false;
     private int TOTAL_PAGES = 10;
     private int currentPage = PAGE_START;
+    private int pageCount, total_pages;
+
     private LinearLayoutManager mLinearLayoutManager;
     private LinearLayoutManager mSubListLayoutManager;
 
@@ -82,143 +89,6 @@ public class FragmentHomeHelper {
         });
 
     }
-
-    private void getHomeData(String language) {
-        Dialog progressDialog = Utils.getProgressDialog(mActivity);
-        progressDialog.show();
-
-        //// TODO: 9/12/20  make language dynamic
-        Call<HomeDetailsModel> call = mInterface_method.getHomeList(language, currentPage);
-        call.enqueue(new Callback<HomeDetailsModel>() {
-            @Override
-            public void onResponse(Call<HomeDetailsModel> call, Response<HomeDetailsModel> response) {
-                if (progressDialog.isShowing())
-                    progressDialog.dismiss();
-
-                if (fragmentHome.swipeRefreshLayout != null && fragmentHome.swipeRefreshLayout.isRefreshing())
-                    fragmentHome.swipeRefreshLayout.setRefreshing(false);
-
-                if (response.isSuccessful()) {
-                    mSubListLayoutManager = new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false);
-                    fragmentHome.rvSubCategory.setLayoutManager(mSubListLayoutManager);
-                    fragmentHome.rvSubCategory.setAdapter(new HomeCategoriesAdapter(response.body().getFeaturedCategories(), mActivity, new HomeCategoriesAdapter.HomeCategoryClickListener() {
-                        @Override
-                        public void onItemClicked(FeaturedCategory model) {
-                            switch (model.getType()) {
-                                case "sms":
-                                    mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "sms").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, model.getSlug()));
-                                    break;
-
-                                case "jokes":
-                                    mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, model.getSlug()));
-                                    break;
-
-                                case "memes":
-                                    mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "memes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, model.getSlug()));
-                                    break;
-                            }
-                        }
-                    }));
-
-                    if (response.body().getData() != null && response.body().getData().size() > 0) {
-                        mAdapter = new HomeItemAdapter(mActivity, response.body().getData(), FragmentHomeHelper.this);
-                        mAdapter.setHasStableIds(true);
-                        mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
-                        fragmentHome.recyclerHome.setLayoutManager(mLinearLayoutManager);
-                        fragmentHome.recyclerHome.setMediaObjects(response.body().getData());
-                        fragmentHome.recyclerHome.setAdapter(mAdapter);
-                        fragmentHome.recyclerHome.setNestedScrollingEnabled(false);
-                        fragmentHome.recyclerHome.setHasFixedSize(false);
-
-                        fragmentHome.recyclerHome.setOnScrollListener(new RecyclerView.OnScrollListener() {
-                            @Override
-                            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                                super.onScrollStateChanged(recyclerView, newState);
-                            }
-
-                            @Override
-                            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                                super.onScrolled(recyclerView, dx, dy);
-                                fragmentHome.swipeRefreshLayout.setEnabled(mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
-                            }
-                        });
-
-                        fragmentHome.ivNext.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                fragmentHome.rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findLastVisibleItemPosition() + 1);
-                            }
-                        });
-
-                        fragmentHome.ivPrevious.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                fragmentHome.rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findFirstVisibleItemPosition() - 1);
-                            }
-                        });
-//
-//                    if (currentPage < TOTAL_PAGES) {
-//                        if (mFeedAdapter != null)
-//                            mFeedAdapter.addLoadingFooter();
-//                    } else isLastPage = true;
-//
-//                    mRvFeed.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
-//                        @Override
-//                        protected void loadMoreItems() {
-//                            isLoading = true;
-//                            currentPage += 1;
-//                            new Handler().postDelayed(HomeFragmentHelper.this::loadNextPage, 1000);
-//                        }
-//
-//                        @Override
-//                        public int getTotalPageCount() {
-//                            return TOTAL_PAGES;
-//                        }
-//
-//                        @Override
-//                        public boolean isLastPage() {
-//                            return isLastPage;
-//                        }
-//
-//                        @Override
-//                        public boolean isLoading() {
-//                            return isLoading;
-//                        }
-//
-//                        @Override
-//                        public void onScrolled() {
-//
-//                        }
-//                    });
-                        fragmentHome.recyclerHome.setVisibility(View.VISIBLE);
-                        fragmentHome.tvNoDataFound.setVisibility(View.GONE);
-//                        Utils.fixRecyclerScroll(fragmentHome.recyclerHome, fragmentHome.swipeRefreshLayout, mLinearLayoutManager);
-                    } else {
-                        fragmentHome.recyclerHome.setVisibility(View.GONE);
-                        fragmentHome.tvNoDataFound.setVisibility(View.VISIBLE);
-                    }
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<HomeDetailsModel> call, Throwable t) {
-
-                if (fragmentHome.swipeRefreshLayout != null && fragmentHome.swipeRefreshLayout.isRefreshing())
-                    fragmentHome.swipeRefreshLayout.setRefreshing(false);
-
-                fragmentHome.recyclerHome.setVisibility(View.GONE);
-                fragmentHome.tvNoDataFound.setVisibility(View.VISIBLE);
-
-                if (progressDialog.isShowing())
-                    progressDialog.dismiss();
-            }
-        });
-    }
-
 
     public void addToFav(HomeDetailList obj, int position, String type, CheckBox cbLike, Dialog progressBar) {
 
@@ -335,4 +205,182 @@ public class FragmentHomeHelper {
 
     }
 
+    private void getHomeData(String language) {
+        Dialog progressDialog = Utils.getProgressDialog(mActivity);
+        progressDialog.show();
+
+        //// TODO: 9/12/20  make language dynamic
+        Call<HomeDetailsModel> call = mInterface_method.getHomeList(language, currentPage);
+        call.enqueue(new Callback<HomeDetailsModel>() {
+            @Override
+            public void onResponse(Call<HomeDetailsModel> call, Response<HomeDetailsModel> response) {
+                if (progressDialog.isShowing())
+                    progressDialog.dismiss();
+
+                if (fragmentHome.swipeRefreshLayout != null && fragmentHome.swipeRefreshLayout.isRefreshing())
+                    fragmentHome.swipeRefreshLayout.setRefreshing(false);
+
+                if (response.isSuccessful()) {
+                    mSubListLayoutManager = new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false);
+                    fragmentHome.rvSubCategory.setLayoutManager(mSubListLayoutManager);
+                    fragmentHome.rvSubCategory.setAdapter(new HomeCategoriesAdapter(response.body().getFeaturedCategories(), mActivity, new HomeCategoriesAdapter.HomeCategoryClickListener() {
+                        @Override
+                        public void onItemClicked(FeaturedCategory model) {
+                            switch (model.getType()) {
+                                case "sms":
+                                    mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "sms").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, model.getSlug()));
+                                    break;
+
+                                case "jokes":
+                                    mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, model.getSlug()));
+                                    break;
+
+                                case "memes":
+                                    mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "memes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, model.getSlug()));
+                                    break;
+                            }
+                        }
+                    }));
+
+
+                    if (response.body().getData() != null && response.body().getData().size() > 0) {
+                        mAdapter = new HomeItemAdapter(mActivity, response.body().getData(), FragmentHomeHelper.this);
+                        mAdapter.setHasStableIds(true);
+                        mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
+                        fragmentHome.recyclerHome.setLayoutManager(mLinearLayoutManager);
+                        fragmentHome.recyclerHome.setMediaObjects(response.body().getData());
+                        fragmentHome.recyclerHome.setAdapter(mAdapter);
+                        fragmentHome.recyclerHome.setNestedScrollingEnabled(false);
+                        fragmentHome.recyclerHome.setHasFixedSize(false);
+
+                        fragmentHome.recyclerHome.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                                super.onScrollStateChanged(recyclerView, newState);
+                            }
+
+                            @Override
+                            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                                super.onScrolled(recyclerView, dx, dy);
+                                fragmentHome.swipeRefreshLayout.setEnabled(mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+                            }
+                        });
+
+                        fragmentHome.ivNext.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                fragmentHome.rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findLastVisibleItemPosition() + 1);
+                            }
+                        });
+
+                        fragmentHome.ivPrevious.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                fragmentHome.rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findFirstVisibleItemPosition() - 1);
+                            }
+                        });
+//
+//                    if (currentPage < TOTAL_PAGES) {
+//                        if (mFeedAdapter != null)
+//                            mFeedAdapter.addLoadingFooter();
+//                    } else isLastPage = true;
+//
+//                    mRvFeed.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
+//                        @Override
+//                        protected void loadMoreItems() {
+//                            isLoading = true;
+//                            currentPage += 1;
+//                            new Handler().postDelayed(HomeFragmentHelper.this::loadNextPage, 1000);
+//                        }
+//
+//                        @Override
+//                        public int getTotalPageCount() {
+//                            return TOTAL_PAGES;
+//                        }
+//
+//                        @Override
+//                        public boolean isLastPage() {
+//                            return isLastPage;
+//                        }
+//
+//                        @Override
+//                        public boolean isLoading() {
+//                            return isLoading;
+//                        }
+//
+//                        @Override
+//                        public void onScrolled() {
+//
+//                        }
+//                    });
+                        fragmentHome.recyclerHome.setVisibility(View.VISIBLE);
+                        fragmentHome.tvNoDataFound.setVisibility(View.GONE);
+//                        Utils.fixRecyclerScroll(fragmentHome.recyclerHome, fragmentHome.swipeRefreshLayout, mLinearLayoutManager);
+                    } else {
+                        fragmentHome.recyclerHome.setVisibility(View.GONE);
+                        fragmentHome.tvNoDataFound.setVisibility(View.VISIBLE);
+                    }
+                }
+
+
+                if (currentPage < TOTAL_PAGES) {
+                    if (mAdapter != null)
+                        mAdapter.addLoadingFooter();
+                } else isLastPage = true;
+
+                fragmentHome.recyclerHome.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
+                    @Override
+                    protected void loadMoreItems() {
+                        isLoading = true;
+                        currentPage += 1;
+                        new Handler().postDelayed(() -> loadNextPage(), 1000);
+                    }
+
+                    @Override
+                    public int getTotalPageCount() {
+                        return TOTAL_PAGES;
+                    }
+
+                    @Override
+                    public boolean isLastPage() {
+                        return isLastPage;
+                    }
+
+                    @Override
+                    public boolean isLoading() {
+                        return isLoading;
+                    }
+
+                    @Override
+                    public void onScrolled() {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onFailure(Call<HomeDetailsModel> call, Throwable t) {
+
+                if (fragmentHome.swipeRefreshLayout != null && fragmentHome.swipeRefreshLayout.isRefreshing())
+                    fragmentHome.swipeRefreshLayout.setRefreshing(false);
+
+                if (progressDialog.isShowing())
+                    progressDialog.dismiss();
+            }
+
+
+            private void loadNextPage() {
+            }
+
+
+
+
+
+        });
+
+    }
 }

@@ -40,7 +40,8 @@
         <item name="bottom_tab_bg">@color/off_black</item>
         <item name="bottom_tab_text">@color/white</item>
         <item name="icon_feather">@drawable/ic_icon_feater_plus_black</item>
-        <item name="share_icon_color">@color/white</item>
+
+        <item name="shre_icon_color">@color/white</item>
 <!--        <item name="icon_minus">@drawable/ic_minus_black</item>-->
 
     </style>
@@ -85,7 +86,9 @@
         <item name="bottom_tab_bg">@color/light_gray</item>
         <item name="bottom_tab_text">@color/light_mode_title_color</item>
         <item name="icon_feather">@drawable/ic_icon_feather_plus</item>
-<!--        <item name="icon_minus">@drawable/ic_minus</item>-->
+        <item name="shre_icon_color">@color/gery_color</item>
+
+        <!--        <item name="icon_minus">@drawable/ic_minus</item>-->
 
     </style>
 

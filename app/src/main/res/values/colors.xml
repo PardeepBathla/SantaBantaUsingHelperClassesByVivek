@@ -10,7 +10,6 @@
     <color name="light_gray">#EBEBEB</color>
     <color name="off_black">#191919</color>
     <color name="orange">#FF4500</color>
-    <color name="gery_color">#898788</color>
     <color name="dark_grey">#787878</color>
     <color name="fb_blue">#456BAD</color>
     <color name="twitter_blue">#00B4DE</color>
@@ -40,4 +39,5 @@
     <color name="light_mode_bg">#F3F3F3</color>
     <color name="light_mode_text_color">#B2B0B1</color>
     <color name="dark_mode_text_color">#FFFFFF</color>
+    <color name="gery_color">#898788</color>
 </resources>

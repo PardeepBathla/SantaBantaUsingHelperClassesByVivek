@@ -116,7 +116,7 @@
                         android:layout_width="@dimen/_16sdp"
                         android:layout_height="@dimen/_16sdp"
                         android:src="@drawable/ic_share_alt"
-                        android:tint="?text_color" />
+                        app:tint="?shre_icon_color" />
 
                     <TextView
                         android:id="@+id/tv_share_count"

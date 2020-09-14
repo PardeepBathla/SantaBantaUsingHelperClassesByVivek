@@ -185,11 +185,17 @@ public class MainActivity extends BaseActivity {
     public void vibrate() {
 
         Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
         } else {
-            v.vibrate(100);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                v.vibrate(100);
+            }
         }
+
     }
 
     @Override
@@ -199,7 +205,6 @@ public class MainActivity extends BaseActivity {
         if (requestCode == CheckPermissions.REQUEST_CODE) {
             if (grantResults.length > 0) {
                 if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-// permission was granted :)
 
                 }
             }

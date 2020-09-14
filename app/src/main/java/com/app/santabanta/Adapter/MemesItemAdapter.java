@@ -307,14 +307,11 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     textView[i].setLayoutParams(params);
                     llbreadcrumbs.addView(textView[i]);
 
-                    int finalI = i;
+                    String slug = obj.getBreadcrumbs().get(i).getLink();
                     textView[i].setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
-                            Intent intent = new Intent();
-                            intent.setAction(GlobalConstants.COMMON.SHOW_MEMES_SELECED_DATA);
-                            intent.putExtra("id", obj.getCategories().get(0).getCategoryId());
-                            intent.putExtra("slug", obj.getBreadcrumbs().get(finalI).getLink());
-                            mCtx.sendBroadcast(intent);
+                            mCtx.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                    .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"memes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug));
                         }
                     });
                 }

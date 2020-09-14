@@ -3,10 +3,12 @@ package com.app.santabanta.Adapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +53,7 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
     private List<SmsDetailModel> mList;
     private Activity mActivity;
     private boolean isSharelayoutVisible = false;
+    private boolean isLoadingAdded = false;
 
     public SmsHomeAdapter(FragmentSmsHelper fragmentSmsHelper, List<SmsDetailModel> mList, Activity mActivity) {
         this.mList = mList;
@@ -60,12 +63,58 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
         pref = Utils.getSharedPref(mActivity);
     }
 
+    private SmsDetailModel getItem(int position) {
+        return mList.get(position);
+    }
+
+    public void removeLoadingFooter() {
+        isLoadingAdded = false;
+
+        int position = mList.size() - 1;
+        SmsDetailModel item = getItem(position);
+
+        if (item != null) {
+            mList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    public void addLoadingFooter() {
+        isLoadingAdded = true;
+        SmsDetailModel newsFeedResponse = new SmsDetailModel();
+        add(newsFeedResponse);
+    }
+
+    public void add(SmsDetailModel datu) {
+        this.mList.add(datu);
+        notifyItemInserted(mList.size() - 1);
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.home_sms_item, parent, false);
         return new SmsHomeAdapter.ViewHolder(v);
+    }
+
+    public void addAll(List<SmsDetailModel> mcList) {
+        for (SmsDetailModel mc : mcList) {
+            add(mc);
+        }
+    }
+
+    public void remove(SmsDetailModel datum) {
+        int position = mList.indexOf(datum);
+        if (position > -1) {
+            mList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
@@ -105,13 +154,9 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
                 params.setMargins(3,3,3,3);
                 textView[i].setLayoutParams(params);
                 llbreadcrumbs.addView(textView[i]);
-
-                int finalI = i;
-                textView[i].setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-
-                    }
-                });
+                String slug = obj.getBreadcrumbs().get(i).getLink();
+                textView[i].setOnClickListener(v -> mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                        .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"sms").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug)));
             }
         }
     }
@@ -195,7 +240,7 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
         }
 
         void bindData(SmsDetailModel model, int position) {
-
+            Log.e("sms_url",model.getImage());
             if (model.getFav_count() == 0) {
                 tv_like_count.setVisibility(View.GONE);
             } else {

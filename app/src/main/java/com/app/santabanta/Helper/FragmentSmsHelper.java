@@ -2,11 +2,12 @@ package com.app.santabanta.Helper;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.os.Bundle;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.lifecycle.Observer;
@@ -25,6 +26,7 @@ import com.app.santabanta.Modals.SmsFeaturedCategory;
 import com.app.santabanta.Modals.SmsResponseModel;
 import com.app.santabanta.R;
 import com.app.santabanta.RestClient.Webservices;
+import com.app.santabanta.Utils.PaginationScrollListener;
 import com.app.santabanta.Utils.ShareableIntents;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.Utils;
@@ -53,6 +55,7 @@ public class FragmentSmsHelper {
     private int TOTAL_PAGES = 10;
     private int currentPage = PAGE_START;
     private LinearLayoutManager mLinearLayoutManager;
+    private ArrayList<SmsDetailModel> mSmsList = new ArrayList<>();
 
 
     public FragmentSmsHelper(Activity mActivity, FragmentSms fragmentSms) {
@@ -71,15 +74,35 @@ public class FragmentSmsHelper {
             }
         });
 
-        getSms("English", "", "");
+        getSms(AppController.LANGUAGE_SELECTED, "", "");
     }
 
+    private void loadNextPage(){
+        Call<SmsResponseModel> call = mInterface_method.getSmsList(AppController.LANGUAGE_SELECTED, fragmentSms.subCatSlug, currentPage, fragmentSms.selectedCategory);
+        call.enqueue(new Callback<SmsResponseModel>() {
+            @Override
+            public void onResponse(Call<SmsResponseModel> call, Response<SmsResponseModel> response) {
+                if (response.isSuccessful()){
+                    if (response.body().getData() != null && response.body().getData().size()>0) {
+                        List<SmsDetailModel> list = response.body().getData();
+                        smsHomeAdapter.removeLoadingFooter();
+                        isLoading = false;
+                        smsHomeAdapter.addAll(list);
+                        if (currentPage != TOTAL_PAGES) smsHomeAdapter.addLoadingFooter();
+                        else isLastPage = true;
+                    }
+                }
+            }
 
+            @Override
+            public void onFailure(Call<SmsResponseModel> call, Throwable t) {
+
+            }
+        });
+    }
 
     private void getSms(String language, String slug, String selectedCategory) {
-        Call<SmsResponseModel> call;
-
-        call = mInterface_method.getSmsList("English", fragmentSms.subCatSlug, 1, fragmentSms.selectedCategory);
+        Call<SmsResponseModel> call = mInterface_method.getSmsList(AppController.LANGUAGE_SELECTED, fragmentSms.subCatSlug, 1, fragmentSms.selectedCategory);
 
         Dialog progressDialog = Utils.getProgressDialog(mActivity);
         progressDialog.show();
@@ -94,6 +117,7 @@ public class FragmentSmsHelper {
 
                 if (response.isSuccessful() && response.body() != null) {
 
+
                     fragmentSms.rvSubCategorySms.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false));
                     fragmentSms.rvSubCategorySms.setAdapter(new SmsCategoriesAdapter(response.body().getFeaturedCategories(), mActivity, new SmsCategoriesAdapter.HomeCategoryClickListener() {
                         @Override
@@ -102,11 +126,23 @@ public class FragmentSmsHelper {
                         }
                     }));
 
+                    if (response.body().getData() != null && response.body().getData().size() > 0){
+                        mLinearLayoutManager = new LinearLayoutManager(mActivity);
+                        fragmentSms.recyclerSms.setLayoutManager(mLinearLayoutManager);
 
-                    fragmentSms.recyclerSms.setLayoutManager(new LinearLayoutManager(mActivity));
+                        fragmentSms.recyclerSms.setVisibility(View.VISIBLE);
+                        fragmentSms.tvNoDataFound.setVisibility(View.GONE);
 
-                    smsHomeAdapter = new SmsHomeAdapter(FragmentSmsHelper.this, response.body().getData(), mActivity);
-                    fragmentSms.recyclerSms.setAdapter(smsHomeAdapter);
+                        Utils.fixRecyclerScroll(fragmentSms.recyclerSms, fragmentSms.swipeRefreshSms, mLinearLayoutManager);
+
+                        mSmsList.addAll(response.body().getData());
+                        smsHomeAdapter = new SmsHomeAdapter(FragmentSmsHelper.this, response.body().getData(), mActivity);
+                        fragmentSms.recyclerSms.setAdapter(smsHomeAdapter);
+                    }else {
+                        fragmentSms.recyclerSms.setVisibility(View.GONE);
+                        fragmentSms.tvNoDataFound.setVisibility(View.VISIBLE);
+                    }
+
                 }
             }
 
@@ -117,6 +153,9 @@ public class FragmentSmsHelper {
 
                 if (fragmentSms.swipeRefreshSms != null && fragmentSms.swipeRefreshSms.isRefreshing())
                     fragmentSms.swipeRefreshSms.setRefreshing(false);
+
+                fragmentSms.recyclerSms.setVisibility(View.GONE);
+                fragmentSms.tvNoDataFound.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -149,7 +188,7 @@ public class FragmentSmsHelper {
                                 cbLike.setClickable(true);
                                 obj.setFav_count(obj.getFav_count() + 1);
                                 setFavItemToModel(position, addFavouriteRequest, obj, jsonObject.getInt("fav_id"));
-                                Toast.makeText(mActivity, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+
                             }
                         }
 

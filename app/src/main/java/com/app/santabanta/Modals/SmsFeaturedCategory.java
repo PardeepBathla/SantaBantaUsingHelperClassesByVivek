@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class SmsFeaturedCategory  implements Parcelable {
+public class SmsFeaturedCategory  {
 
     @SerializedName("id")
     @Expose
@@ -44,30 +44,6 @@ public class SmsFeaturedCategory  implements Parcelable {
     @Expose
     private ArrayList<SmsFeaturedSubCategory> children = new ArrayList<>();
 
-    protected SmsFeaturedCategory(Parcel in) {
-        if (in.readByte() == 0) {
-            id = null;
-        } else {
-            id = in.readInt();
-        }
-        name = in.readString();
-        hindiLabel = in.readString();
-        icon = in.readString();
-        updatedAt = in.readString();
-        slug = in.readString();
-        in.readList(children, SmsFeaturedSubCategory.class.getClassLoader());
-    }
-    public static final Creator<SmsFeaturedCategory> CREATOR = new Creator<SmsFeaturedCategory>() {
-        @Override
-        public SmsFeaturedCategory createFromParcel(Parcel in) {
-            return new SmsFeaturedCategory(in);
-        }
-
-        @Override
-        public SmsFeaturedCategory[] newArray(int size) {
-            return new SmsFeaturedCategory[size];
-        }
-    };
 
     public Integer getId() {
         return id;
@@ -125,24 +101,5 @@ public class SmsFeaturedCategory  implements Parcelable {
         this.children = children;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        if (id == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(id);
-        }
-        dest.writeString(name);
-        dest.writeString(hindiLabel);
-        dest.writeString(icon);
-        dest.writeString(updatedAt);
-        dest.writeString(slug);
-        dest.writeList(children);
-    }
 }

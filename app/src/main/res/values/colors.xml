@@ -39,4 +39,5 @@
     <color name="light_mode_bg">#F3F3F3</color>
     <color name="light_mode_text_color">#B2B0B1</color>
     <color name="dark_mode_text_color">#FFFFFF</color>
+    <color name="gery_color">#898788</color>
 </resources>

@@ -36,8 +36,7 @@
                     android:id="@+id/ivMeme"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_250sdp"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/app_logo" />
+                    android:scaleType="centerCrop"/>
 
             </RelativeLayout>
 
@@ -95,7 +94,7 @@
                         android:layout_width="@dimen/_16sdp"
                         android:layout_height="@dimen/_16sdp"
                         android:src="@drawable/ic_share_alt"
-                        app:tint="?text_color" />
+                        app:tint="?shre_icon_color" />
 
                     <TextView
                         android:id="@+id/tv_share_count"

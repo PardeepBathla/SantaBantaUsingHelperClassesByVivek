@@ -3,6 +3,7 @@ package com.app.santabanta.Helper;
 import android.app.Activity;
 import android.app.Dialog;
 import android.util.Log;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
@@ -34,10 +35,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 public class FragmentJokesHelper {
 
     private static final int PAGE_START = 1;
-
+    JokesHomeAdapter mJokesHomeAdapter;
     private Activity mActivity;
     private Webservices mInterface_method = AppController.getRetroInstance().create(Webservices.class);
     private FragmentJokes fragmentJokes;
@@ -45,7 +47,6 @@ public class FragmentJokesHelper {
     private boolean isLastPage = false;
     private int TOTAL_PAGES = 10;
     private int currentPage = PAGE_START;
-    JokesHomeAdapter mJokesHomeAdapter;
 
     public FragmentJokesHelper(Activity mActivity, FragmentJokes fragmentJokes) {
         this.mActivity = mActivity;
@@ -60,55 +61,74 @@ public class FragmentJokesHelper {
             public void onRefresh() {
 //                fragmentJokes.IS_SUB_CAT = false;
 //                fragmentJokes.slugName = "";
-                getJokes(AppController.LANGUAGE_SELECTED,fragmentJokes.slugName);
+                getJokes(AppController.LANGUAGE_SELECTED, fragmentJokes.slugName);
             }
         });
 
-        getJokes(AppController.LANGUAGE_SELECTED,fragmentJokes.slugName);
+        getJokes(AppController.LANGUAGE_SELECTED, fragmentJokes.slugName);
     }
 
     private void getJokes(String language, String slug) {
         Call<JokesDataModel> call;
         if (fragmentJokes.IS_SUB_CAT)
-            call = mInterface_method.getJokesListNew(slug,1);
+            call = mInterface_method.getJokesListNew(slug, 1);
         else
-            call = mInterface_method.getJokesList(language,slug,1);
+            call = mInterface_method.getJokesList(language, slug, 1);
         Dialog dialog = Utils.getProgressDialog(mActivity);
         dialog.show();
         call.enqueue(new Callback<JokesDataModel>() {
             @Override
             public void onResponse(Call<JokesDataModel> call, Response<JokesDataModel> response) {
-                if (dialog.isShowing())
-                    dialog.dismiss();
+                try {
+                    if (dialog.isShowing())
+                        dialog.dismiss();
 
-                if (fragmentJokes.swipeRefreshJokes != null && fragmentJokes.swipeRefreshJokes.isRefreshing())
-                    fragmentJokes.swipeRefreshJokes.setRefreshing(false);
+                    if (fragmentJokes.swipeRefreshJokes != null && fragmentJokes.swipeRefreshJokes.isRefreshing())
+                        fragmentJokes.swipeRefreshJokes.setRefreshing(false);
 
-                if (response.isSuccessful()) {
-                    fragmentJokes.rvSubCategoryJokes.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false));
+                    if (response.isSuccessful()) {
+                        fragmentJokes.rvSubCategoryJokes.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false));
+                        fragmentJokes.rvSubCategoryJokes.setAdapter(new JokesCategoriesAdapter(response.body().getFeaturedCategories(), mActivity, new JokesCategoriesAdapter.JokesCategoryClickListener() {
+                            @Override
+                            public void onItemClicked(JokesFeaturedCategory model) {
+                                fragmentJokes.enterSubCategoryJoke(true, model.getSlug());
+                            }
+                        }));
 
-                    fragmentJokes.rvSubCategoryJokes.setAdapter(new JokesCategoriesAdapter(response.body().getFeaturedCategories(), mActivity, new JokesCategoriesAdapter.JokesCategoryClickListener() {
-                        @Override
-                        public void onItemClicked(JokesFeaturedCategory model) {
-                            fragmentJokes.enterSubCategoryJoke(true,model.getSlug());
+                        if (response.body().getData() != null && response.body().getData().size() > 0) {
+                            fragmentJokes.recyclerJokes.setLayoutManager(new LinearLayoutManager(mActivity));
+                            fragmentJokes.recyclerJokes.setAdapter(new JokesHomeAdapter(response.body().getData(), mActivity,FragmentJokesHelper.this));
+                            fragmentJokes.recyclerJokes.setVisibility(View.VISIBLE);
+                            fragmentJokes.tvNoDataFound.setVisibility(View.GONE);
+                        } else {
+                            fragmentJokes.recyclerJokes.setVisibility(View.GONE);
+                            fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
+
+
                         }
-                    }));
-
-                    fragmentJokes.recyclerJokes.setLayoutManager(new LinearLayoutManager(mActivity));
-
-                    mJokesHomeAdapter = new JokesHomeAdapter(response.body().getData(), mActivity,FragmentJokesHelper.this);
-                    fragmentJokes.recyclerJokes.setAdapter(mJokesHomeAdapter);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    fragmentJokes.recyclerJokes.setVisibility(View.GONE);
+                    fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
                 }
 
             }
 
             @Override
             public void onFailure(Call<JokesDataModel> call, Throwable t) {
-                if (dialog.isShowing())
-                    dialog.dismiss();
+                try {
+                    if (dialog.isShowing())
+                        dialog.dismiss();
 
-                if (fragmentJokes.swipeRefreshJokes != null && fragmentJokes.swipeRefreshJokes.isRefreshing())
-                    fragmentJokes.swipeRefreshJokes.setRefreshing(false);
+                    if (fragmentJokes.swipeRefreshJokes != null && fragmentJokes.swipeRefreshJokes.isRefreshing())
+                        fragmentJokes.swipeRefreshJokes.setRefreshing(false);
+
+                    fragmentJokes.recyclerJokes.setVisibility(View.GONE);
+                    fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -120,7 +140,6 @@ public class FragmentJokesHelper {
         addFavouriteRequest.setDeviceId(Utils.getMyDeviceId(mActivity));
         addFavouriteRequest.setType("sms");
         addFavouriteRequest.setItemId(obj.getId().intValue());
-
 
 
         Call<ResponseBody> call = null;
@@ -158,8 +177,6 @@ public class FragmentJokesHelper {
                 Log.e("onFailure", "onFailure");
             }
         });
-
-
 
 
     }

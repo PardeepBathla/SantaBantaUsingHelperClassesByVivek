@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -114,6 +115,7 @@ public class FragmentHomeHelper {
                         }
                     }));
 
+<<<<<<< HEAD
                     mAdapter = new HomeItemAdapter(mActivity,response.body().getData(),FragmentHomeHelper.this);
                     mAdapter.setHasStableIds(true);
                     mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
@@ -134,6 +136,72 @@ public class FragmentHomeHelper {
                         public boolean isLastPage() {
                             return false;
                         }
+=======
+                    if (response.body().getData()!=null && response.body().getData().size()>0){
+                        mAdapter = new HomeItemAdapter(mActivity, response.body().getData(),FragmentHomeHelper.this);
+                        mAdapter.setHasStableIds(true);
+                        mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
+                        fragmentHome.recyclerHome.setLayoutManager(mLinearLayoutManager);
+                        fragmentHome.recyclerHome.setMediaObjects(response.body().getData());
+                        fragmentHome.recyclerHome.setAdapter(mAdapter);
+                        fragmentHome.recyclerHome.setNestedScrollingEnabled(false);
+                        fragmentHome.recyclerHome.setHasFixedSize(false);
+
+                        fragmentHome.recyclerHome.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                                super.onScrollStateChanged(recyclerView, newState);
+                            }
+
+                            @Override
+                            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                                super.onScrolled(recyclerView, dx, dy);
+                                fragmentHome.swipeRefreshLayout.setEnabled(mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+                            }
+                        });
+//
+//                    if (currentPage < TOTAL_PAGES) {
+//                        if (mFeedAdapter != null)
+//                            mFeedAdapter.addLoadingFooter();
+//                    } else isLastPage = true;
+//
+//                    mRvFeed.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
+//                        @Override
+//                        protected void loadMoreItems() {
+//                            isLoading = true;
+//                            currentPage += 1;
+//                            new Handler().postDelayed(HomeFragmentHelper.this::loadNextPage, 1000);
+//                        }
+//
+//                        @Override
+//                        public int getTotalPageCount() {
+//                            return TOTAL_PAGES;
+//                        }
+//
+//                        @Override
+//                        public boolean isLastPage() {
+//                            return isLastPage;
+//                        }
+//
+//                        @Override
+//                        public boolean isLoading() {
+//                            return isLoading;
+//                        }
+//
+//                        @Override
+//                        public void onScrolled() {
+//
+//                        }
+//                    });
+                        fragmentHome.recyclerHome.setVisibility(View.VISIBLE);
+                        fragmentHome.tvNoDataFound.setVisibility(View.GONE);
+//                        Utils.fixRecyclerScroll(fragmentHome.recyclerHome, fragmentHome.swipeRefreshLayout, mLinearLayoutManager);
+                    }else {
+                        fragmentHome.recyclerHome.setVisibility(View.GONE);
+                        fragmentHome.tvNoDataFound.setVisibility(View.VISIBLE);
+                    }
+                }
+>>>>>>> cccaccca51f74dae1c0cce6e9a7e182466c32e6b
 
                         @Override
                         public boolean isLoading() {

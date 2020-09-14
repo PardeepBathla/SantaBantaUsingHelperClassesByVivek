@@ -54,7 +54,6 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:padding="@dimen/_5sdp"
-                    app:tint="?share_icon_color"
                     android:src="@drawable/ic_forward_white" />
             </RelativeLayout>
 

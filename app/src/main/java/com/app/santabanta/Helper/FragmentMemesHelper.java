@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -101,9 +102,21 @@ public class FragmentMemesHelper {
 
                     progressBar.setVisibility(View.VISIBLE);
                     memesItemAdapter.updateList((ArrayList<MemesDetailModel>) response.getData());
-                    Utils.fixRecyclerScroll(recyclerMemes,swipeContainer, mLinearLayoutManager);
+
                     recyclerMemes.setVisibility(View.VISIBLE);
                     tvNoDataFound.setVisibility(View.GONE);
+                    recyclerMemes.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                            super.onScrollStateChanged(recyclerView, newState);
+                        }
+
+                        @Override
+                        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                                super.onScrolled(recyclerView, dx, dy);
+                            swipeContainer.setEnabled(mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+                        }
+                    });
                 }else {
                     recyclerMemes.setVisibility(View.GONE);
                     tvNoDataFound.setVisibility(View.VISIBLE);

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -116,6 +117,19 @@ public class FragmentHomeHelper {
                         fragmentHome.recyclerHome.setAdapter(mAdapter);
                         fragmentHome.recyclerHome.setNestedScrollingEnabled(false);
                         fragmentHome.recyclerHome.setHasFixedSize(false);
+
+                        fragmentHome.recyclerHome.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                                super.onScrollStateChanged(recyclerView, newState);
+                            }
+
+                            @Override
+                            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                                super.onScrolled(recyclerView, dx, dy);
+                                fragmentHome.swipeRefreshLayout.setEnabled(mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+                            }
+                        });
 //
 //                    if (currentPage < TOTAL_PAGES) {
 //                        if (mFeedAdapter != null)
@@ -152,7 +166,7 @@ public class FragmentHomeHelper {
 //                    });
                         fragmentHome.recyclerHome.setVisibility(View.VISIBLE);
                         fragmentHome.tvNoDataFound.setVisibility(View.GONE);
-                        Utils.fixRecyclerScroll(fragmentHome.recyclerHome, fragmentHome.swipeRefreshLayout, mLinearLayoutManager);
+//                        Utils.fixRecyclerScroll(fragmentHome.recyclerHome, fragmentHome.swipeRefreshLayout, mLinearLayoutManager);
                     }else {
                         fragmentHome.recyclerHome.setVisibility(View.GONE);
                         fragmentHome.tvNoDataFound.setVisibility(View.VISIBLE);

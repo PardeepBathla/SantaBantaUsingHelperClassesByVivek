@@ -152,7 +152,7 @@ public class MainActivityHelper {
                     openMemesFragment(slug);
                 }
             }));
-            recyclerViewItems.addItemDecoration(new SimpleDividerItemDecoration(mActivity));
+//            recyclerViewItems.addItemDecoration(new SimpleDividerItemDecoration(mActivity));
         });
 
     }

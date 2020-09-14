@@ -13,7 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -47,6 +46,7 @@ import retrofit2.Response;
 public class FragmentHomeHelper {
 
     private static final int PAGE_START = 1;
+    int mFirst = 0, mLast = 0;
     private Activity mActivity;
     private Webservices mInterface_method = AppController.getRetroInstance().create(Webservices.class);
     private FragmentHome fragmentHome;
@@ -58,6 +58,7 @@ public class FragmentHomeHelper {
     private int pageCount, total_pages;
 
     private LinearLayoutManager mLinearLayoutManager;
+    private LinearLayoutManager mSubListLayoutManager;
 
     public FragmentHomeHelper(Activity mActivity, FragmentHome fragmentHome) {
         this.mActivity = mActivity;
@@ -74,6 +75,19 @@ public class FragmentHomeHelper {
             }
         });
         getHomeData(AppController.LANGUAGE_SELECTED);
+        fragmentHome.ivNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        fragmentHome.ivPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
+
     }
 
     private void getHomeData(String language) {
@@ -92,104 +106,145 @@ public class FragmentHomeHelper {
                     fragmentHome.swipeRefreshLayout.setRefreshing(false);
 
                 if (response.isSuccessful()) {
-                    fragmentHome.rvSubCategory.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false));
+                    mSubListLayoutManager = new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false);
+                    fragmentHome.rvSubCategory.setLayoutManager(mSubListLayoutManager);
                     fragmentHome.rvSubCategory.setAdapter(new HomeCategoriesAdapter(response.body().getFeaturedCategories(), mActivity, new HomeCategoriesAdapter.HomeCategoryClickListener() {
                         @Override
                         public void onItemClicked(FeaturedCategory model) {
                             switch (model.getType()) {
                                 case "sms":
                                     mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"sms").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,model.getSlug()));
+                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "sms").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, model.getSlug()));
                                     break;
 
                                 case "jokes":
                                     mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,model.getSlug()));
+                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, model.getSlug()));
                                     break;
 
                                 case "memes":
                                     mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"memes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,model.getSlug()));
+                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "memes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, model.getSlug()));
                                     break;
                             }
                         }
                     }));
 
 
-                    mAdapter = new HomeItemAdapter(mActivity,response.body().getData(),FragmentHomeHelper.this);
-                    mAdapter.setHasStableIds(true);
-                    mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
-                    fragmentHome.recyclerHome.setLayoutManager(mLinearLayoutManager);
-                    fragmentHome.recyclerHome.setMediaObjects(response.body().getData());
-                   /* fragmentHome.recyclerHome.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
-                        @Override
-                        protected void loadMoreItems() {
-                            new Handler().postDelayed(() -> loadNextPage(), 1000);
-                        }
+                    if (response.body().getData() != null && response.body().getData().size() > 0) {
+                        mAdapter = new HomeItemAdapter(mActivity, response.body().getData(), FragmentHomeHelper.this);
+                        mAdapter.setHasStableIds(true);
+                        mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
+                        fragmentHome.recyclerHome.setLayoutManager(mLinearLayoutManager);
+                        fragmentHome.recyclerHome.setMediaObjects(response.body().getData());
+                        fragmentHome.recyclerHome.setAdapter(mAdapter);
+                        fragmentHome.recyclerHome.setNestedScrollingEnabled(false);
+                        fragmentHome.recyclerHome.setHasFixedSize(false);
 
-                        @Override
-                        public int getTotalPageCount() {
-                            return total_pages;
-                        }
+                        fragmentHome.recyclerHome.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                                super.onScrollStateChanged(recyclerView, newState);
+                            }
 
-                        @Override
-                        public boolean isLastPage() {
-                            return false;
-                        }
+                            @Override
+                            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                                super.onScrolled(recyclerView, dx, dy);
+                                fragmentHome.swipeRefreshLayout.setEnabled(mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+                            }
+                        });
 
+                        fragmentHome.ivNext.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                fragmentHome.rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findLastVisibleItemPosition() + 1);
+                            }
+                        });
 
-                        @Override
-                        public boolean isLoading() {
-                            return false;
-                        }
-
-
-                        @Override
-                        public void onScrolled() {
-
-                        }
-                    });*/
-                    fragmentHome.recyclerHome.setAdapter(mAdapter);
-                    fragmentHome.recyclerHome.setNestedScrollingEnabled(false);
-                    fragmentHome.recyclerHome.setHasFixedSize(false);
-
-                    //TODO uncomment when pagination values comes in api response
-
-                    if (currentPage < TOTAL_PAGES) {
-                        if (mAdapter != null)
-                            mAdapter.addLoadingFooter();
-                    } else isLastPage = true;
-
-                    fragmentHome.recyclerHome.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
-                        @Override
-                        protected void loadMoreItems() {
-                            isLoading = true;
-                            currentPage += 1;
-                            new Handler().postDelayed(() -> loadNextPage(), 1000);
-                        }
-
-                        @Override
-                        public int getTotalPageCount() {
-                            return TOTAL_PAGES;
-                        }
-
-                        @Override
-                        public boolean isLastPage() {
-                            return isLastPage;
-                        }
-
-                        @Override
-                        public boolean isLoading() {
-                            return isLoading;
-                        }
-
-                        @Override
-                        public void onScrolled() {
-
-                        }
-                    });
-
+                        fragmentHome.ivPrevious.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                fragmentHome.rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findFirstVisibleItemPosition() - 1);
+                            }
+                        });
+//
+//                    if (currentPage < TOTAL_PAGES) {
+//                        if (mFeedAdapter != null)
+//                            mFeedAdapter.addLoadingFooter();
+//                    } else isLastPage = true;
+//
+//                    mRvFeed.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
+//                        @Override
+//                        protected void loadMoreItems() {
+//                            isLoading = true;
+//                            currentPage += 1;
+//                            new Handler().postDelayed(HomeFragmentHelper.this::loadNextPage, 1000);
+//                        }
+//
+//                        @Override
+//                        public int getTotalPageCount() {
+//                            return TOTAL_PAGES;
+//                        }
+//
+//                        @Override
+//                        public boolean isLastPage() {
+//                            return isLastPage;
+//                        }
+//
+//                        @Override
+//                        public boolean isLoading() {
+//                            return isLoading;
+//                        }
+//
+//                        @Override
+//                        public void onScrolled() {
+//
+//                        }
+//                    });
+                        fragmentHome.recyclerHome.setVisibility(View.VISIBLE);
+                        fragmentHome.tvNoDataFound.setVisibility(View.GONE);
+//                        Utils.fixRecyclerScroll(fragmentHome.recyclerHome, fragmentHome.swipeRefreshLayout, mLinearLayoutManager);
+                    } else {
+                        fragmentHome.recyclerHome.setVisibility(View.GONE);
+                        fragmentHome.tvNoDataFound.setVisibility(View.VISIBLE);
+                    }
                 }
+
+
+                if (currentPage < TOTAL_PAGES) {
+                    if (mAdapter != null)
+                        mAdapter.addLoadingFooter();
+                } else isLastPage = true;
+
+                fragmentHome.recyclerHome.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
+                    @Override
+                    protected void loadMoreItems() {
+                        isLoading = true;
+                        currentPage += 1;
+                        new Handler().postDelayed(() -> loadNextPage(), 1000);
+                    }
+
+                    @Override
+                    public int getTotalPageCount() {
+                        return TOTAL_PAGES;
+                    }
+
+                    @Override
+                    public boolean isLastPage() {
+                        return isLastPage;
+                    }
+
+                    @Override
+                    public boolean isLoading() {
+                        return isLoading;
+                    }
+
+                    @Override
+                    public void onScrolled() {
+
+                    }
+                });
+
             }
 
             @Override
@@ -201,131 +256,126 @@ public class FragmentHomeHelper {
                 if (progressDialog.isShowing())
                     progressDialog.dismiss();
             }
-        });
-    }
-
-    private void loadNextPage() {
-        pageCount++;
-        if (pageCount <= total_pages) {
-           // syncManager.sendJsonToServer(Const.API_BLOGS_LIST + "?page=" + pageCount + "&per-page=25", null, this);
-        }
-    }
-
-    public void addToFav(HomeDetailList obj, int position, String type, CheckBox cbLike, Dialog progressBar) {
-
-        AddFavouriteRequest addFavouriteRequest = new AddFavouriteRequest();
-        addFavouriteRequest.setDeviceId(Utils.getMyDeviceId(mActivity));
-        addFavouriteRequest.setType(type);
-        addFavouriteRequest.setItemId(obj.getId().intValue());
 
 
-        Call<ResponseBody> call = null;
+            private void loadNextPage() {
+            }
 
-        call = mInterface_method.saveFavouriteJoke(addFavouriteRequest);
 
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response != null) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("status")) {
-                            String status = jsonObject.getString("status");
+            public void addToFav(HomeDetailList obj, int position, String type, CheckBox cbLike, Dialog progressBar) {
 
-                            if (status.equals("success")) {
-                                progressBar.dismiss();
-                                cbLike.setClickable(true);
-                                     obj.setFavCount(obj.getFavCount()+1);
-                                setFavItemToModel(position, addFavouriteRequest, obj, jsonObject.getInt("fav_id"));
-                                Toast.makeText(mActivity, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                AddFavouriteRequest addFavouriteRequest = new AddFavouriteRequest();
+                addFavouriteRequest.setDeviceId(Utils.getMyDeviceId(mActivity));
+                addFavouriteRequest.setType(type);
+                addFavouriteRequest.setItemId(obj.getId().intValue());
+
+
+                Call<ResponseBody> call = null;
+
+                call = mInterface_method.saveFavouriteJoke(addFavouriteRequest);
+
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response != null) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response.body().string());
+                                if (jsonObject.has("status")) {
+                                    String status = jsonObject.getString("status");
+
+                                    if (status.equals("success")) {
+                                        progressBar.dismiss();
+                                        cbLike.setClickable(true);
+                                        obj.setFavCount(obj.getFavCount() + 1);
+                                        setFavItemToModel(position, addFavouriteRequest, obj, jsonObject.getInt("fav_id"));
+                                        Toast.makeText(mActivity, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                            } catch (IOException | JSONException e) {
+                                e.printStackTrace();
                             }
                         }
 
-                    } catch (IOException | JSONException e) {
-                        e.printStackTrace();
                     }
-                }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.e("onFailure", "onFailure");
+                    }
+                });
+
 
             }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("onFailure", "onFailure");
-            }
-        });
+            public void removeFromFav(HomeDetailList obj, int id, int position, CheckBox cbLike, Dialog progressBar) {
 
 
+                Call<ResponseBody> call = null;
 
+                call = mInterface_method.removeJokeFromFav(id);
 
-    }
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response != null) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response.body().string());
+                                if (jsonObject.has("status")) {
+                                    String status = jsonObject.getString("status");
+                                    if (status.equals("success")) {
+                                        cbLike.setClickable(true);
+                                        progressBar.dismiss();
+                                        removeFavItemFromModel(position, obj);
+                                        Toast.makeText(mActivity, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
 
-    private void setFavItemToModel(int position, AddFavouriteRequest addFavouriteRequest, HomeDetailList obj, int fav_id) {
-        Favourite homeFavouriteList = new Favourite();
-        homeFavouriteList.setDeviceId(addFavouriteRequest.getDeviceId());
-        homeFavouriteList.setItemId(String.valueOf(addFavouriteRequest.getItemId()));
-        homeFavouriteList.setId(fav_id);
-
-        ArrayList<HomeDetailList> pagedLists = null;
-        pagedLists = mAdapter.getCurrentList();
-        if (obj.getFavourites() != null && obj.getFavourites().size() != 0) {
-            obj.getFavourites().add(0, homeFavouriteList);
-        } else {
-            List<Favourite> favouriteModelList = new ArrayList<>();
-            favouriteModelList.add(0, homeFavouriteList);
-            obj.setFavourites(favouriteModelList);
-        }
-        pagedLists.get(position).setFavourites(obj.getFavourites());
-        mAdapter.updateList(pagedLists); //paging method
-
-    }
-
-    public void removeFromFav(HomeDetailList obj, int id, int position, CheckBox cbLike, Dialog progressBar) {
-
-
-        Call<ResponseBody> call = null;
-
-        call = mInterface_method.removeJokeFromFav(id);
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response != null) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("status")) {
-                            String status = jsonObject.getString("status");
-                            if (status.equals("success")) {
-                                cbLike.setClickable(true);
-                                progressBar.dismiss();
-                                removeFavItemFromModel(position, obj);
-                                Toast.makeText(mActivity, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                            } catch (IOException | JSONException e) {
+                                e.printStackTrace();
                             }
                         }
 
-                    } catch (IOException | JSONException e) {
-                        e.printStackTrace();
                     }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.e("onFailure", "onFailure");
+                    }
+                });
+
+
+            }
+
+            private void removeFavItemFromModel(int position, HomeDetailList obj) {
+                ArrayList<HomeDetailList> pagedLists = null;
+                pagedLists = mAdapter.getCurrentList();
+
+                pagedLists.get(position).setFavourites(null);
+                obj.setFavCount(obj.getFavCount() - 1);
+                mAdapter.updateList(pagedLists); //paging method
+
+            }
+            private void setFavItemToModel(int position, AddFavouriteRequest addFavouriteRequest, HomeDetailList obj, int fav_id) {
+                Favourite homeFavouriteList = new Favourite();
+                homeFavouriteList.setDeviceId(addFavouriteRequest.getDeviceId());
+                homeFavouriteList.setItemId(String.valueOf(addFavouriteRequest.getItemId()));
+                homeFavouriteList.setId(fav_id);
+
+                ArrayList<HomeDetailList> pagedLists = null;
+                pagedLists = mAdapter.getCurrentList();
+                if (obj.getFavourites() != null && obj.getFavourites().size() != 0) {
+                    obj.getFavourites().add(0, homeFavouriteList);
+                } else {
+                    List<Favourite> favouriteModelList = new ArrayList<>();
+                    favouriteModelList.add(0, homeFavouriteList);
+                    obj.setFavourites(favouriteModelList);
                 }
+                pagedLists.get(position).setFavourites(obj.getFavourites());
+                mAdapter.updateList(pagedLists); //paging method
 
             }
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("onFailure", "onFailure");
-            }
         });
 
-
     }
-
-    private void removeFavItemFromModel(int position, HomeDetailList obj) {
-        ArrayList<HomeDetailList> pagedLists = null;
-        pagedLists = mAdapter.getCurrentList();
-
-        pagedLists.get(position).setFavourites(null);
-        obj.setFavCount(obj.getFavCount() - 1);
-        mAdapter.updateList(pagedLists); //paging method
-
-    }
-
 }

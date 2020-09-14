@@ -47,6 +47,7 @@ public class FragmentJokesHelper {
     private boolean isLastPage = false;
     private int TOTAL_PAGES = 10;
     private int currentPage = PAGE_START;
+    private LinearLayoutManager mSubListLayoutManager;
 
     public FragmentJokesHelper(Activity mActivity, FragmentJokes fragmentJokes) {
         this.mActivity = mActivity;
@@ -87,7 +88,8 @@ public class FragmentJokesHelper {
                         fragmentJokes.swipeRefreshJokes.setRefreshing(false);
 
                     if (response.isSuccessful()) {
-                        fragmentJokes.rvSubCategoryJokes.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false));
+                        mSubListLayoutManager = new LinearLayoutManager(mActivity,RecyclerView.HORIZONTAL,false);
+                        fragmentJokes.rvSubCategoryJokes.setLayoutManager(mSubListLayoutManager);
                         fragmentJokes.rvSubCategoryJokes.setAdapter(new JokesCategoriesAdapter(response.body().getFeaturedCategories(), mActivity, new JokesCategoriesAdapter.JokesCategoryClickListener() {
                             @Override
                             public void onItemClicked(JokesFeaturedCategory model) {
@@ -97,15 +99,31 @@ public class FragmentJokesHelper {
 
                         if (response.body().getData() != null && response.body().getData().size() > 0) {
                             fragmentJokes.recyclerJokes.setLayoutManager(new LinearLayoutManager(mActivity));
-                            fragmentJokes.recyclerJokes.setAdapter(new JokesHomeAdapter(response.body().getData(), mActivity,FragmentJokesHelper.this));
+                            mJokesHomeAdapter = new JokesHomeAdapter(response.body().getData(),mActivity, FragmentJokesHelper.this);
+                            fragmentJokes.recyclerJokes.setAdapter(mJokesHomeAdapter);
                             fragmentJokes.recyclerJokes.setVisibility(View.VISIBLE);
                             fragmentJokes.tvNoDataFound.setVisibility(View.GONE);
+                            fragmentJokes.ivNext.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    fragmentJokes.rvSubCategoryJokes.getLayoutManager().scrollToPosition(mSubListLayoutManager.findLastVisibleItemPosition() + 1);
+                                }
+                            });
+
+                            fragmentJokes.ivPrevious.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    fragmentJokes.rvSubCategoryJokes.getLayoutManager().scrollToPosition(mSubListLayoutManager.findFirstVisibleItemPosition() - 1);
+                                }
+                            });
                         } else {
                             fragmentJokes.recyclerJokes.setVisibility(View.GONE);
                             fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
 
 
                         }
+
+
                     }
                 }catch (Exception e){
                     e.printStackTrace();

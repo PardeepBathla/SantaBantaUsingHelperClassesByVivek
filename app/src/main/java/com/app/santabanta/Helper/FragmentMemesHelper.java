@@ -3,9 +3,11 @@ package com.app.santabanta.Helper;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -61,6 +63,9 @@ public class FragmentMemesHelper {
     private LinearLayoutManager mLinearLayoutManager;
     private MemesExoPlayerRecyclerView recyclerMemes;
     private RecyclerView rvSubCategory;
+    private LinearLayoutManager mSubListLayoutManager;
+    private ImageView ivPrevious;
+    private ImageView ivNext;
 
     public FragmentMemesHelper(Activity context, FragmentMemes mFragment, View view) {
         this.mFragment = mFragment;
@@ -130,6 +135,8 @@ public class FragmentMemesHelper {
 
     private void findViews() {
 
+        ivNext = view.findViewById(R.id.ivNext);
+        ivPrevious = view.findViewById(R.id.ivPrevious);
         rvSubCategory = view.findViewById(R.id.rvSubCategory);
         tvNoDataFound = view.findViewById(R.id.tvNoDataFound);
         progressBar = view.findViewById(R.id.progress_bar);
@@ -161,7 +168,21 @@ public class FragmentMemesHelper {
                     if (response.body() != null) {
                         memesCallback.onMemesFetched(response.body());
 
-                        rvSubCategory.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false));
+                        mSubListLayoutManager = new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false);
+                        rvSubCategory.setLayoutManager(mSubListLayoutManager);
+                        ivNext.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findLastVisibleItemPosition() + 1);
+                            }
+                        });
+
+                        ivPrevious.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findFirstVisibleItemPosition() - 1);
+                            }
+                        });
                         rvSubCategory.setAdapter(new MemesCategoryAdapter(context, response.body().getFeaturedCategories(), new MemesCategoryAdapter.MemeCategoryClickListener() {
                             @Override
                             public void onClicked(MemesFeaturedCategory model) {

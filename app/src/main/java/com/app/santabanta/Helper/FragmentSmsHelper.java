@@ -56,6 +56,7 @@ public class FragmentSmsHelper {
     private int currentPage = PAGE_START;
     private LinearLayoutManager mLinearLayoutManager;
     private ArrayList<SmsDetailModel> mSmsList = new ArrayList<>();
+    private LinearLayoutManager mSubListLayoutManager;
 
 
     public FragmentSmsHelper(Activity mActivity, FragmentSms fragmentSms) {
@@ -117,8 +118,8 @@ public class FragmentSmsHelper {
 
                 if (response.isSuccessful() && response.body() != null) {
 
-
-                    fragmentSms.rvSubCategorySms.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false));
+                    mSubListLayoutManager = new LinearLayoutManager(mActivity,RecyclerView.HORIZONTAL,false);
+                    fragmentSms.rvSubCategorySms.setLayoutManager(mSubListLayoutManager);
                     fragmentSms.rvSubCategorySms.setAdapter(new SmsCategoriesAdapter(response.body().getFeaturedCategories(), mActivity, new SmsCategoriesAdapter.HomeCategoryClickListener() {
                         @Override
                         public void onItemClicked(SmsFeaturedCategory model) {
@@ -138,6 +139,20 @@ public class FragmentSmsHelper {
                         mSmsList.addAll(response.body().getData());
                         smsHomeAdapter = new SmsHomeAdapter(FragmentSmsHelper.this, response.body().getData(), mActivity);
                         fragmentSms.recyclerSms.setAdapter(smsHomeAdapter);
+
+                        fragmentSms.ivNext.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                fragmentSms.rvSubCategorySms.getLayoutManager().scrollToPosition(mSubListLayoutManager.findLastVisibleItemPosition() + 1);
+                            }
+                        });
+
+                        fragmentSms.ivPrevious.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                fragmentSms.rvSubCategorySms.getLayoutManager().scrollToPosition(mSubListLayoutManager.findFirstVisibleItemPosition() - 1);
+                            }
+                        });
                     }else {
                         fragmentSms.recyclerSms.setVisibility(View.GONE);
                         fragmentSms.tvNoDataFound.setVisibility(View.VISIBLE);

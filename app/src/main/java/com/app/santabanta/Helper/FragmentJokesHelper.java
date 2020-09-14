@@ -2,6 +2,7 @@ package com.app.santabanta.Helper;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -21,6 +22,8 @@ import com.app.santabanta.Modals.JokesDetailModel;
 import com.app.santabanta.Modals.JokesFavouriteModel;
 import com.app.santabanta.Modals.JokesFeaturedCategory;
 import com.app.santabanta.RestClient.Webservices;
+import com.app.santabanta.Utils.GlobalConstants;
+import com.app.santabanta.Utils.PaginationScrollListener;
 import com.app.santabanta.Utils.Utils;
 
 import org.json.JSONException;
@@ -47,7 +50,9 @@ public class FragmentJokesHelper {
     private boolean isLastPage = false;
     private int TOTAL_PAGES = 10;
     private int currentPage = PAGE_START;
+    private int pageCount, total_pages, next_page;
     private LinearLayoutManager mSubListLayoutManager;
+    private LinearLayoutManager mLinearLayoutManager;
 
     public FragmentJokesHelper(Activity mActivity, FragmentJokes fragmentJokes) {
         this.mActivity = mActivity;
@@ -68,13 +73,20 @@ public class FragmentJokesHelper {
 
         getJokes(AppController.LANGUAGE_SELECTED, fragmentJokes.slugName);
     }
-
+    private void loadNextPage() {
+        if (isLoading) {
+            if (currentPage <= total_pages) {
+                getJokes(GlobalConstants.COMMON.LANGUAGE_SELECTED, fragmentJokes.slugName);
+                isLoading = false;
+            }
+        }
+    }
     private void getJokes(String language, String slug) {
         Call<JokesDataModel> call;
         if (fragmentJokes.IS_SUB_CAT)
-            call = mInterface_method.getJokesListNew(slug, 1);
+            call = mInterface_method.getJokesListNew(slug, currentPage);
         else
-            call = mInterface_method.getJokesList(language, slug, 1);
+            call = mInterface_method.getJokesList(language, slug, currentPage);
         Dialog dialog = Utils.getProgressDialog(mActivity);
         dialog.show();
         call.enqueue(new Callback<JokesDataModel>() {
@@ -97,9 +109,43 @@ public class FragmentJokesHelper {
                             }
                         }));
 
+                        total_pages = response.body().getTotal();
+                        currentPage =response.body().getCurrentPage();
+                        currentPage = currentPage+1;
+
                         if (response.body().getData() != null && response.body().getData().size() > 0) {
-                            fragmentJokes.recyclerJokes.setLayoutManager(new LinearLayoutManager(mActivity));
+                            mLinearLayoutManager = new LinearLayoutManager(mActivity,RecyclerView.VERTICAL,false);
+                            fragmentJokes.recyclerJokes.setLayoutManager(mLinearLayoutManager);
                             mJokesHomeAdapter = new JokesHomeAdapter(response.body().getData(),mActivity, FragmentJokesHelper.this);
+                            fragmentJokes.recyclerJokes.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
+                                @Override
+                                protected void loadMoreItems() {
+                                    isLoading = true;
+                                    new Handler().postDelayed(() -> loadNextPage(), 1000);
+                                }
+
+                                @Override
+                                public int getTotalPageCount() {
+                                    return total_pages;
+                                }
+
+                                @Override
+                                public boolean isLastPage() {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean isLoading() {
+                                    return false;
+                                }
+
+
+                                @Override
+                                public void onScrolled() {
+
+                                }
+                            });
+
                             fragmentJokes.recyclerJokes.setAdapter(mJokesHomeAdapter);
                             fragmentJokes.recyclerJokes.setVisibility(View.VISIBLE);
                             fragmentJokes.tvNoDataFound.setVisibility(View.GONE);
@@ -264,7 +310,6 @@ public class FragmentJokesHelper {
     private void removeFavItemFromModel(int position, JokesDetailModel obj) {
         ArrayList<JokesDetailModel> pagedLists = null;
         pagedLists = mJokesHomeAdapter.getCurrentList();
-
         pagedLists.get(position).setmFavourite(null);
         obj.setFav_count(obj.getFav_count() - 1);
         mJokesHomeAdapter.updateList(pagedLists);

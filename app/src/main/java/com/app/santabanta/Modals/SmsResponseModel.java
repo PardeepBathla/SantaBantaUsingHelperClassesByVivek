@@ -10,13 +10,13 @@ public class SmsResponseModel {
 
 
     @SerializedName("current_page")
-    private Long mCurrentPage;
+    private int mCurrentPage;
     @SerializedName("data")
     private List<SmsDetailModel> mData;
     @SerializedName("first_page_url")
     private String mFirstPageUrl;
     @SerializedName("from")
-    private Long mFrom;
+    private int mFrom;
     @SerializedName("last_page")
     private int mLastPage;
     @SerializedName("last_page_url")
@@ -26,13 +26,13 @@ public class SmsResponseModel {
     @SerializedName("path")
     private String mPath;
     @SerializedName("per_page")
-    private Long mPerPage;
+    private int mPerPage;
     @SerializedName("prev_page_url")
     private Object mPrevPageUrl;
     @SerializedName("to")
-    private Long mTo;
+    private int mTo;
     @SerializedName("total")
-    private Long mTotal;
+    private int mTotal;
 
     public ArrayList<SmsFeaturedCategory> getFeaturedCategories() {
         return featuredCategories;
@@ -46,7 +46,7 @@ public class SmsResponseModel {
     @Expose
     private ArrayList<SmsFeaturedCategory> featuredCategories = null;
 
-    public Long getCurrentPage() {
+    public int getCurrentPage() {
         return mCurrentPage;
     }
 
@@ -58,7 +58,7 @@ public class SmsResponseModel {
         return mFirstPageUrl;
     }
 
-    public Long getFrom() {
+    public int getFrom() {
         return mFrom;
     }
 
@@ -78,7 +78,7 @@ public class SmsResponseModel {
         return mPath;
     }
 
-    public Long getPerPage() {
+    public int getPerPage() {
         return mPerPage;
     }
 
@@ -86,30 +86,30 @@ public class SmsResponseModel {
         return mPrevPageUrl;
     }
 
-    public Long getTo() {
+    public int getTo() {
         return mTo;
     }
 
-    public Long getTotal() {
+    public int getTotal() {
         return mTotal;
     }
 
     public static class Builder {
 
-        private Long mCurrentPage;
+        private int mCurrentPage;
         private List<SmsDetailModel> mData;
         private String mFirstPageUrl;
-        private Long mFrom;
+        private int mFrom;
         private int mLastPage;
         private String mLastPageUrl;
         private String mNextPageUrl;
         private String mPath;
-        private Long mPerPage;
+        private int mPerPage;
         private Object mPrevPageUrl;
-        private Long mTo;
-        private Long mTotal;
+        private int mTo;
+        private int mTotal;
 
-        public SmsResponseModel.Builder withCurrentPage(Long currentPage) {
+        public SmsResponseModel.Builder withCurrentPage(int currentPage) {
             mCurrentPage = currentPage;
             return this;
         }
@@ -124,7 +124,7 @@ public class SmsResponseModel {
             return this;
         }
 
-        public SmsResponseModel.Builder withFrom(Long from) {
+        public SmsResponseModel.Builder withFrom(int from) {
             mFrom = from;
             return this;
         }
@@ -149,7 +149,7 @@ public class SmsResponseModel {
             return this;
         }
 
-        public SmsResponseModel.Builder withPerPage(Long perPage) {
+        public SmsResponseModel.Builder withPerPage(int perPage) {
             mPerPage = perPage;
             return this;
         }
@@ -159,12 +159,12 @@ public class SmsResponseModel {
             return this;
         }
 
-        public SmsResponseModel.Builder withTo(Long to) {
+        public SmsResponseModel.Builder withTo(int to) {
             mTo = to;
             return this;
         }
 
-        public SmsResponseModel.Builder withTotal(Long total) {
+        public SmsResponseModel.Builder withTotal(int total) {
             mTotal = total;
             return this;
         }

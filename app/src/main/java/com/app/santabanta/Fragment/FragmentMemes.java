@@ -24,7 +24,6 @@ import butterknife.ButterKnife;
 import static com.app.santabanta.Utils.GlobalConstants.INTENT_PARAMS.SHOW_MEMES_FRAGMENT;
 
 public class FragmentMemes extends BaseFragment {
-
     public  boolean IS_FROM_MENU = false;
     public  String subcat_slug_name = "";
     private static String TAG = FragmentMemes.class.getSimpleName();

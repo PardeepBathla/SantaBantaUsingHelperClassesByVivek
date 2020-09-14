@@ -109,6 +109,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
+        if (mList.get(position).getType()!=null){
         String type = mList.get(position).getType();
         if (type.equalsIgnoreCase("jokes"))
             return JOKE_POST;
@@ -119,6 +120,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return MEMES_VIDEO_POST;
             } else
                 return MEMES_IMAGE_POST;
+        }
         }
         return 0;
 
@@ -698,7 +700,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
 
-            if (model.getFavCount() == 0) {
+            if (model.getFavCount()!=null && model.getFavCount() == 0) {
                 tv_like_count.setVisibility(View.GONE);
             } else {
                 tv_like_count.setVisibility(View.VISIBLE);
@@ -1141,53 +1143,55 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
     private void setBreadCrumbs(HomeDetailList obj, LinearLayout llbreadcrumbs,String type) {
-        TextView[] textView = new TextView[obj.getBreadcrumbs().size()];
+        if (obj.getBreadcrumbs()!=null) {
+            TextView[] textView = new TextView[obj.getBreadcrumbs().size()];
 
-        if (llbreadcrumbs.getChildCount() > 0)
-            llbreadcrumbs.removeAllViews();
+            if (llbreadcrumbs.getChildCount() > 0)
+                llbreadcrumbs.removeAllViews();
 
 
-        for (int i = 0; i < obj.getBreadcrumbs().size(); i++) {
-            textView[i] = new TextView(mActivity);
+            for (int i = 0; i < obj.getBreadcrumbs().size(); i++) {
+                textView[i] = new TextView(mActivity);
 
-            if (i == 0) {
-                textView[i].setText(obj.getBreadcrumbs().get(i).getLabel());
+                if (i == 0) {
+                    textView[i].setText(obj.getBreadcrumbs().get(i).getLabel());
 
-            } else {
-                textView[i].setText(" > " + obj.getBreadcrumbs().get(i).getLabel());
+                } else {
+                    textView[i].setText(" > " + obj.getBreadcrumbs().get(i).getLabel());
 
-            }
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-
-            );
-            llbreadcrumbs.setOrientation(LinearLayout.HORIZONTAL);
-            params.setMargins(3, 3, 3, 3);
-            textView[i].setLayoutParams(params);
-            llbreadcrumbs.addView(textView[i]);
-
-            String slug = obj.getBreadcrumbs().get(i).getLink();
-            textView[i].setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    switch (type){
-                        case "sms":
-                            mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                    .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"sms").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug));
-                            break;
-
-                        case "jokes":
-                            mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                    .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug));
-                            break;
-
-                        case "memes":
-                            mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                    .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"memes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug));
-                            break;
-                    }
                 }
-            });
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+
+                );
+                llbreadcrumbs.setOrientation(LinearLayout.HORIZONTAL);
+                params.setMargins(3, 3, 3, 3);
+                textView[i].setLayoutParams(params);
+                llbreadcrumbs.addView(textView[i]);
+
+                String slug = obj.getBreadcrumbs().get(i).getLink();
+                textView[i].setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        switch (type) {
+                            case "sms":
+                                mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                        .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "sms").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, slug));
+                                break;
+
+                            case "jokes":
+                                mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                        .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, slug));
+                                break;
+
+                            case "memes":
+                                mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                        .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "memes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, slug));
+                                break;
+                        }
+                    }
+                });
+            }
         }
     }
     class LoadingVH extends RecyclerView.ViewHolder {

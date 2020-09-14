@@ -3,13 +3,10 @@ package com.app.santabanta.Helper;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,17 +42,17 @@ import retrofit2.Response;
 
 public class FragmentHomeHelper {
 
-    private static final int PAGE_START = 1;
+    private static final int PAGE_START = 0;
     int mFirst = 0, mLast = 0;
     private Activity mActivity;
     private Webservices mInterface_method = AppController.getRetroInstance().create(Webservices.class);
     private FragmentHome fragmentHome;
     private HomeItemAdapter mAdapter;
-    private boolean isLoading = false;
     private boolean isLastPage = false;
     private int TOTAL_PAGES = 10;
     private int currentPage = PAGE_START;
-    private int pageCount, total_pages;
+    private int pageCount, total_pages, next_page;
+    private boolean isLoading = false;
 
     private LinearLayoutManager mLinearLayoutManager;
     private LinearLayoutManager mSubListLayoutManager;
@@ -209,7 +206,6 @@ public class FragmentHomeHelper {
         Dialog progressDialog = Utils.getProgressDialog(mActivity);
         progressDialog.show();
 
-        //// TODO: 9/12/20  make language dynamic
         Call<HomeDetailsModel> call = mInterface_method.getHomeList(language, currentPage);
         call.enqueue(new Callback<HomeDetailsModel>() {
             @Override
@@ -245,14 +241,52 @@ public class FragmentHomeHelper {
                         }
                     }));
 
+                    total_pages = response.body().getTotal();
+                    next_page = response.body().getNextPage();
+                    currentPage = next_page;
 
                     if (response.body().getData() != null && response.body().getData().size() > 0) {
+                        // if (mAdapter == null) {
                         mAdapter = new HomeItemAdapter(mActivity, response.body().getData(), FragmentHomeHelper.this);
                         mAdapter.setHasStableIds(true);
                         mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
                         fragmentHome.recyclerHome.setLayoutManager(mLinearLayoutManager);
                         fragmentHome.recyclerHome.setMediaObjects(response.body().getData());
+                        fragmentHome.recyclerHome.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
+                            @Override
+                            protected void loadMoreItems() {
+                                isLoading = true;
+                                new Handler().postDelayed(() -> loadNextPage(), 1000);
+                            }
+
+                            @Override
+                            public int getTotalPageCount() {
+                                return total_pages;
+                            }
+
+                            @Override
+                            public boolean isLastPage() {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean isLoading() {
+                                return false;
+                            }
+
+
+                            @Override
+                            public void onScrolled() {
+
+                            }
+                        });
+
+
                         fragmentHome.recyclerHome.setAdapter(mAdapter);
+
+                      /*  } else {
+                            mAdapter.notifyDataSetChanged();
+                        }*/
                         fragmentHome.recyclerHome.setNestedScrollingEnabled(false);
                         fragmentHome.recyclerHome.setHasFixedSize(false);
 
@@ -291,42 +325,6 @@ public class FragmentHomeHelper {
                         fragmentHome.tvNoDataFound.setVisibility(View.VISIBLE);
                     }
                 }
-
-
-                if (currentPage < TOTAL_PAGES) {
-                    if (mAdapter != null)
-                        mAdapter.addLoadingFooter();
-                } else isLastPage = true;
-
-                fragmentHome.recyclerHome.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
-                    @Override
-                    protected void loadMoreItems() {
-                        isLoading = true;
-                        currentPage += 1;
-                        new Handler().postDelayed(() -> loadNextPage(), 1000);
-                    }
-
-                    @Override
-                    public int getTotalPageCount() {
-                        return TOTAL_PAGES;
-                    }
-
-                    @Override
-                    public boolean isLastPage() {
-                        return isLastPage;
-                    }
-
-                    @Override
-                    public boolean isLoading() {
-                        return isLoading;
-                    }
-
-                    @Override
-                    public void onScrolled() {
-
-                    }
-                });
-
             }
 
             @Override
@@ -338,16 +336,15 @@ public class FragmentHomeHelper {
                 if (progressDialog.isShowing())
                     progressDialog.dismiss();
             }
-
-
-            private void loadNextPage() {
-            }
-
-
-
-
-
         });
+    }
 
+    private void loadNextPage() {
+        if (isLoading) {
+            if (currentPage <= total_pages) {
+                getHomeData(GlobalConstants.COMMON.LANGUAGE_SELECTED);
+                isLoading = false;
+            }
+        }
     }
 }

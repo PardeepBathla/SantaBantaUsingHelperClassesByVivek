@@ -14,9 +14,16 @@ public class HomeDetailsModel {
     @SerializedName("featured_categories")
     @Expose
     private ArrayList<FeaturedCategory> featuredCategories = null;
-    @SerializedName("page")
+
+     @SerializedName("page")
     @Expose
     private Integer next;
+    @SerializedName("next_page")
+    @Expose
+    private Integer nextPage;
+    @SerializedName("total")
+    @Expose
+    private Integer total;
 
     public List<HomeDetailList> getData() {
         return data;
@@ -33,6 +40,23 @@ public class HomeDetailsModel {
     public void setFeaturedCategories(ArrayList<FeaturedCategory> featuredCategories) {
         this.featuredCategories = featuredCategories;
     }
+
+    public Integer getNextPage() {
+        return nextPage;
+    }
+
+    public void setNextPage(Integer nextPage) {
+        this.nextPage = nextPage;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
+
 
     public Integer getNext() {
         return next;

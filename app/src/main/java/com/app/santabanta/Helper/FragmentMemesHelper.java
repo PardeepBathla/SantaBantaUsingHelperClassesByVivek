@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.Image;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -33,6 +34,7 @@ import com.app.santabanta.R;
 import com.app.santabanta.RestClient.Webservices;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.MemesExoPlayerRecyclerView;
+import com.app.santabanta.Utils.PaginationScrollListener;
 import com.app.santabanta.Utils.Utils;
 
 import org.json.JSONException;
@@ -66,6 +68,10 @@ public class FragmentMemesHelper {
     private LinearLayoutManager mSubListLayoutManager;
     private ImageView ivPrevious;
     private ImageView ivNext;
+    private static final int PAGE_START = 1;
+    private int currentPage = PAGE_START;
+    private int pageCount, total_pages, next_page;
+    private boolean isLoading = false;
 
     public FragmentMemesHelper(Activity context, FragmentMemes mFragment, View view) {
         this.mFragment = mFragment;
@@ -87,6 +93,20 @@ public class FragmentMemesHelper {
 
     }
 
+    private void loadNextPage() {
+        if (isLoading) {
+            if (currentPage <= total_pages) {
+                getMemesData(new MemesCallback() {
+                    @Override
+                    public void onMemesFetched(MemesResposeModel body) {
+                        isLoading = false;
+
+                    }
+                });
+            }
+        }
+    }
+
     private void getApiData() {
 
         progressBar.setVisibility(View.VISIBLE);
@@ -100,7 +120,40 @@ public class FragmentMemesHelper {
                         swipeContainer.setRefreshing(false);
                     }
 
+                    total_pages = response.getTotal();
+                    currentPage =response.getCurrentPage();
+                    currentPage = currentPage+1;
+
                     recyclerMemes.setMediaObjects(response.getData());
+                    recyclerMemes.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
+                        @Override
+                        protected void loadMoreItems() {
+                            isLoading = true;
+                            new Handler().postDelayed(() -> loadNextPage(), 1000);
+                        }
+
+                        @Override
+                        public int getTotalPageCount() {
+                            return total_pages;
+                        }
+
+                        @Override
+                        public boolean isLastPage() {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean isLoading() {
+                            return false;
+                        }
+
+
+                        @Override
+                        public void onScrolled() {
+
+                        }
+                    });
+
                     recyclerMemes.setAdapter(memesItemAdapter);
                     recyclerMemes.setNestedScrollingEnabled(false);
                     recyclerMemes.setHasFixedSize(false);
@@ -157,9 +210,9 @@ public class FragmentMemesHelper {
     private void getMemesData(MemesCallback memesCallback) {
         Call<MemesResposeModel> call = null;
         if (mFragment.IS_FROM_MENU) {
-            call = mInterface_method.getMemesNewList(mFragment.subcat_slug_name, 1);
+            call = mInterface_method.getMemesNewList(mFragment.subcat_slug_name, currentPage);
         } else {
-            call = mInterface_method.getMemesList(GlobalConstants.COMMON.LANGUAGE_SELECTED, 1);
+            call = mInterface_method.getMemesList(GlobalConstants.COMMON.LANGUAGE_SELECTED, currentPage);
         }
         call.enqueue(new Callback<MemesResposeModel>() {
             @Override

@@ -9,15 +9,15 @@ import java.util.List;
 public class JokesDataModel {
 
     @SerializedName("current_page")
-    private Long mCurrentPage;
+    private int mCurrentPage;
     @SerializedName("data")
     private List<JokesDetailModel> mData;
     @SerializedName("first_page_url")
     private String mFirstPageUrl;
     @SerializedName("from")
-    private Long mFrom;
+    private int mFrom;
     @SerializedName("last_page")
-    private Long mLastPage;
+    private int mLastPage;
     @SerializedName("last_page_url")
     private String mLastPageUrl;
     @SerializedName("next_page_url")
@@ -25,17 +25,17 @@ public class JokesDataModel {
     @SerializedName("path")
     private String mPath;
     @SerializedName("per_page")
-    private Long mPerPage;
+    private int mPerPage;
     @SerializedName("prev_page_url")
     private Object mPrevPageUrl;
     @SerializedName("to")
-    private Long mTo;
+    private int mTo;
     @SerializedName("total")
-    private Long mTotal;
+    private int mTotal;
     @SerializedName("featured_categories")
     @Expose
     private ArrayList<JokesFeaturedCategory> featuredCategories = null;
-    public Long getCurrentPage() {
+    public int getCurrentPage() {
         return mCurrentPage;
     }
 
@@ -47,11 +47,11 @@ public class JokesDataModel {
         return mFirstPageUrl;
     }
 
-    public Long getFrom() {
+    public int getFrom() {
         return mFrom;
     }
 
-    public Long getLastPage() {
+    public int getLastPage() {
         return mLastPage;
     }
 
@@ -75,7 +75,7 @@ public class JokesDataModel {
         this.featuredCategories = featuredCategories;
     }
 
-    public Long getPerPage() {
+    public int getPerPage() {
         return mPerPage;
     }
 
@@ -83,30 +83,30 @@ public class JokesDataModel {
         return mPrevPageUrl;
     }
 
-    public Long getTo() {
+    public int getTo() {
         return mTo;
     }
 
-    public Long getTotal() {
+    public int getTotal() {
         return mTotal;
     }
 
     public static class Builder {
 
-        private Long mCurrentPage;
+        private int mCurrentPage;
         private List<JokesDetailModel> mData;
         private String mFirstPageUrl;
-        private Long mFrom;
-        private Long mLastPage;
+        private int mFrom;
+        private int mLastPage;
         private String mLastPageUrl;
         private String mNextPageUrl;
         private String mPath;
-        private Long mPerPage;
+        private int mPerPage;
         private Object mPrevPageUrl;
-        private Long mTo;
-        private Long mTotal;
+        private int mTo;
+        private int mTotal;
 
-        public JokesDataModel.Builder withCurrentPage(Long currentPage) {
+        public JokesDataModel.Builder withCurrentPage(int currentPage) {
             mCurrentPage = currentPage;
             return this;
         }
@@ -121,12 +121,12 @@ public class JokesDataModel {
             return this;
         }
 
-        public JokesDataModel.Builder withFrom(Long from) {
+        public JokesDataModel.Builder withFrom(int from) {
             mFrom = from;
             return this;
         }
 
-        public JokesDataModel.Builder withLastPage(Long lastPage) {
+        public JokesDataModel.Builder withLastPage(int lastPage) {
             mLastPage = lastPage;
             return this;
         }
@@ -146,7 +146,7 @@ public class JokesDataModel {
             return this;
         }
 
-        public JokesDataModel.Builder withPerPage(Long perPage) {
+        public JokesDataModel.Builder withPerPage(int perPage) {
             mPerPage = perPage;
             return this;
         }
@@ -156,12 +156,12 @@ public class JokesDataModel {
             return this;
         }
 
-        public JokesDataModel.Builder withTo(Long to) {
+        public JokesDataModel.Builder withTo(int to) {
             mTo = to;
             return this;
         }
 
-        public JokesDataModel.Builder withTotal(Long total) {
+        public JokesDataModel.Builder withTotal(int total) {
             mTotal = total;
             return this;
         }

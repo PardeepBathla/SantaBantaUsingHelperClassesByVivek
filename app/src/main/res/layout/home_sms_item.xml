@@ -47,7 +47,6 @@
                 android:layout_below="@+id/rl_image"
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginEnd="@dimen/_20sdp"
                 android:orientation="horizontal">
 
 

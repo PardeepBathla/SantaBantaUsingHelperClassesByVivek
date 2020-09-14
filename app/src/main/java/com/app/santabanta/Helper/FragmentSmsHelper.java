@@ -3,6 +3,7 @@ package com.app.santabanta.Helper;
 import android.app.Activity;
 import android.app.Dialog;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -50,14 +51,14 @@ public class FragmentSmsHelper {
     private Activity mActivity;
     private Webservices mInterface_method = AppController.getRetroInstance().create(Webservices.class);
     private FragmentSms fragmentSms;
-    private boolean isLoading = false;
     private boolean isLastPage = false;
     private int TOTAL_PAGES = 10;
-    private int currentPage = PAGE_START;
     private LinearLayoutManager mLinearLayoutManager;
     private ArrayList<SmsDetailModel> mSmsList = new ArrayList<>();
     private LinearLayoutManager mSubListLayoutManager;
-
+    private int currentPage = PAGE_START;
+    private int pageCount, total_pages, next_page;
+    private boolean isLoading = false;
 
     public FragmentSmsHelper(Activity mActivity, FragmentSms fragmentSms) {
         this.mActivity = mActivity;
@@ -71,39 +72,22 @@ public class FragmentSmsHelper {
         fragmentSms.swipeRefreshSms.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getSms("English", "", "");
+                getSms(GlobalConstants.COMMON.LANGUAGE_SELECTED, "", "");
             }
         });
 
         getSms(AppController.LANGUAGE_SELECTED, "", "");
     }
-
-    private void loadNextPage(){
-        Call<SmsResponseModel> call = mInterface_method.getSmsList(AppController.LANGUAGE_SELECTED, fragmentSms.subCatSlug, currentPage, fragmentSms.selectedCategory);
-        call.enqueue(new Callback<SmsResponseModel>() {
-            @Override
-            public void onResponse(Call<SmsResponseModel> call, Response<SmsResponseModel> response) {
-                if (response.isSuccessful()){
-                    if (response.body().getData() != null && response.body().getData().size()>0) {
-                        List<SmsDetailModel> list = response.body().getData();
-                        smsHomeAdapter.removeLoadingFooter();
-                        isLoading = false;
-                        smsHomeAdapter.addAll(list);
-                        if (currentPage != TOTAL_PAGES) smsHomeAdapter.addLoadingFooter();
-                        else isLastPage = true;
-                    }
-                }
+    private void loadNextPage() {
+        if (isLoading) {
+            if (currentPage <= total_pages) {
+                getSms(GlobalConstants.COMMON.LANGUAGE_SELECTED, fragmentSms.subCatSlug,fragmentSms.selectedCategory);
+                isLoading = false;
             }
-
-            @Override
-            public void onFailure(Call<SmsResponseModel> call, Throwable t) {
-
-            }
-        });
+        }
     }
-
     private void getSms(String language, String slug, String selectedCategory) {
-        Call<SmsResponseModel> call = mInterface_method.getSmsList(AppController.LANGUAGE_SELECTED, fragmentSms.subCatSlug, 1, fragmentSms.selectedCategory);
+        Call<SmsResponseModel> call = mInterface_method.getSmsList(AppController.LANGUAGE_SELECTED, fragmentSms.subCatSlug, currentPage, fragmentSms.selectedCategory);
 
         Dialog progressDialog = Utils.getProgressDialog(mActivity);
         progressDialog.show();
@@ -127,6 +111,10 @@ public class FragmentSmsHelper {
                         }
                     }));
 
+                    total_pages = response.body().getTotal();
+                    currentPage =response.body().getCurrentPage();
+                    currentPage = currentPage+1;
+
                     if (response.body().getData() != null && response.body().getData().size() > 0){
                         mLinearLayoutManager = new LinearLayoutManager(mActivity);
                         fragmentSms.recyclerSms.setLayoutManager(mLinearLayoutManager);
@@ -138,6 +126,35 @@ public class FragmentSmsHelper {
 
                         mSmsList.addAll(response.body().getData());
                         smsHomeAdapter = new SmsHomeAdapter(FragmentSmsHelper.this, response.body().getData(), mActivity);
+                        fragmentSms.recyclerSms.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
+                            @Override
+                            protected void loadMoreItems() {
+                                isLoading = true;
+                                new Handler().postDelayed(() -> loadNextPage(), 1000);
+                            }
+
+                            @Override
+                            public int getTotalPageCount() {
+                                return total_pages;
+                            }
+
+                            @Override
+                            public boolean isLastPage() {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean isLoading() {
+                                return false;
+                            }
+
+
+                            @Override
+                            public void onScrolled() {
+
+                            }
+                        });
+
                         fragmentSms.recyclerSms.setAdapter(smsHomeAdapter);
 
                         fragmentSms.ivNext.setOnClickListener(new View.OnClickListener() {

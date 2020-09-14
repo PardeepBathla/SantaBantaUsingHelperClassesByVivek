@@ -3,6 +3,7 @@ package com.app.santabanta.Helper;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -91,16 +92,17 @@ public class FragmentHomeHelper {
                         }
                     }));
 
-                    mAdapter = new HomeItemAdapter(mActivity, response.body().getData());
-                    mAdapter.setHasStableIds(true);
-                    mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
-                    fragmentHome.recyclerHome.setLayoutManager(mLinearLayoutManager);
-                    fragmentHome.recyclerHome.setMediaObjects(response.body().getData());
-                    fragmentHome.recyclerHome.setAdapter(mAdapter);
-                    fragmentHome.recyclerHome.setNestedScrollingEnabled(false);
-                    fragmentHome.recyclerHome.setHasFixedSize(false);
+                    if (response.body().getData()!=null && response.body().getData().size()>0){
+                        mAdapter = new HomeItemAdapter(mActivity, response.body().getData());
+                        mAdapter.setHasStableIds(true);
+                        mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
+                        fragmentHome.recyclerHome.setLayoutManager(mLinearLayoutManager);
+                        fragmentHome.recyclerHome.setMediaObjects(response.body().getData());
+                        fragmentHome.recyclerHome.setAdapter(mAdapter);
+                        fragmentHome.recyclerHome.setNestedScrollingEnabled(false);
+                        fragmentHome.recyclerHome.setHasFixedSize(false);
 
-                    //TODO uncomment when pagination values comes in api response
+                        //TODO uncomment when pagination values comes in api response
 //
 //                    if (currentPage < TOTAL_PAGES) {
 //                        if (mFeedAdapter != null)
@@ -135,8 +137,15 @@ public class FragmentHomeHelper {
 //
 //                        }
 //                    });
-
+                        fragmentHome.recyclerHome.setVisibility(View.VISIBLE);
+                        fragmentHome.tvNoDataFound.setVisibility(View.GONE);
+                        Utils.fixRecyclerScroll(fragmentHome.recyclerHome, fragmentHome.swipeRefreshLayout, mLinearLayoutManager);
+                    }else {
+                        fragmentHome.recyclerHome.setVisibility(View.GONE);
+                        fragmentHome.tvNoDataFound.setVisibility(View.VISIBLE);
+                    }
                 }
+
             }
 
             @Override
@@ -144,6 +153,9 @@ public class FragmentHomeHelper {
 
                 if (fragmentHome.swipeRefreshLayout != null && fragmentHome.swipeRefreshLayout.isRefreshing())
                     fragmentHome.swipeRefreshLayout.setRefreshing(false);
+
+                fragmentHome.recyclerHome.setVisibility(View.GONE);
+                fragmentHome.tvNoDataFound.setVisibility(View.VISIBLE);
 
                 if (progressDialog.isShowing())
                     progressDialog.dismiss();

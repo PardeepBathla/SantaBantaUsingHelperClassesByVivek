@@ -18,7 +18,7 @@ public class SmsResponseModel {
     @SerializedName("from")
     private Long mFrom;
     @SerializedName("last_page")
-    private Long mLastPage;
+    private int mLastPage;
     @SerializedName("last_page_url")
     private String mLastPageUrl;
     @SerializedName("next_page_url")
@@ -62,7 +62,7 @@ public class SmsResponseModel {
         return mFrom;
     }
 
-    public Long getLastPage() {
+    public int getLastPage() {
         return mLastPage;
     }
 
@@ -100,7 +100,7 @@ public class SmsResponseModel {
         private List<SmsDetailModel> mData;
         private String mFirstPageUrl;
         private Long mFrom;
-        private Long mLastPage;
+        private int mLastPage;
         private String mLastPageUrl;
         private String mNextPageUrl;
         private String mPath;
@@ -129,7 +129,7 @@ public class SmsResponseModel {
             return this;
         }
 
-        public SmsResponseModel.Builder withLastPage(Long lastPage) {
+        public SmsResponseModel.Builder withLastPage(int lastPage) {
             mLastPage = lastPage;
             return this;
         }

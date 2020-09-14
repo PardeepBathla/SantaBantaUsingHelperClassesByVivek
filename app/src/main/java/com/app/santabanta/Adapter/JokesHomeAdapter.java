@@ -2,6 +2,7 @@ package com.app.santabanta.Adapter;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -88,9 +89,11 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
                 llbreadcrumbs.addView(textView[i]);
 
                 int finalI = i;
+                String slug = obj.getBreadcrumbs().get(i).getLink();
                 textView[i].setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-
+                        mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug));
                     }
                 });
             }

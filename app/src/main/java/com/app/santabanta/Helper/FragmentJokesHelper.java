@@ -3,6 +3,7 @@ package com.app.santabanta.Helper;
 import android.app.Activity;
 import android.app.Dialog;
 import android.util.Log;
+import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -65,34 +66,53 @@ public class FragmentJokesHelper {
         call.enqueue(new Callback<JokesDataModel>() {
             @Override
             public void onResponse(Call<JokesDataModel> call, Response<JokesDataModel> response) {
-                if (dialog.isShowing())
-                    dialog.dismiss();
+                try {
+                    if (dialog.isShowing())
+                        dialog.dismiss();
 
-                if (fragmentJokes.swipeRefreshJokes != null && fragmentJokes.swipeRefreshJokes.isRefreshing())
-                    fragmentJokes.swipeRefreshJokes.setRefreshing(false);
+                    if (fragmentJokes.swipeRefreshJokes != null && fragmentJokes.swipeRefreshJokes.isRefreshing())
+                        fragmentJokes.swipeRefreshJokes.setRefreshing(false);
 
-                if (response.isSuccessful()){
-                    fragmentJokes.rvSubCategoryJokes.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL,false));
-                    fragmentJokes.rvSubCategoryJokes.setAdapter(new JokesCategoriesAdapter(response.body().getFeaturedCategories(), mActivity, new JokesCategoriesAdapter.JokesCategoryClickListener() {
-                        @Override
-                        public void onItemClicked(JokesFeaturedCategory model) {
-                            fragmentJokes.enterSubCategoryJoke(true,model.getSlug());
+                    if (response.isSuccessful()){
+                        fragmentJokes.rvSubCategoryJokes.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL,false));
+                        fragmentJokes.rvSubCategoryJokes.setAdapter(new JokesCategoriesAdapter(response.body().getFeaturedCategories(), mActivity, new JokesCategoriesAdapter.JokesCategoryClickListener() {
+                            @Override
+                            public void onItemClicked(JokesFeaturedCategory model) {
+                                fragmentJokes.enterSubCategoryJoke(true,model.getSlug());
+                            }
+                        }));
+
+                        if (response.body().getData()!=null && response.body().getData().size()>0){
+                            fragmentJokes.recyclerJokes.setLayoutManager(new LinearLayoutManager(mActivity));
+                            fragmentJokes.recyclerJokes.setAdapter(new JokesHomeAdapter(response.body().getData(),mActivity));
+                            fragmentJokes.recyclerJokes.setVisibility(View.VISIBLE);
+                            fragmentJokes.tvNoDataFound.setVisibility(View.GONE);
+                        }else {
+                            fragmentJokes.recyclerJokes.setVisibility(View.GONE);
+                            fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
                         }
-                    }));
 
-                    fragmentJokes.recyclerJokes.setLayoutManager(new LinearLayoutManager(mActivity));
-                    fragmentJokes.recyclerJokes.setAdapter(new JokesHomeAdapter(response.body().getData(),mActivity));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
             }
 
             @Override
             public void onFailure(Call<JokesDataModel> call, Throwable t) {
-                if (dialog.isShowing())
-                    dialog.dismiss();
+                try {
+                    if (dialog.isShowing())
+                        dialog.dismiss();
 
-                if (fragmentJokes.swipeRefreshJokes != null && fragmentJokes.swipeRefreshJokes.isRefreshing())
-                    fragmentJokes.swipeRefreshJokes.setRefreshing(false);
+                    if (fragmentJokes.swipeRefreshJokes != null && fragmentJokes.swipeRefreshJokes.isRefreshing())
+                        fragmentJokes.swipeRefreshJokes.setRefreshing(false);
+
+                    fragmentJokes.recyclerJokes.setVisibility(View.GONE);
+                    fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

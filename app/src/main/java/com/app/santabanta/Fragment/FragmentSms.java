@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,6 +52,8 @@ public class FragmentSms extends BaseFragment {
     public SwipeRefreshLayout swipeRefreshSms;
     @BindView(R.id.frameSms)
     public FrameLayout frameSms;
+    @BindView(R.id.tvNoDataFound)
+    public TextView tvNoDataFound;
     private Activity mActivity;
     private FragmentSmsHelper mHelper;
 

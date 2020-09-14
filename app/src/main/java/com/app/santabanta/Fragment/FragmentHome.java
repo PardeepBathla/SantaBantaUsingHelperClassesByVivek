@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -34,6 +35,8 @@ public class FragmentHome extends BaseFragment {
     public HomeMemesExoPlayerRecyclerview recyclerHome;
     @BindView(R.id.swipeRefreshHome)
     public SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.tvNoDataFound)
+    public TextView tvNoDataFound;
     private Activity mActivity;
     private FragmentHomeHelper mHelper;
 
@@ -50,7 +53,7 @@ public class FragmentHome extends BaseFragment {
         mActivity = getActivity();
         View view = inflater.inflate(R.layout.fragment_home, parent, false);
         ButterKnife.bind(this, view);
-        mHelper = new FragmentHomeHelper(mActivity,this);
+        mHelper = new FragmentHomeHelper(mActivity, this);
         return view;
     }
 

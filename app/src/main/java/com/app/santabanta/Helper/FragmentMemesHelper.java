@@ -46,14 +46,14 @@ import retrofit2.Response;
 
 public class FragmentMemesHelper {
     public SharedPreferences pref;
-    MemesItemAdapter memesItemAdapter;
-    HomeCategoriesAdapter mHomeCategoriesAdapter;
-    RelativeLayout smsRootLayout;
-    TextView tvNo_data_found;
-    ProgressBar progressBar;
-    View view;
-    ArrayList<MemesDetailModel> memesList = new ArrayList<>();
-    Activity context;
+    private MemesItemAdapter memesItemAdapter;
+    private HomeCategoriesAdapter mHomeCategoriesAdapter;
+    private RelativeLayout smsRootLayout;
+    private TextView tvNoDataFound;
+    private ProgressBar progressBar;
+    private View view;
+    private ArrayList<MemesDetailModel> memesList = new ArrayList<>();
+    private Activity context;
     private FragmentMemes mFragment;
     private Webservices mInterface_method = AppController.getRetroInstance().create(Webservices.class);
     private SwipeRefreshLayout swipeContainer;
@@ -78,6 +78,7 @@ public class FragmentMemesHelper {
 
         memesItemAdapter = new MemesItemAdapter(mFragment.getActivity(), mFragment, progressBar, memesList, this);
         memesItemAdapter.setHasStableIds(true);
+
     }
 
     private void getApiData() {
@@ -88,17 +89,25 @@ public class FragmentMemesHelper {
             public void onMemesFetched(MemesResposeModel response) {
 
 
-                if (swipeContainer.isRefreshing()) {
-                    swipeContainer.setRefreshing(false);
+                if (response.getData() != null && response.getData().size()>0){
+                    if (swipeContainer.isRefreshing()) {
+                        swipeContainer.setRefreshing(false);
+                    }
+
+                    recyclerMemes.setMediaObjects(response.getData());
+                    recyclerMemes.setAdapter(memesItemAdapter);
+                    recyclerMemes.setNestedScrollingEnabled(false);
+                    recyclerMemes.setHasFixedSize(false);
+
+                    progressBar.setVisibility(View.VISIBLE);
+                    memesItemAdapter.updateList((ArrayList<MemesDetailModel>) response.getData());
+                    Utils.fixRecyclerScroll(recyclerMemes,swipeContainer, mLinearLayoutManager);
+                    recyclerMemes.setVisibility(View.VISIBLE);
+                    tvNoDataFound.setVisibility(View.GONE);
+                }else {
+                    recyclerMemes.setVisibility(View.GONE);
+                    tvNoDataFound.setVisibility(View.VISIBLE);
                 }
-
-                recyclerMemes.setMediaObjects(response.getData());
-                recyclerMemes.setAdapter(memesItemAdapter);
-                recyclerMemes.setNestedScrollingEnabled(false);
-                recyclerMemes.setHasFixedSize(false);
-
-                progressBar.setVisibility(View.VISIBLE);
-                memesItemAdapter.updateList((ArrayList<MemesDetailModel>) response.getData());
 
 
             }
@@ -109,6 +118,7 @@ public class FragmentMemesHelper {
     private void findViews() {
 
         rvSubCategory = view.findViewById(R.id.rvSubCategory);
+        tvNoDataFound = view.findViewById(R.id.tvNoDataFound);
         progressBar = view.findViewById(R.id.progress_bar);
         swipeContainer = view.findViewById(R.id.swipeContainer);
         recyclerMemes = view.findViewById(R.id.recyclerMemes);

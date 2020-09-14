@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -44,6 +45,8 @@ public class FragmentJokes extends BaseFragment {
     public RecyclerView recyclerJokes;
     @BindView(R.id.swipeRefreshJokes)
     public SwipeRefreshLayout swipeRefreshJokes;
+    @BindView(R.id.tvNoDataFound)
+    public TextView tvNoDataFound;
     private Activity mActivity;
     private FragmentJokesHelper mHelper;
 

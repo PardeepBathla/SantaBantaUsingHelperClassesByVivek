@@ -95,6 +95,15 @@
                 android:layout_below="@+id/lowerView"
                 android:background="@color/off_black" />
 
+            <TextView
+                android:id="@+id/tvNoDataFound"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:textColor="?text_color"
+                android:text="@string/no_data_found"
+                android:layout_height="match_parent"/>
+
             <!-- Custom animated loader-->
             <ProgressBar
                 android:id="@+id/progress_bar"

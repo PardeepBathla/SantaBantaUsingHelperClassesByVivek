@@ -65,7 +65,18 @@
             <com.app.santabanta.Utils.HomeMemesExoPlayerRecyclerview
                 android:id="@+id/recyclerHome"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tvNoDataFound"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:textColor="?text_color"
+                android:text="@string/no_data_found"
+                android:layout_height="match_parent"/>
+
 
         </LinearLayout>
 

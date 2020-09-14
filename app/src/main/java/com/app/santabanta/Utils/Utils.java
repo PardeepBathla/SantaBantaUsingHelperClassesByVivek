@@ -19,6 +19,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.santabanta.Activites.MainActivity;
 import com.app.santabanta.AppController;
@@ -93,6 +96,31 @@ public class Utils {
             }
         });
 
+    }
+
+    public static void fixRecyclerScroll(RecyclerView recyclerView, SwipeRefreshLayout swipeRefreshLayout, LinearLayoutManager linearLayoutManager){
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+
+                int firstPos=linearLayoutManager.findFirstCompletelyVisibleItemPosition();
+                if (firstPos>0)
+                {
+                    swipeRefreshLayout.setEnabled(false);
+                }
+                else {
+                    swipeRefreshLayout.setEnabled(true);
+                }
+            }
+        });
     }
 
     public static void vibrate(Context mCtx) {

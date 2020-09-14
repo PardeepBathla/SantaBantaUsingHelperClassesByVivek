@@ -28,6 +28,7 @@ import com.app.santabanta.Modals.HomeDetailList;
 import com.app.santabanta.Modals.HomeDetailsModel;
 import com.app.santabanta.RestClient.Webservices;
 import com.app.santabanta.Utils.GlobalConstants;
+import com.app.santabanta.Utils.PaginationScrollListener;
 import com.app.santabanta.Utils.Utils;
 
 import org.json.JSONException;
@@ -53,6 +54,8 @@ public class FragmentHomeHelper {
     private boolean isLastPage = false;
     private int TOTAL_PAGES = 10;
     private int currentPage = PAGE_START;
+    private int pageCount, total_pages;
+
     private LinearLayoutManager mLinearLayoutManager;
 
     public FragmentHomeHelper(Activity mActivity, FragmentHome fragmentHome) {
@@ -116,45 +119,72 @@ public class FragmentHomeHelper {
                     mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
                     fragmentHome.recyclerHome.setLayoutManager(mLinearLayoutManager);
                     fragmentHome.recyclerHome.setMediaObjects(response.body().getData());
+                   /* fragmentHome.recyclerHome.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
+                        @Override
+                        protected void loadMoreItems() {
+                            new Handler().postDelayed(() -> loadNextPage(), 1000);
+                        }
+
+                        @Override
+                        public int getTotalPageCount() {
+                            return total_pages;
+                        }
+
+                        @Override
+                        public boolean isLastPage() {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean isLoading() {
+                            return false;
+                        }
+
+
+                        @Override
+                        public void onScrolled() {
+
+                        }
+                    });*/
                     fragmentHome.recyclerHome.setAdapter(mAdapter);
                     fragmentHome.recyclerHome.setNestedScrollingEnabled(false);
                     fragmentHome.recyclerHome.setHasFixedSize(false);
 
                     //TODO uncomment when pagination values comes in api response
-//
-//                    if (currentPage < TOTAL_PAGES) {
-//                        if (mFeedAdapter != null)
-//                            mFeedAdapter.addLoadingFooter();
-//                    } else isLastPage = true;
-//
-//                    mRvFeed.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
-//                        @Override
-//                        protected void loadMoreItems() {
-//                            isLoading = true;
-//                            currentPage += 1;
-//                            new Handler().postDelayed(HomeFragmentHelper.this::loadNextPage, 1000);
-//                        }
-//
-//                        @Override
-//                        public int getTotalPageCount() {
-//                            return TOTAL_PAGES;
-//                        }
-//
-//                        @Override
-//                        public boolean isLastPage() {
-//                            return isLastPage;
-//                        }
-//
-//                        @Override
-//                        public boolean isLoading() {
-//                            return isLoading;
-//                        }
-//
-//                        @Override
-//                        public void onScrolled() {
-//
-//                        }
-//                    });
+
+                    if (currentPage < TOTAL_PAGES) {
+                        if (mAdapter != null)
+                            mAdapter.addLoadingFooter();
+                    } else isLastPage = true;
+
+                    fragmentHome.recyclerHome.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
+                        @Override
+                        protected void loadMoreItems() {
+                            isLoading = true;
+                            currentPage += 1;
+                            new Handler().postDelayed(() -> loadNextPage(), 1000);
+                        }
+
+                        @Override
+                        public int getTotalPageCount() {
+                            return TOTAL_PAGES;
+                        }
+
+                        @Override
+                        public boolean isLastPage() {
+                            return isLastPage;
+                        }
+
+                        @Override
+                        public boolean isLoading() {
+                            return isLoading;
+                        }
+
+                        @Override
+                        public void onScrolled() {
+
+                        }
+                    });
 
                 }
             }
@@ -171,8 +201,12 @@ public class FragmentHomeHelper {
         });
     }
 
-
-
+    private void loadNextPage() {
+        pageCount++;
+        if (pageCount <= total_pages) {
+           // syncManager.sendJsonToServer(Const.API_BLOGS_LIST + "?page=" + pageCount + "&per-page=25", null, this);
+        }
+    }
 
     public void addToFav(HomeDetailList obj, int position, String type, CheckBox cbLike, Dialog progressBar) {
 

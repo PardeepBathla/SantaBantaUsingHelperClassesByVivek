@@ -6,18 +6,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.app.santabanta.Fragment.NavFragment;
 import com.app.santabanta.Helper.MainActivityHelper;
 import com.app.santabanta.R;
+import com.app.santabanta.Utils.CheckPermissions;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.LocaleHelper;
 import com.app.santabanta.Utils.Utils;
@@ -78,11 +85,14 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Show status bar
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         pref = Utils.getSharedPref(MainActivity.this);
         setThemePreference();
         LocaleHelper.onAttach(MainActivity.this);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        CheckPermissions.isStoragePermissionGranted(MainActivity.this);
         registerReceiver(navigateReceiver, new IntentFilter(NAVIGATE_FROM_HOME));
         initActivity();
         if (savedInstanceState == null) {
@@ -176,4 +186,31 @@ public class MainActivity extends BaseActivity {
         editor.apply();
 
     }
+
+    public void vibrate() {
+
+        Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+// Vibrate for 500 milliseconds
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            //deprecated in API 26
+            v.vibrate(100);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == CheckPermissions.REQUEST_CODE) {
+            if (grantResults.length > 0){
+                if ( grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted :)
+
+                }
+            }
+        }
+    }
+
 }

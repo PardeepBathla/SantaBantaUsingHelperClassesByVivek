@@ -27,7 +27,6 @@
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:text="No Data Found!"
-
                 android:textSize="@dimen/_14sdp"
                 android:visibility="gone" />
 
@@ -46,7 +45,6 @@
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_alignParentLeft="true"
-                    app:tint="?share_icon_color"
                     android:layout_centerVertical="true"
                     android:padding="@dimen/_5sdp"
                     android:src="?previous" />
@@ -65,7 +63,6 @@
                 <ImageView
                     android:id="@+id/ivNext"
                     android:layout_width="@dimen/_30sdp"
-                    app:tint="?share_icon_color"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"

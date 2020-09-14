@@ -36,7 +36,7 @@
                     android:id="@+id/ivMeme"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_250sdp"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="fitXY"/>
 
             </RelativeLayout>
 
@@ -93,8 +93,7 @@
                     <ImageView
                         android:layout_width="@dimen/_16sdp"
                         android:layout_height="@dimen/_16sdp"
-                        android:src="@drawable/ic_share_alt"
-                        app:tint="?share_icon_color" />
+                        android:src="@drawable/ic_share_alt"/>
 
 
                     <TextView

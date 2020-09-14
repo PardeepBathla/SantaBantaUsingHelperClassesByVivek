@@ -34,8 +34,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:padding="@dimen/_5sdp"
-                    android:src="@drawable/ic_previous_white"
-                    app:tint="?share_icon_color" />
+                    android:src="?previous"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvSubCategory"
@@ -54,7 +53,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:padding="@dimen/_5sdp"
-                    android:src="@drawable/ic_forward_white" />
+                    android:src="?next" />
             </RelativeLayout>
 
 

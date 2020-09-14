@@ -19,7 +19,7 @@
         android:layout_height="@dimen/_38sdp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/_1sdp"
-        android:background="@drawable/round_back_white"
+        android:background="?featuresBg"
         android:padding="@dimen/_7sdp" />
 
     <TextView
@@ -32,7 +32,7 @@
         android:fontFamily="@font/roboto_regular"
         android:singleLine="true"
         android:textAllCaps="true"
-        android:textColor="@android:color/white"
+        android:textColor="?text_color"
         android:textSize="@dimen/_9sdp" />
 
 </RelativeLayout>

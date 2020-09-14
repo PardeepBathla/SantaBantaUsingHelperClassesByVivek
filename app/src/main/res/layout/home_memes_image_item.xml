@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:layout_marginVertical="@dimen/_2sdp"
+        android:layout_marginBottom="@dimen/_3sdp"
         app:cardBackgroundColor="?card_bg_color"
         app:cardCornerRadius="8dp"
         app:cardElevation="@dimen/_4sdp">
@@ -86,8 +87,7 @@
                     <ImageView
                         android:layout_width="@dimen/_16sdp"
                         android:layout_height="@dimen/_16sdp"
-                        android:src="@drawable/ic_share_alt"
-                        app:tint="?share_icon_color" />
+                        android:src="@drawable/ic_share_alt" />
 
                     <TextView
                         android:id="@+id/tv_share_count"

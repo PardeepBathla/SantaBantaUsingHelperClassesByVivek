@@ -50,7 +50,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
+public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int JOKE_POST = 0;
     private static final int SMS_POST = 1;
@@ -194,7 +194,6 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
-
     public ArrayList<HomeDetailList> getCurrentList() {
         return (ArrayList<HomeDetailList>) mList;
     }
@@ -205,9 +204,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
-
-
-    class MemesImageHolder extends RecyclerView.ViewHolder {
+    class MemesImageHolder extends RecyclerView.ViewHolder implements BitmapLoadedCallback {
         @BindView(R.id.llbreadcrumbs)
         LinearLayout llbreadcrumbs;
         @BindView(R.id.ivMeme)
@@ -238,17 +235,24 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView iv_pintrest;
         @BindView(R.id.iv_snapchat)
         ImageView iv_snapchat;
+        private final ShareableIntents shareableIntents;
+        private boolean isSharelayoutVisible = false;
+        HomeDetailList imageTOBeShared;
+
 
         public MemesImageHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            shareableIntents = new ShareableIntents(mActivity);
+
         }
+
 
         void bindData(HomeDetailList model, int position) {
             Utils.loadGlideImage(mActivity, ivMeme, model.getImage());
-            setBreadCrumbs(model, llbreadcrumbs,"memes");
+            setBreadCrumbs(model, llbreadcrumbs, "memes");
 
-//            imageTOBeShared = obj;
+            imageTOBeShared = model;
 
 
             if (model.getFavourites() != null && model.getFavourites().size() != 0) {
@@ -265,38 +269,357 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 cb_like.setChecked(false);
             }
 
-//            smsItemListeners(model, position);
+            ll_share_home.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (ll_share_options_home.getVisibility() == View.VISIBLE) {
+                        ll_share_options_home.setVisibility(View.GONE);
+                    } else {
+                        ll_share_options_home.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+            MemesImageItemListeners(model, position);
 
 
         }
+
+        private void MemesImageItemListeners(HomeDetailList obj, int position) {
+
+            iv_whatsapp.setOnClickListener(v -> {
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+                if (CheckPermissions.isStoragePermissionGranted(mActivity)) {
+                    BitmapConversion(obj, GlobalConstants.COMMON.WHATSAPP);
+                }
+            });
+            iv_facebook.setOnClickListener(v -> {
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+                shareableIntents.shareOnFbMesenger(imageTOBeShared.getImage());
+
+            });
+            iv_twitter.setOnClickListener(v -> {
+                shareableIntents.shareOnTwitter(v, imageTOBeShared.getImage());
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+            });
+            iv_instagram.setOnClickListener(v -> {
+                shareableIntents.shareOnInstagram(imageTOBeShared.getImage());
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+            });
+            iv_pintrest.setOnClickListener(v -> {
+                shareableIntents.shareOnPintrest(v, imageTOBeShared.getImage());
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+            });
+            iv_snapchat.setOnClickListener(v -> {
+                shareableIntents.shareOnSnapChat(imageTOBeShared.getImage());
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+            });
+       /* binding.ivSms.setOnClickListener(v -> {
+            shareLayoutGone();
+
+        });*/
+       /* binding.rlSms.setOnClickListener(v -> {
+            shareLayoutGone();
+        });
+*/
+            cb_like.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+                Utils.vibrate(mActivity);
+
+                Dialog dialog = Utils.getProgressDialog(mActivity);
+                dialog.show();
+                cb_like.setClickable(false);
+                if (isChecked) {
+                    fragmentHomeHelper.addToFav(obj, position, "sms", cb_like, dialog);
+                } else {
+                    for (Favourite favouriteModel : obj.getFavourites()) {
+                        if (favouriteModel.getDeviceId().equals(Utils.getMyDeviceId(mActivity))) {
+                            fragmentHomeHelper.removeFromFav(obj, favouriteModel.getId(), position, cb_like, dialog);
+                            break;
+
+                        }
+                    }
+
+                }
+                //FUNCTIONALITY NOT IN SCOPE FOR THE TIME BEING
+//                    SmsRepository.getInstance().InsertFavourite(obj,fragmentSms);
+            });
+            ll_share_home.setOnClickListener(v -> {
+                Utils.vibrate(mActivity);
+                if (isSharelayoutVisible) {
+                    shareLayoutGone();
+                } else {
+                    if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
+                        ll_share_home.setBackgroundDrawable(mActivity.getDrawable(R.drawable.share_round_corner_bg_light));
+                        int padding = (int) mActivity.getResources().getDimension(R.dimen._10sdp);
+                        ll_share_home.setPadding(padding, padding, padding, padding);
+                        ll_share_options_home.setVisibility(View.VISIBLE);
+                        isSharelayoutVisible = true;
+                    } else {
+                        ll_share_home.setBackgroundDrawable(mActivity.getDrawable(R.drawable.bottom_round_corner_bg));
+                        int padding = (int) mActivity.getResources().getDimension(R.dimen._10sdp);
+                        ll_share_home.setPadding(padding, padding, padding, padding);
+                        ll_share_options_home.setVisibility(View.VISIBLE);
+                        isSharelayoutVisible = true;
+                    }
+
+                }
+            });
+
+        }
+
+
+        private void BitmapConversion(HomeDetailList obj, String platform) {
+            shareLayoutGone();
+            try {
+                URL url = new URL(obj.getImage());
+                new LoadImageBitmap(mActivity, this::onBitmapLoaded, platform).execute(url);
+
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+
+        private void shareLayoutGone() {
+
+            isSharelayoutVisible = false;
+            ll_share_home.setBackground(null);
+            ll_share_options_home.setVisibility(View.GONE);
+        }
+
+
+
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, String platform) {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(mActivity.getContentResolver(), bitmap, "SantaBantaShare", null);
+            Uri imageUri = Uri.parse(path);
+
+            switch (platform) {
+                case GlobalConstants.COMMON.WHATSAPP:
+                    shareableIntents.shareOnWhatsapp(imageUri);
+                    break;
+            /*    case Constants.COMMON.FACEBOOK :
+                shareableIntents.shareOnWhatsapp(imageUri);
+                break;*/
+                case GlobalConstants.COMMON.TWITTER:
+//                shareableIntents.shareOnTwi1tter(imageUri);
+                    break;
+               /* case Constants.COMMON.INSTAGRAM :
+                shareableIntents.shareOnWhatsapp(imageUri);
+                break;
+                case Constants.COMMON.PINTREST :
+                shareableIntents.shareOnWhatsapp(imageUri);
+                break;
+                case Constants.COMMON.SNAPCHAT :
+                shareableIntents.shareOnWhatsapp(imageUri);
+                break;*/
+            }
+        }
+
     }
 
-    public class MemesVideoViewHolder extends RecyclerView.ViewHolder {
-
+    public class MemesVideoViewHolder extends RecyclerView.ViewHolder implements BitmapLoadedCallback {
+        @BindView(R.id.llbreadcrumbs)
+        LinearLayout llbreadcrumbs;
+        @BindView(R.id.ll_share_memes)
+        LinearLayout llShareMemes;
+        @BindView(R.id.ll_share_options_sms)
+        LinearLayout llShareOptionsSms;
+        @BindView(R.id.cb_like)
+        CheckBox cbLike;
+        @BindView(R.id.iv_facebook)
+        ImageView ivFacebook;
+        @BindView(R.id.iv_whatsapp)
+        ImageView ivWhatsapp;
+        @BindView(R.id.iv_twitter)
+        ImageView ivTwitter;
+        @BindView(R.id.iv_snapchat)
+        ImageView ivSnapchat;
+        @BindView(R.id.iv_pintrest)
+        ImageView ivPintrest;
+        @BindView(R.id.iv_instagram)
+        ImageView ivInstagram;
+        @BindView(R.id.ivMeme)
+        AspectRatioImageView ivMeme;
+        @BindView(R.id.progress_bar)
+        public ProgressBar progressBar;
+        @BindView(R.id.tv_like_count)
+        TextView tv_like_count;
         @BindView(R.id.ivMediaCoverImage)
         public ImageView ivMediaCoverImage;
-        @BindView(R.id.progressBar)
-        public ProgressBar progressBar;
         @BindView(R.id.ivVolumeControl)
         public ImageView ivVolumeControl;
         @BindView(R.id.mediaContainer)
         public FrameLayout mediaContainer;
         @BindView(R.id.pbBuffering)
         public ProgressBar pbBuffering;
+        private boolean isSharelayoutVisible = false;
         public RequestManager requestManager;
+        private final ShareableIntents shareableIntents;
+        HomeDetailList imageTOBeShared;
+
 
         public MemesVideoViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             Glide.with(mActivity).setDefaultRequestOptions(new RequestOptions());
+            shareableIntents = new ShareableIntents(mActivity);
         }
 
         void bindData(HomeDetailList model, int position) {
-
-
+            imageTOBeShared = model;
+            MemesImageItemListeners(model, position);
 
         }
+
+        private void MemesImageItemListeners(HomeDetailList obj, int position) {
+
+            ivWhatsapp.setOnClickListener(v -> {
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+                if (CheckPermissions.isStoragePermissionGranted(mActivity)) {
+                    BitmapConversion(obj, GlobalConstants.COMMON.WHATSAPP);
+                }
+            });
+            ivFacebook.setOnClickListener(v -> {
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+                shareableIntents.shareOnFbMesenger(imageTOBeShared.getImage());
+
+            });
+            ivTwitter.setOnClickListener(v -> {
+                shareableIntents.shareOnTwitter(v, imageTOBeShared.getImage());
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+            });
+            ivInstagram.setOnClickListener(v -> {
+                shareableIntents.shareOnInstagram(imageTOBeShared.getImage());
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+            });
+            ivPintrest.setOnClickListener(v -> {
+                shareableIntents.shareOnPintrest(v, imageTOBeShared.getImage());
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+            });
+            ivSnapchat.setOnClickListener(v -> {
+                shareableIntents.shareOnSnapChat(imageTOBeShared.getImage());
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+            });
+       /* binding.ivSms.setOnClickListener(v -> {
+            shareLayoutGone();
+
+        });*/
+       /* binding.rlSms.setOnClickListener(v -> {
+            shareLayoutGone();
+        });
+*/
+            cbLike.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+                Utils.vibrate(mActivity);
+
+                Dialog dialog = Utils.getProgressDialog(mActivity);
+                dialog.show();
+                cbLike.setClickable(false);
+                if (isChecked) {
+                    fragmentHomeHelper.addToFav(obj, position, "sms", cbLike, dialog);
+                } else {
+                    for (Favourite favouriteModel : obj.getFavourites()) {
+                        if (favouriteModel.getDeviceId().equals(Utils.getMyDeviceId(mActivity))) {
+                            fragmentHomeHelper.removeFromFav(obj, favouriteModel.getId(), position, cbLike, dialog);
+                            break;
+
+                        }
+                    }
+
+                }
+                //FUNCTIONALITY NOT IN SCOPE FOR THE TIME BEING
+//                    SmsRepository.getInstance().InsertFavourite(obj,fragmentSms);
+            });
+            llShareMemes.setOnClickListener(v -> {
+                Utils.vibrate(mActivity);
+                if (isSharelayoutVisible) {
+                    shareLayoutGone();
+                } else {
+                    if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
+                        llShareMemes.setBackgroundDrawable(mActivity.getDrawable(R.drawable.share_round_corner_bg_light));
+                        int padding = (int) mActivity.getResources().getDimension(R.dimen._10sdp);
+                        llShareMemes.setPadding(padding, padding, padding, padding);
+                        llShareOptionsSms.setVisibility(View.VISIBLE);
+                        isSharelayoutVisible = true;
+                    } else {
+                        llShareMemes.setBackgroundDrawable(mActivity.getDrawable(R.drawable.bottom_round_corner_bg));
+                        int padding = (int) mActivity.getResources().getDimension(R.dimen._10sdp);
+                        llShareMemes.setPadding(padding, padding, padding, padding);
+                        llShareOptionsSms.setVisibility(View.VISIBLE);
+                        isSharelayoutVisible = true;
+                    }
+
+                }
+            });
+
+        }
+
+
+        private void BitmapConversion(HomeDetailList obj, String platform) {
+            shareLayoutGone();
+            try {
+                URL url = new URL(obj.getImage());
+                new LoadImageBitmap(mActivity, this::onBitmapLoaded, platform).execute(url);
+
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+
+        private void shareLayoutGone() {
+
+            isSharelayoutVisible = false;
+            llShareMemes.setBackground(null);
+            llShareOptionsSms.setVisibility(View.GONE);
+        }
+
+
+
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, String platform) {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(mActivity.getContentResolver(), bitmap, "SantaBantaShare", null);
+            Uri imageUri = Uri.parse(path);
+
+            switch (platform) {
+                case GlobalConstants.COMMON.WHATSAPP:
+                    shareableIntents.shareOnWhatsapp(imageUri);
+                    break;
+            /*    case Constants.COMMON.FACEBOOK :
+                shareableIntents.shareOnWhatsapp(imageUri);
+                break;*/
+                case GlobalConstants.COMMON.TWITTER:
+//                shareableIntents.shareOnTwi1tter(imageUri);
+                    break;
+               /* case Constants.COMMON.INSTAGRAM :
+                shareableIntents.shareOnWhatsapp(imageUri);
+                break;
+                case Constants.COMMON.PINTREST :
+                shareableIntents.shareOnWhatsapp(imageUri);
+                break;
+                case Constants.COMMON.SNAPCHAT :
+                shareableIntents.shareOnWhatsapp(imageUri);
+                break;*/
+            }
+        }
+
     }
+
 
     class JokesHolder extends RecyclerView.ViewHolder {
 

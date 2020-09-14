@@ -9,7 +9,6 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -42,6 +41,7 @@ import retrofit2.Response;
 public class FragmentHomeHelper {
 
     private static final int PAGE_START = 1;
+    int mFirst = 0, mLast = 0;
     private Activity mActivity;
     private Webservices mInterface_method = AppController.getRetroInstance().create(Webservices.class);
     private FragmentHome fragmentHome;
@@ -51,6 +51,7 @@ public class FragmentHomeHelper {
     private int TOTAL_PAGES = 10;
     private int currentPage = PAGE_START;
     private LinearLayoutManager mLinearLayoutManager;
+    private LinearLayoutManager mSubListLayoutManager;
 
     public FragmentHomeHelper(Activity mActivity, FragmentHome fragmentHome) {
         this.mActivity = mActivity;
@@ -67,6 +68,19 @@ public class FragmentHomeHelper {
             }
         });
         getHomeData(AppController.LANGUAGE_SELECTED);
+        fragmentHome.ivNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        fragmentHome.ivPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
+
     }
 
     private void getHomeData(String language) {
@@ -85,31 +99,32 @@ public class FragmentHomeHelper {
                     fragmentHome.swipeRefreshLayout.setRefreshing(false);
 
                 if (response.isSuccessful()) {
-                    fragmentHome.rvSubCategory.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false));
+                    mSubListLayoutManager = new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false);
+                    fragmentHome.rvSubCategory.setLayoutManager(mSubListLayoutManager);
                     fragmentHome.rvSubCategory.setAdapter(new HomeCategoriesAdapter(response.body().getFeaturedCategories(), mActivity, new HomeCategoriesAdapter.HomeCategoryClickListener() {
                         @Override
                         public void onItemClicked(FeaturedCategory model) {
                             switch (model.getType()) {
                                 case "sms":
                                     mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"sms").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,model.getSlug()));
+                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "sms").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, model.getSlug()));
                                     break;
 
                                 case "jokes":
                                     mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,model.getSlug()));
+                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, model.getSlug()));
                                     break;
 
                                 case "memes":
                                     mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"memes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,model.getSlug()));
+                                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "memes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, model.getSlug()));
                                     break;
                             }
                         }
                     }));
 
-                    if (response.body().getData()!=null && response.body().getData().size()>0){
-                        mAdapter = new HomeItemAdapter(mActivity, response.body().getData(),FragmentHomeHelper.this);
+                    if (response.body().getData() != null && response.body().getData().size() > 0) {
+                        mAdapter = new HomeItemAdapter(mActivity, response.body().getData(), FragmentHomeHelper.this);
                         mAdapter.setHasStableIds(true);
                         mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
                         fragmentHome.recyclerHome.setLayoutManager(mLinearLayoutManager);
@@ -128,6 +143,20 @@ public class FragmentHomeHelper {
                             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
 //                                super.onScrolled(recyclerView, dx, dy);
                                 fragmentHome.swipeRefreshLayout.setEnabled(mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+                            }
+                        });
+
+                        fragmentHome.ivNext.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                fragmentHome.rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findLastVisibleItemPosition() + 1);
+                            }
+                        });
+
+                        fragmentHome.ivPrevious.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                fragmentHome.rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findFirstVisibleItemPosition() - 1);
                             }
                         });
 //
@@ -167,7 +196,7 @@ public class FragmentHomeHelper {
                         fragmentHome.recyclerHome.setVisibility(View.VISIBLE);
                         fragmentHome.tvNoDataFound.setVisibility(View.GONE);
 //                        Utils.fixRecyclerScroll(fragmentHome.recyclerHome, fragmentHome.swipeRefreshLayout, mLinearLayoutManager);
-                    }else {
+                    } else {
                         fragmentHome.recyclerHome.setVisibility(View.GONE);
                         fragmentHome.tvNoDataFound.setVisibility(View.VISIBLE);
                     }
@@ -189,8 +218,6 @@ public class FragmentHomeHelper {
             }
         });
     }
-
-
 
 
     public void addToFav(HomeDetailList obj, int position, String type, CheckBox cbLike, Dialog progressBar) {
@@ -217,7 +244,7 @@ public class FragmentHomeHelper {
                             if (status.equals("success")) {
                                 progressBar.dismiss();
                                 cbLike.setClickable(true);
-                                     obj.setFavCount(obj.getFavCount()+1);
+                                obj.setFavCount(obj.getFavCount() + 1);
                                 setFavItemToModel(position, addFavouriteRequest, obj, jsonObject.getInt("fav_id"));
                                 Toast.makeText(mActivity, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                             }
@@ -235,8 +262,6 @@ public class FragmentHomeHelper {
                 Log.e("onFailure", "onFailure");
             }
         });
-
-
 
 
     }

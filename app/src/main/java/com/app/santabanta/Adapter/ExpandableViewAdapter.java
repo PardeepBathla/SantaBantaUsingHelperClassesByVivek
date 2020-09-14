@@ -20,6 +20,7 @@ import com.app.santabanta.Modals.NavMenuResponse;
 import com.app.santabanta.R;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.ResUtils;
+import com.app.santabanta.Utils.SimpleDividerItemDecoration;
 import com.app.santabanta.Utils.Utils;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.side_menu_nav_item, parent, false);
+                .inflate(R.layout.item_expandable_view, parent, false);
         return new ExpandableViewAdapter.ViewHolder(v);
     }
 
@@ -123,6 +124,7 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
             name.setText(model.getName());
             recycler.setLayoutManager(new LinearLayoutManager(context));
             recycler.setAdapter(new ChildExpandableAdapter(context, model.getInfo(), model.getName(), menuClickListener, getAdapterPosition()));
+            recycler.addItemDecoration(new SimpleDividerItemDecoration(context));
             viewMoreBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

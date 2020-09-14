@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:paddingLeft="@dimen/_10sdp"
+        android:id="@+id/parent"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/iv_item_logo"
+            android:layout_width="@dimen/_16sdp"
+            android:layout_height="@dimen/_16sdp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/_3sdp"
+            android:src="@drawable/ic_santa_banta_logo" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_toLeftOf="@+id/viewMoreBtn"
+            android:layout_toRightOf="@+id/iv_item_logo"
+            android:fontFamily="@font/roboto_regular"
+            android:textAllCaps="true"
+            android:textColor="?text_color_reverse"
+            android:textSize="@dimen/_12ssp" />
+
+
+        <ImageView
+            android:id="@+id/viewMoreBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/_10sdp"
+            android:src="@drawable/ic_icon_feather_plus" />
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutExpand"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#DAD8D9"
+            />
+
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:visibility="gone" />
+
+</LinearLayout>

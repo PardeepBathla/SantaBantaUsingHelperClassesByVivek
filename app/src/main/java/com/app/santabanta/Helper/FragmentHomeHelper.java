@@ -282,40 +282,7 @@ public class FragmentHomeHelper {
                                 fragmentHome.rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findFirstVisibleItemPosition() - 1);
                             }
                         });
-//
-//                    if (currentPage < TOTAL_PAGES) {
-//                        if (mFeedAdapter != null)
-//                            mFeedAdapter.addLoadingFooter();
-//                    } else isLastPage = true;
-//
-//                    mRvFeed.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
-//                        @Override
-//                        protected void loadMoreItems() {
-//                            isLoading = true;
-//                            currentPage += 1;
-//                            new Handler().postDelayed(HomeFragmentHelper.this::loadNextPage, 1000);
-//                        }
-//
-//                        @Override
-//                        public int getTotalPageCount() {
-//                            return TOTAL_PAGES;
-//                        }
-//
-//                        @Override
-//                        public boolean isLastPage() {
-//                            return isLastPage;
-//                        }
-//
-//                        @Override
-//                        public boolean isLoading() {
-//                            return isLoading;
-//                        }
-//
-//                        @Override
-//                        public void onScrolled() {
-//
-//                        }
-//                    });
+
                         fragmentHome.recyclerHome.setVisibility(View.VISIBLE);
                         fragmentHome.tvNoDataFound.setVisibility(View.GONE);
 //                        Utils.fixRecyclerScroll(fragmentHome.recyclerHome, fragmentHome.swipeRefreshLayout, mLinearLayoutManager);

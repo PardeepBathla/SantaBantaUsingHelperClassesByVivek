@@ -7,7 +7,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_400sdp"
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:layout_marginVertical="@dimen/_2sdp"
         app:cardBackgroundColor="?card_bg_color"
@@ -16,7 +16,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <LinearLayout
@@ -62,11 +62,12 @@
             <RelativeLayout
                 android:id="@+id/rl_fav_and_share"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="?actionBarSize"
                 android:layout_below="@+id/tvContent"
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
+                android:layout_alignParentBottom="true"
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:orientation="horizontal">
 
@@ -78,6 +79,7 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:paddingTop="@dimen/_10sdp"
+                    android:layout_alignParentBottom="true"
                     android:paddingEnd="@dimen/_10sdp"
                     android:paddingBottom="@dimen/_10sdp">
 
@@ -109,6 +111,7 @@
                     android:id="@+id/ll_share_home"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
                     android:layout_toEndOf="@+id/ll_like_dislike"
                     android:orientation="horizontal"
                     android:padding="@dimen/_10sdp">

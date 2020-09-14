@@ -335,7 +335,7 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
             return;
         }
         mediaCoverImage = holder.ivMediaCoverImage;
-        progressBar = holder.progressBar;
+        progressBar = holder.pbBuffering;
         volumeControl = holder.ivVolumeControl;
 
         viewHolderParent = holder.itemView;

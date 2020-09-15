@@ -20,16 +20,16 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true">
         <activity android:name=".Activites.Splash">
-
-        </activity>
-        <activity android:name=".Activites.MainActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".Activites.MainActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:configChanges="orientation|screenSize|keyboardHidden">
+
         </activity>
     </application>
 

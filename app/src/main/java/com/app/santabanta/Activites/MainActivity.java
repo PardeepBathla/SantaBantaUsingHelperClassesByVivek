@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
@@ -113,6 +114,7 @@ public class MainActivity extends BaseActivity {
     private void initActivity() {
         mHelper = new MainActivityHelper(MainActivity.this);
         pref = Utils.getSharedPref(MainActivity.this);
+
     }
 
     @Override
@@ -209,7 +211,7 @@ public class MainActivity extends BaseActivity {
         if (requestCode == CheckPermissions.REQUEST_CODE) {
             if (grantResults.length > 0) {
                 if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+                    LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
                     View view = inflater.inflate(R.layout.dialog_18_plus, null);
                     final Dialog dialog = new Dialog(MainActivity.this);
                     dialog.setContentView(view);

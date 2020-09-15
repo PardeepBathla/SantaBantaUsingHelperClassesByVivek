@@ -1,6 +1,7 @@
 package com.app.santabanta.Helper;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.Image;
@@ -111,10 +112,13 @@ public class FragmentMemesHelper {
     private void getApiData() {
 
 //        progressBar.setVisibility(View.VISIBLE);
+        Dialog dialog = Utils.getProgressDialog(mFragment.getActivity());
+        dialog.show();
         getMemesData(new MemesCallback() {
             @Override
             public void onMemesFetched(MemesResposeModel response) {
-
+                if (dialog != null && dialog.isShowing())
+                    dialog.dismiss();
 
                 if (response.getData() != null && response.getData().size()>0){
                     if (swipeContainer.isRefreshing()) {
@@ -130,7 +134,7 @@ public class FragmentMemesHelper {
                         @Override
                         protected void loadMoreItems() {
                             isLoading = true;
-                            new Handler().postDelayed(() -> loadNextPage(), 1000);
+                            new Handler().postDelayed(() -> getApiData(), 1000);
                         }
 
                         @Override
@@ -181,7 +185,6 @@ public class FragmentMemesHelper {
 
 
             }
-
         });
     }
 

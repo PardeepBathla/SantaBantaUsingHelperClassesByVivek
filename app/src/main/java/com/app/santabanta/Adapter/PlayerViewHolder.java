@@ -198,7 +198,15 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
         ivWhatsapp.setOnClickListener(v -> {
             shareLayoutGone();
             Utils.vibrate(mCtx);
-            shareableIntents.shareOnWhatsapp(obj.getContent());
+            Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+            whatsappIntent.setType("text/plain");
+            whatsappIntent.setPackage("com.whatsapp");
+            whatsappIntent.putExtra(Intent.EXTRA_TEXT, obj.getContent() + "\n" + obj.getImage());
+            try {
+                mCtx.startActivity(whatsappIntent);
+            } catch (android.content.ActivityNotFoundException ex) {
+                Utils.ShowToast(mCtx, "Whatsapp has not been installed.");
+            }
 
         });
         ivFacebook.setOnClickListener(v -> {

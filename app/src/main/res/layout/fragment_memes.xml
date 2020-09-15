@@ -104,13 +104,7 @@
                 android:layout_height="match_parent"/>
 
             <!-- Custom animated loader-->
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:visibility="gone" />
+
         </RelativeLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

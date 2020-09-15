@@ -54,7 +54,6 @@ public class FragmentSmsHelper {
     private boolean isLastPage = false;
     private int TOTAL_PAGES = 10;
     private LinearLayoutManager mLinearLayoutManager;
-    private ArrayList<SmsDetailModel> mSmsList = new ArrayList<>();
     private LinearLayoutManager mSubListLayoutManager;
     private int currentPage = PAGE_START;
     private int pageCount, total_pages, next_page;
@@ -69,12 +68,13 @@ public class FragmentSmsHelper {
 
     private void initViews() {
 
-        fragmentSms.swipeRefreshSms.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getSms(GlobalConstants.COMMON.LANGUAGE_SELECTED, "", "");
-            }
-        });
+        mLinearLayoutManager = new LinearLayoutManager(mActivity);
+        fragmentSms.recyclerSms.setLayoutManager(mLinearLayoutManager);
+
+        smsHomeAdapter = new SmsHomeAdapter(FragmentSmsHelper.this, mActivity);
+        fragmentSms.recyclerSms.setAdapter(smsHomeAdapter);
+
+        fragmentSms.swipeRefreshSms.setOnRefreshListener(() -> getSms(GlobalConstants.COMMON.LANGUAGE_SELECTED, "", ""));
 
         getSms(AppController.LANGUAGE_SELECTED, "", "");
     }
@@ -116,16 +116,11 @@ public class FragmentSmsHelper {
                     currentPage = currentPage+1;
 
                     if (response.body().getData() != null && response.body().getData().size() > 0){
-                        mLinearLayoutManager = new LinearLayoutManager(mActivity);
-                        fragmentSms.recyclerSms.setLayoutManager(mLinearLayoutManager);
 
                         fragmentSms.recyclerSms.setVisibility(View.VISIBLE);
                         fragmentSms.tvNoDataFound.setVisibility(View.GONE);
+                        smsHomeAdapter.addAll(response.body().getData());
 
-                        Utils.fixRecyclerScroll(fragmentSms.recyclerSms, fragmentSms.swipeRefreshSms, mLinearLayoutManager);
-
-                        mSmsList.addAll(response.body().getData());
-                        smsHomeAdapter = new SmsHomeAdapter(FragmentSmsHelper.this, response.body().getData(), mActivity);
                         fragmentSms.recyclerSms.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
                             @Override
                             protected void loadMoreItems() {
@@ -154,8 +149,6 @@ public class FragmentSmsHelper {
 
                             }
                         });
-
-                        fragmentSms.recyclerSms.setAdapter(smsHomeAdapter);
 
                         fragmentSms.ivNext.setOnClickListener(new View.OnClickListener() {
                             @Override

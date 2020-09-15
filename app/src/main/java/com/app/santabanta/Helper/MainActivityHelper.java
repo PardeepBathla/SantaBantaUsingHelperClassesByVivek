@@ -89,7 +89,7 @@ public class MainActivityHelper {
                 ((MainActivity) mActivity).switchTheme();
             }
         });
-        initDrawer();
+
         ivMenu.setOnClickListener(view -> {
             Log.e("test", "test");
             drawer.openDrawer(Gravity.LEFT);
@@ -121,6 +121,7 @@ public class MainActivityHelper {
                 mActivity.startActivity(mActivity.getIntent());
             }
         });
+        initDrawer();
     }
 
 
@@ -180,7 +181,7 @@ public class MainActivityHelper {
     }
 
     private void getHomeCategories(CategoriesCallback categoriesCallback) {
-        Call<NavMenuResponse> call = mInterface_method.getNavList("English");
+        Call<NavMenuResponse> call = mInterface_method.getNavList(LANGUAGE_SELECTED);
         call.enqueue(new Callback<NavMenuResponse>() {
             @Override
             public void onResponse(Call<NavMenuResponse> call, Response<NavMenuResponse> response) {

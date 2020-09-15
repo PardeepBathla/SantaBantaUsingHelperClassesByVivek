@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.viewpager.widget.ViewPager;
+
 import com.app.santabanta.Activites.MainActivity;
 import com.app.santabanta.Adapter.ViewPagerAdapter;
 import com.app.santabanta.AppController;
@@ -25,12 +27,12 @@ public class NavFragmentHelper {
     private Activity mActivity;
     private NavFragment fragment;
     private ViewPagerAdapter adapter;
-    private NonSwipeableViewPager mPager;
+    private ViewPager mPager;
     private TabLayout mTabLayout;
     private RelativeLayout profileLayout;
     private ImageView iv_hamburger;
 
-    public NavFragmentHelper(NavFragment fragment, NonSwipeableViewPager mPager, TabLayout mTabLayout, Activity mActivity) {
+    public NavFragmentHelper(NavFragment fragment, ViewPager mPager, TabLayout mTabLayout, Activity mActivity) {
         this.fragment = fragment;
         this.mActivity = mActivity;
         this.mPager = mPager;

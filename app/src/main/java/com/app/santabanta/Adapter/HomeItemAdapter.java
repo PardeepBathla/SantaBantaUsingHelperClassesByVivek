@@ -58,17 +58,15 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int MEMES_IMAGE_POST = 3;
     private static final int LOADING = 4;
     public Activity mActivity;
-    private List<HomeDetailList> mList;
+    private List<HomeDetailList>  mList = new ArrayList<>();;
     private boolean isLoadingAdded = false;
     private SharedPreferences pref;
     FragmentHomeHelper fragmentHomeHelper;
 
-    public HomeItemAdapter(Activity mActivity, List<HomeDetailList> mList, FragmentHomeHelper fragmentHomeHelper) {
+    public HomeItemAdapter(Activity mActivity ,FragmentHomeHelper fragmentHomeHelper) {
         this.mActivity = mActivity;
-        this.mList = mList;
         pref = Utils.getSharedPref(mActivity);
         this.fragmentHomeHelper = fragmentHomeHelper;
-
     }
 
 
@@ -126,6 +124,11 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     }
 
+    public void addAll(List<HomeDetailList> list){
+        for (HomeDetailList mc : list) {
+            add(mc);
+        }
+    }
 
     public void setNewList(List<HomeDetailList> mList) {
         this.mList = mList;
@@ -135,6 +138,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void add(HomeDetailList item) {
         this.mList.add(item);
         notifyItemInserted(mList.size() - 1);
+
     }
 
 
@@ -724,8 +728,8 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
 
-            tv_title.setText(model.getTitle());
-            tvContent.setText(model.getContent());
+            tv_title.setText(Html.fromHtml(model.getTitle()));
+            tvContent.setText(Html.fromHtml(model.getContent()));
             setBreadCrumbs(model, llbreadcrumbs,"jokes");
             ll_share_home.setOnClickListener(new View.OnClickListener() {
                 @Override

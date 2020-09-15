@@ -1,11 +1,13 @@
 package com.app.santabanta.Adapter;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -15,9 +17,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.app.santabanta.Activites.MainActivity;
+import com.app.santabanta.AppController;
 import com.app.santabanta.Callbacks.DrawerMenuClickListener;
 import com.app.santabanta.Modals.NavMenuResponse;
 import com.app.santabanta.R;
+import com.app.santabanta.Utils.CheckPermissions;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.ResUtils;
 import com.app.santabanta.Utils.SimpleDividerItemDecoration;
@@ -27,6 +32,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAdapter.ViewHolder> {
 
@@ -128,17 +135,42 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
             viewMoreBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    if (layoutExpand.getVisibility() == View.VISIBLE) {
-//                        layoutExpand.setVisibility(View.GONE);
-//                    } else {
-//                        layoutExpand.setVisibility(View.VISIBLE);
-//                    }
+
                     if (currentPos == getAdapterPosition()){
                         currentPos = 999;
                         notifyDataSetChanged();
                     }else {
-                        currentPos = getAdapterPosition();
-                        notifyDataSetChanged();
+                        if (getAdapterPosition() == 1){
+                            if (AppController.SHOW_ADULT_DIALOG){
+                                LayoutInflater inflater = (LayoutInflater)context.getSystemService(LAYOUT_INFLATER_SERVICE);
+                                View view1 = inflater.inflate(R.layout.dialog_18_plus, null);
+                                final Dialog dialog = new Dialog(context);
+                                dialog.setContentView(view1);
+                                dialog.setCancelable(true);
+                                dialog.setCanceledOnTouchOutside(true);
+
+                                TextView txt_dia = dialog.findViewById(R.id.txt_dia);
+                                Button btn_yes = dialog.findViewById(R.id.btn_yes);
+                                Button btn_no = dialog.findViewById(R.id.btn_no);
+                                btn_yes.setOnClickListener(view2 -> {
+                                    AppController.SHOW_ADULT_DIALOG = false;
+                                    currentPos = getAdapterPosition();
+                                    notifyDataSetChanged();
+                                    dialog.dismiss();
+
+                                });
+                                btn_no.setOnClickListener(view12 -> dialog.dismiss());
+                                dialog.show();
+                            }else {
+                                currentPos = getAdapterPosition();
+                                notifyDataSetChanged();
+                            }
+
+                        }else {
+                            currentPos = getAdapterPosition();
+                            notifyDataSetChanged();
+                        }
+
                     }
                 }
             });

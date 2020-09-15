@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +24,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.santabanta.Callbacks.BitmapLoadedCallback;
 import com.app.santabanta.Fragment.FragmentMemes;
 import com.app.santabanta.Helper.FragmentMemesHelper;
+import com.app.santabanta.Modals.SmsDetailModel;
 import com.app.santabanta.Modals.memesModel.MemesDetailModel;
 import com.app.santabanta.Modals.memesModel.MemesFavouriteModel;
 import com.app.santabanta.R;
 import com.app.santabanta.Utils.AspectRatioImageView;
+import com.app.santabanta.Utils.CheckPermissions;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.LoadImageBitmap;
 import com.app.santabanta.Utils.ShareableIntents;
@@ -33,9 +38,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,20 +57,18 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final ShareableIntents shareableIntents;
     ArrayList<MemesDetailModel> memesData;
     private FragmentMemes memesFragment;
-    private ProgressBar progressBar;
     private MemesDetailModel memeTOBeShared;
     private boolean isSharelayoutVisible = false;
     private boolean isDialogSharelayoutVisible = false;
     private SharedPreferences pref;
     FragmentMemesHelper fragmentMemesHelper;
 
-    public MemesItemAdapter(Activity mCtx, FragmentMemes memesFragment, ProgressBar progressBar, ArrayList<MemesDetailModel> memesList, FragmentMemesHelper fragmentMemesHelper) {
+    public MemesItemAdapter(Activity mCtx, FragmentMemes memesFragment, ProgressBar progressBar, FragmentMemesHelper fragmentMemesHelper) {
         this.memesFragment = memesFragment;
         MemesItemAdapter.mCtx = mCtx;
-        this.progressBar = progressBar;
         shareableIntents = new ShareableIntents(mCtx);
         pref = Utils.getSharedPref(mCtx);
-        this.memesData = memesList;
+        this.memesData = new ArrayList<>();
         this.fragmentMemesHelper = fragmentMemesHelper;
         setHasStableIds(true);
     }
@@ -98,7 +104,7 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        progressBar.setVisibility(View.GONE);
+
         if (holder instanceof PlayerViewHolder) {
             ((PlayerViewHolder) holder).onBind(memesData.get(position), Glide.with(mCtx).setDefaultRequestOptions(new RequestOptions()), position);
             holder.setIsRecyclable(false);
@@ -189,11 +195,24 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
+    public void add(MemesDetailModel datu) {
+        this.memesData.add(datu);
+        notifyItemInserted(memesData.size() - 1);
+    }
+
+    public void addAll(List<MemesDetailModel> mcList) {
+        for (MemesDetailModel mc : mcList) {
+            add(mc);
+        }
+    }
+
+
+
     private void setMemeImage(String url, AspectRatioImageView ivMeme) {
         Utils.loadGlideImage(mCtx, ivMeme, url);
     }
 
-    public class ImageViewHolder extends RecyclerView.ViewHolder {
+    public class ImageViewHolder extends RecyclerView.ViewHolder implements BitmapLoadedCallback{
 
         @BindView(R.id.llbreadcrumbs)
         LinearLayout llbreadcrumbs;
@@ -274,7 +293,7 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 cbLike.setChecked(false);
             }
 
-            memesItemListener(obj, position);
+            memesItemListener(obj, position,ivMeme);
 
 
         }
@@ -318,6 +337,7 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         }
 
+
         private void BitmapConversion(MemesDetailModel obj, String platform) {
             shareLayoutGone();
             try {
@@ -329,14 +349,40 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         }
 
+        public Uri getLocalBitmapUri(ImageView imageView) {
+            // Extract Bitmap from ImageView drawable
+            Drawable drawable = imageView.getDrawable();
+            Bitmap bmp = null;
+            if (drawable instanceof BitmapDrawable){
+                bmp = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            } else {
+                return null;
+            }
+            // Store image to default external storage directory
+            Uri bmpUri = null;
+            try {
+                File file =  new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DOWNLOADS), "share_image_" + System.currentTimeMillis() + ".png");
+                file.getParentFile().mkdirs();
+                FileOutputStream out = new FileOutputStream(file);
+                bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+                out.close();
+                bmpUri = Uri.fromFile(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return bmpUri;
+        }
 
-        private void memesItemListener(MemesDetailModel obj, int position) {
+        private void memesItemListener(MemesDetailModel obj, int position,ImageView ivMeme) {
 
             ivWhatsapp.setOnClickListener(v -> {
                 shareLayoutGone();
                 Utils.vibrate(mCtx);
-                shareableIntents.shareOnWhatsapp(obj.getContent());
 
+                if (CheckPermissions.isStoragePermissionGranted(mCtx)) {
+                    BitmapConversion(obj, GlobalConstants.COMMON.WHATSAPP);
+                }
             });
             ivFacebook.setOnClickListener(v -> {
                 shareLayoutGone();
@@ -402,6 +448,35 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             isSharelayoutVisible = false;
             llShareMemes.setBackground(null);
             llShareOptionsSms.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, String platform) {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(mCtx.getContentResolver(), bitmap, "SantaBantaShare", null);
+            Uri imageUri = Uri.parse(path);
+
+            switch (platform) {
+                case GlobalConstants.COMMON.WHATSAPP:
+                    shareableIntents.shareOnWhatsapp(imageUri);
+                    break;
+            /*    case Constants.COMMON.FACEBOOK :
+                shareableIntents.shareOnWhatsapp(imageUri);
+                break;*/
+                case GlobalConstants.COMMON.TWITTER:
+//                shareableIntents.shareOnTwi1tter(imageUri);
+                    break;
+               /* case Constants.COMMON.INSTAGRAM :
+                shareableIntents.shareOnWhatsapp(imageUri);
+                break;
+                case Constants.COMMON.PINTREST :
+                shareableIntents.shareOnWhatsapp(imageUri);
+                break;
+                case Constants.COMMON.SNAPCHAT :
+                shareableIntents.shareOnWhatsapp(imageUri);
+                break;*/
+            }
         }
     }
 

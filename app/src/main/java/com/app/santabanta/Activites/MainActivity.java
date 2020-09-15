@@ -1,5 +1,6 @@
 package com.app.santabanta.Activites;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +11,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -205,7 +209,30 @@ public class MainActivity extends BaseActivity {
         if (requestCode == CheckPermissions.REQUEST_CODE) {
             if (grantResults.length > 0) {
                 if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+                    View view = inflater.inflate(R.layout.dialog_18_plus, null);
+                    final Dialog dialog = new Dialog(MainActivity.this);
+                    dialog.setContentView(view);
+                    dialog.setCancelable(true);
+                    dialog.setCanceledOnTouchOutside(true);
 
+                    TextView txt_dia = dialog.findViewById(R.id.txt_dia);
+                    Button btn_yes = dialog.findViewById(R.id.btn_yes);
+                    Button btn_no = dialog.findViewById(R.id.btn_no);
+
+                    btn_yes.setText(getString(R.string.ok));
+                    btn_no.setText(getString(R.string.cancel));
+                    txt_dia.setText(getString(R.string.permission_alert));
+                    btn_no.setOnClickListener(view13 -> {
+                        dialog.dismiss();
+                        finish();
+                    });
+                    btn_yes.setOnClickListener(view1 -> {
+                        CheckPermissions.isStoragePermissionGranted(MainActivity.this);
+                        dialog.dismiss();
+                    });
+                    btn_no.setOnClickListener(view12 -> dialog.dismiss());
+                    dialog.show();
                 }
             }
         }

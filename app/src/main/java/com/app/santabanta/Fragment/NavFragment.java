@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 public class NavFragment extends BaseFragment {
 
     @BindView(R.id.vp_pages)
-    public NonSwipeableViewPager mPager;
+    public ViewPager mPager;
     @BindView(R.id.tabs)
     public TabLayout mTabLayout;
     private Activity mActivity;

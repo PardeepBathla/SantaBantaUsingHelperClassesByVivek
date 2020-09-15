@@ -24,7 +24,7 @@ public interface Webservices {
     Call<NavMenuResponse> getNavList(@Path("language") String lang) ;
 
     @GET("home/{language}")
-    Call<HomeDetailsModel> getHomeList(@Path("language") String lang, @Query("page") int page);
+    Call<HomeDetailsModel> getHomeList(@Path("language") String lang, @Query("next_page") int page);
 
     @POST("favourites/save")
     Call<ResponseBody> saveFavouriteJoke(@Body AddFavouriteRequest addFavouriteRequest);

@@ -55,8 +55,8 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
     private boolean isSharelayoutVisible = false;
     private boolean isLoadingAdded = false;
 
-    public SmsHomeAdapter(FragmentSmsHelper fragmentSmsHelper, List<SmsDetailModel> mList, Activity mActivity) {
-        this.mList = mList;
+    public SmsHomeAdapter(FragmentSmsHelper fragmentSmsHelper,Activity mActivity) {
+        mList = new ArrayList<>();
         this.mActivity = mActivity;
         this.fragmentSmsHelper = fragmentSmsHelper;
         shareableIntents = new ShareableIntents(mActivity);

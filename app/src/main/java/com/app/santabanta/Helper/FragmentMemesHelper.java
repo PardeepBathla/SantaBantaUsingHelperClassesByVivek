@@ -55,7 +55,6 @@ public class FragmentMemesHelper {
     private HomeCategoriesAdapter mHomeCategoriesAdapter;
     private RelativeLayout smsRootLayout;
     private TextView tvNoDataFound;
-    private ProgressBar progressBar;
     private View view;
     private ArrayList<MemesDetailModel> memesList = new ArrayList<>();
     private Activity context;
@@ -88,9 +87,11 @@ public class FragmentMemesHelper {
         mLinearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         recyclerMemes.setLayoutManager(mLinearLayoutManager);
 
-        memesItemAdapter = new MemesItemAdapter(mFragment.getActivity(), mFragment, progressBar, memesList, this);
+        memesItemAdapter = new MemesItemAdapter(mFragment.getActivity(), mFragment, null, this);
         memesItemAdapter.setHasStableIds(true);
-
+        recyclerMemes.setAdapter(memesItemAdapter);
+        recyclerMemes.setNestedScrollingEnabled(false);
+        recyclerMemes.setHasFixedSize(false);
     }
 
     private void loadNextPage() {
@@ -109,7 +110,7 @@ public class FragmentMemesHelper {
 
     private void getApiData() {
 
-        progressBar.setVisibility(View.VISIBLE);
+//        progressBar.setVisibility(View.VISIBLE);
         getMemesData(new MemesCallback() {
             @Override
             public void onMemesFetched(MemesResposeModel response) {
@@ -154,12 +155,10 @@ public class FragmentMemesHelper {
                         }
                     });
 
-                    recyclerMemes.setAdapter(memesItemAdapter);
-                    recyclerMemes.setNestedScrollingEnabled(false);
-                    recyclerMemes.setHasFixedSize(false);
 
-                    progressBar.setVisibility(View.VISIBLE);
-                    memesItemAdapter.updateList((ArrayList<MemesDetailModel>) response.getData());
+
+//                    progressBar.setVisibility(View.VISIBLE);
+                    memesItemAdapter.addAll((ArrayList<MemesDetailModel>) response.getData());
 
                     recyclerMemes.setVisibility(View.VISIBLE);
                     tvNoDataFound.setVisibility(View.GONE);
@@ -192,7 +191,7 @@ public class FragmentMemesHelper {
         ivPrevious = view.findViewById(R.id.ivPrevious);
         rvSubCategory = view.findViewById(R.id.rvSubCategory);
         tvNoDataFound = view.findViewById(R.id.tvNoDataFound);
-        progressBar = view.findViewById(R.id.progress_bar);
+//        progressBar = view.findViewById(R.id.progress_bar);
         swipeContainer = view.findViewById(R.id.swipeContainer);
         recyclerMemes = view.findViewById(R.id.recyclerMemes);
 
@@ -201,6 +200,7 @@ public class FragmentMemesHelper {
             public void onRefresh() {
 //                mFragment.IS_FROM_MENU = false;
 //                mFragment.subcat_slug_name = "";
+                currentPage = PAGE_START;
                 getApiData();
 
             }

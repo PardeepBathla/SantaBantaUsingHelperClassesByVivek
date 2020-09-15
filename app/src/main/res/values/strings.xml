@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SantaBanta</string>
 
+    <string name="permission_alert">Permission is required to use the app!</string>
     <string name="SmsTab">SMS</string>
     <string name="HomeTab">HOME</string>
     <string name="JokesTab">JOKES</string>

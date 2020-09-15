@@ -8,7 +8,7 @@
 
 
 
-    <com.app.santabanta.Utils.NonSwipeableViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/vp_pages"
         android:layout_width="match_parent"
         android:layout_height="0dp"

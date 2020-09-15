@@ -21,6 +21,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.santabanta.Helper.FragmentJokesHelper;
+import com.app.santabanta.Modals.HomeDetailList;
 import com.app.santabanta.Modals.JokesDetailModel;
 import com.app.santabanta.Modals.JokesFavouriteModel;
 import com.app.santabanta.Modals.SmsDetailModel;
@@ -46,8 +47,8 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
     private boolean isSharelayoutVisible = false;
     FragmentJokesHelper fragmentJokesHelper;
 
-    public JokesHomeAdapter(List<JokesDetailModel> mData, Activity mActivity, FragmentJokesHelper fragmentJokesHelper) {
-        this.mData = mData;
+    public JokesHomeAdapter(Activity mActivity, FragmentJokesHelper fragmentJokesHelper) {
+        this.mData = new ArrayList<>();
         this.mActivity = mActivity;
         pref = Utils.getSharedPref(mActivity);
         shareableIntents = new ShareableIntents(mActivity);
@@ -120,6 +121,20 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
        mData = pagedLists;
        notifyDataSetChanged();
     }
+
+    public void addAll(List<JokesDetailModel> list){
+        for (JokesDetailModel mc : list) {
+            add(mc);
+        }
+    }
+
+    public void add(JokesDetailModel item) {
+        this.mData.add(item);
+        notifyItemInserted(mData.size() - 1);
+    }
+
+
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -218,8 +233,8 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
             }
 
 
-            tv_title.setText(model.getTitle());
-            tvContent.setText(model.getContent());
+            tv_title.setText(Html.fromHtml(model.getTitle()));
+            tvContent.setText(Html.fromHtml(model.getContent()));
             setBreadCrumbs(model, llbreadcrumbs);
             jokesItemListener(model, position);
 

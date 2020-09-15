@@ -62,11 +62,16 @@ public class FragmentJokesHelper {
 
     private void initViews() {
 
+        mLinearLayoutManager = new LinearLayoutManager(mActivity,RecyclerView.VERTICAL,false);
+        fragmentJokes.recyclerJokes.setLayoutManager(mLinearLayoutManager);
+        mJokesHomeAdapter = new JokesHomeAdapter(mActivity, FragmentJokesHelper.this);
+        fragmentJokes.recyclerJokes.setAdapter(mJokesHomeAdapter);
         fragmentJokes.swipeRefreshJokes.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 //                fragmentJokes.IS_SUB_CAT = false;
 //                fragmentJokes.slugName = "";
+                currentPage = PAGE_START;
                 getJokes(AppController.LANGUAGE_SELECTED, fragmentJokes.slugName);
             }
         });
@@ -114,9 +119,8 @@ public class FragmentJokesHelper {
                         currentPage = currentPage+1;
 
                         if (response.body().getData() != null && response.body().getData().size() > 0) {
-                            mLinearLayoutManager = new LinearLayoutManager(mActivity,RecyclerView.VERTICAL,false);
-                            fragmentJokes.recyclerJokes.setLayoutManager(mLinearLayoutManager);
-                            mJokesHomeAdapter = new JokesHomeAdapter(response.body().getData(),mActivity, FragmentJokesHelper.this);
+
+                            mJokesHomeAdapter.addAll(response.body().getData());
                             fragmentJokes.recyclerJokes.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
                                 @Override
                                 protected void loadMoreItems() {
@@ -139,14 +143,12 @@ public class FragmentJokesHelper {
                                     return false;
                                 }
 
-
                                 @Override
                                 public void onScrolled() {
 
                                 }
                             });
 
-                            fragmentJokes.recyclerJokes.setAdapter(mJokesHomeAdapter);
                             fragmentJokes.recyclerJokes.setVisibility(View.VISIBLE);
                             fragmentJokes.tvNoDataFound.setVisibility(View.GONE);
                             fragmentJokes.ivNext.setOnClickListener(new View.OnClickListener() {
@@ -165,11 +167,7 @@ public class FragmentJokesHelper {
                         } else {
                             fragmentJokes.recyclerJokes.setVisibility(View.GONE);
                             fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
-
-
                         }
-
-
                     }
                 }catch (Exception e){
                     e.printStackTrace();

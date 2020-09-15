@@ -53,13 +53,24 @@ public class FragmentHomeHelper {
     private int currentPage = PAGE_START;
     private int pageCount, total_pages, next_page;
     private boolean isLoading = false;
-
     private LinearLayoutManager mLinearLayoutManager;
     private LinearLayoutManager mSubListLayoutManager;
 
     public FragmentHomeHelper(Activity mActivity, FragmentHome fragmentHome) {
         this.mActivity = mActivity;
         this.fragmentHome = fragmentHome;
+        mAdapter = new HomeItemAdapter(mActivity,FragmentHomeHelper.this);
+        mAdapter.setHasStableIds(true);
+
+
+                      /*  } else {
+                            mAdapter.notifyDataSetChanged();
+                        }*/
+        fragmentHome.recyclerHome.setNestedScrollingEnabled(false);
+        fragmentHome.recyclerHome.setHasFixedSize(false);
+        mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
+        fragmentHome.recyclerHome.setLayoutManager(mLinearLayoutManager);
+        fragmentHome.recyclerHome.setAdapter(mAdapter);
         initViews();
     }
 
@@ -247,10 +258,7 @@ public class FragmentHomeHelper {
 
                     if (response.body().getData() != null && response.body().getData().size() > 0) {
                         // if (mAdapter == null) {
-                        mAdapter = new HomeItemAdapter(mActivity, response.body().getData(), FragmentHomeHelper.this);
-                        mAdapter.setHasStableIds(true);
-                        mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
-                        fragmentHome.recyclerHome.setLayoutManager(mLinearLayoutManager);
+                        mAdapter.addAll(response.body().getData());
                         fragmentHome.recyclerHome.setMediaObjects(response.body().getData());
                         fragmentHome.recyclerHome.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
                             @Override
@@ -282,13 +290,7 @@ public class FragmentHomeHelper {
                         });
 
 
-                        fragmentHome.recyclerHome.setAdapter(mAdapter);
 
-                      /*  } else {
-                            mAdapter.notifyDataSetChanged();
-                        }*/
-                        fragmentHome.recyclerHome.setNestedScrollingEnabled(false);
-                        fragmentHome.recyclerHome.setHasFixedSize(false);
 
                         fragmentHome.recyclerHome.setOnScrollListener(new RecyclerView.OnScrollListener() {
                             @Override

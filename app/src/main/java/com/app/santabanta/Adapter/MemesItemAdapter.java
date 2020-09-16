@@ -270,7 +270,7 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (obj.getFavCount() == 0) {
                 tv_like_count.setVisibility(View.GONE);
             } else {
-                tv_like_count.setVisibility(View.VISIBLE);
+                tv_like_count.setVisibility(View.GONE);
                 tv_like_count.setText(String.valueOf(obj.getFavCount()));
             }
 

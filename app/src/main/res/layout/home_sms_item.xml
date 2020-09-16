@@ -45,7 +45,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/rl_image"
-                android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:orientation="horizontal">
 
@@ -55,10 +54,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingTop="@dimen/_10sdp"
-                    android:paddingEnd="@dimen/_10sdp"
-                    android:paddingBottom="@dimen/_10sdp">
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:orientation="horizontal">
 
 
                     <CheckBox
@@ -73,6 +70,7 @@
                     <TextView
                         android:id="@+id/tv_like_count"
                         android:layout_width="wrap_content"
+                        android:visibility="gone"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_5sdp"
                         android:fontFamily="@font/roboto_regular"
@@ -84,9 +82,9 @@
                     android:id="@+id/ll_share_home"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_10sdp"
                     android:layout_toEndOf="@+id/ll_like_dislike"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_10sdp">
+                    android:orientation="horizontal">
 
 
                     <ImageView

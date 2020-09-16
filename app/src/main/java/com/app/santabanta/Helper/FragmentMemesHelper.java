@@ -215,7 +215,7 @@ public class FragmentMemesHelper {
         if (mFragment.IS_FROM_MENU) {
             call = mInterface_method.getMemesNewList(mFragment.subcat_slug_name, currentPage);
         } else {
-            call = mInterface_method.getMemesList(GlobalConstants.COMMON.LANGUAGE_SELECTED, currentPage);
+            call = mInterface_method.getMemesList(AppController.LANGUAGE_SELECTED, currentPage);
         }
         call.enqueue(new Callback<MemesResposeModel>() {
             @Override

@@ -260,7 +260,7 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } else {
                 tv_like_count.setVisibility(View.GONE);
                 tv_like_count.setText(String.valueOf(obj.getFavCount()));
-            }
+            }//
 
 
             setMemeImage(obj.getImage(), ivMeme);

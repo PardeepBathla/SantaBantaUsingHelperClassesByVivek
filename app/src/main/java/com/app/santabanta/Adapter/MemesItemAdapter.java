@@ -201,7 +201,8 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void add(MemesDetailModel data) {
         this.memesData.add(data);
-        notifyItemInserted(memesData.size() - 1);
+       // notifyItemInserted(memesData.size() - 1);
+        notifyDataSetChanged();
     }
 
     public void addAll(List<MemesDetailModel> mcList) {
@@ -260,14 +261,12 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         void bindData(MemesDetailModel obj, int position) {
 
-
             if (obj.getFavCount() == 0) {
                 tv_like_count.setVisibility(View.GONE);
             } else {
                 tv_like_count.setVisibility(View.GONE);
                 tv_like_count.setText(String.valueOf(obj.getFavCount()));
             }//
-
 
             setMemeImage(obj.getImage(), ivMeme);
 
@@ -288,8 +287,6 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
 
             memesItemListener(obj, position,ivMeme);
-
-
         }
 
         private void setBreadCrumbs(View binding, MemesDetailModel obj, int position) {

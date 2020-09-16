@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.media.Image;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,12 +25,13 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.santabanta.Callbacks.BitmapLoadedCallback;
+import com.app.santabanta.Events.Events;
+import com.app.santabanta.Events.GlobalBus;
 import com.app.santabanta.Helper.FragmentHomeHelper;
 import com.app.santabanta.Modals.Favourite;
 import com.app.santabanta.Modals.HomeDetailList;
 import com.app.santabanta.R;
 import com.app.santabanta.Utils.AspectRatioImageView;
-import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.CheckPermissions;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.LoadImageBitmap;
@@ -58,12 +58,12 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int MEMES_IMAGE_POST = 3;
     private static final int LOADING = 4;
     public Activity mActivity;
-    private List<HomeDetailList>  mList = new ArrayList<>();;
+    FragmentHomeHelper fragmentHomeHelper;
+    private List<HomeDetailList> mList = new ArrayList<>();
     private boolean isLoadingAdded = false;
     private SharedPreferences pref;
-    FragmentHomeHelper fragmentHomeHelper;
 
-    public HomeItemAdapter(Activity mActivity ,FragmentHomeHelper fragmentHomeHelper) {
+    public HomeItemAdapter(Activity mActivity, FragmentHomeHelper fragmentHomeHelper) {
         this.mActivity = mActivity;
         pref = Utils.getSharedPref(mActivity);
         this.fragmentHomeHelper = fragmentHomeHelper;
@@ -107,24 +107,24 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        if (mList.get(position).getType()!=null){
-        String type = mList.get(position).getType();
-        if (type.equalsIgnoreCase("jokes"))
-            return JOKE_POST;
-        else if (type.equalsIgnoreCase("sms"))
-            return SMS_POST;
-        else if (type.equalsIgnoreCase("memes")) {
-            if (mList.get(position).getImage().endsWith(".mp4")) {
-                return MEMES_VIDEO_POST;
-            } else
-                return MEMES_IMAGE_POST;
-        }
+        if (mList.get(position).getType() != null) {
+            String type = mList.get(position).getType();
+            if (type.equalsIgnoreCase("jokes"))
+                return JOKE_POST;
+            else if (type.equalsIgnoreCase("sms"))
+                return SMS_POST;
+            else if (type.equalsIgnoreCase("memes")) {
+                if (mList.get(position).getImage().endsWith(".mp4")) {
+                    return MEMES_VIDEO_POST;
+                } else
+                    return MEMES_IMAGE_POST;
+            }
         }
         return 0;
 
     }
 
-    public void addAll(List<HomeDetailList> list){
+    public void addAll(List<HomeDetailList> list) {
         for (HomeDetailList mc : list) {
             add(mc);
         }
@@ -209,8 +209,65 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         notifyDataSetChanged();
     }
 
+    private void setBreadCrumbs(HomeDetailList obj, LinearLayout llbreadcrumbs, String type) {
+        if (obj.getBreadcrumbs() != null) {
+            TextView[] textView = new TextView[obj.getBreadcrumbs().size()];
+
+            if (llbreadcrumbs.getChildCount() > 0)
+                llbreadcrumbs.removeAllViews();
+
+
+            for (int i = 0; i < obj.getBreadcrumbs().size(); i++) {
+                textView[i] = new TextView(mActivity);
+
+                if (i == 0) {
+                    textView[i].setText(obj.getBreadcrumbs().get(i).getLabel());
+
+                } else {
+                    textView[i].setText(" > " + obj.getBreadcrumbs().get(i).getLabel());
+
+                }
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+
+                );
+                llbreadcrumbs.setOrientation(LinearLayout.HORIZONTAL);
+                params.setMargins(3, 3, 3, 3);
+                textView[i].setLayoutParams(params);
+                llbreadcrumbs.addView(textView[i]);
+
+                String slug = obj.getBreadcrumbs().get(i).getLink();
+                textView[i].setOnClickListener(v -> {
+                    switch (type) {
+                        case "sms":
+//                                Events.SMSEvent onFileSelected = new Events.SMSEvent(slug, "Veg");
+//                                GlobalBus.getBus().post(onFileSelected);
+                            mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                    .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "sms").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, slug));
+                            break;
+
+                        case "jokes":
+//                                Events.JokesEvent jokesEvent = new Events.JokesEvent(slug);
+//                                GlobalBus.getBus().post(jokesEvent);
+                            mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                    .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, slug));
+                            break;
+
+                        case "memes":
+//                                Events.MemesEvent memesEvent = new Events.MemesEvent(slug);
+//                                GlobalBus.getBus().post(memesEvent);
+                            mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+                                    .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "memes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, slug));
+                            break;
+                    }
+                });
+            }
+        }
+    }
 
     class MemesImageHolder extends RecyclerView.ViewHolder implements BitmapLoadedCallback {
+        private final ShareableIntents shareableIntents;
         @BindView(R.id.llbreadcrumbs)
         LinearLayout llbreadcrumbs;
         @BindView(R.id.ivMeme)
@@ -241,9 +298,8 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView iv_pintrest;
         @BindView(R.id.iv_snapchat)
         ImageView iv_snapchat;
-        private final ShareableIntents shareableIntents;
-        private boolean isSharelayoutVisible = false;
         HomeDetailList imageTOBeShared;
+        private boolean isSharelayoutVisible = false;
 
 
         public MemesImageHolder(@NonNull View itemView) {
@@ -399,7 +455,6 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
 
-
         @Override
         public void onBitmapLoaded(Bitmap bitmap, String platform) {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -432,6 +487,18 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public class MemesVideoViewHolder extends RecyclerView.ViewHolder implements BitmapLoadedCallback {
+        private final ShareableIntents shareableIntents;
+        @BindView(R.id.progress_bar)
+        public ProgressBar progressBar;
+        @BindView(R.id.ivMediaCoverImage)
+        public ImageView ivMediaCoverImage;
+        @BindView(R.id.ivVolumeControl)
+        public ImageView ivVolumeControl;
+        @BindView(R.id.mediaContainer)
+        public FrameLayout mediaContainer;
+        @BindView(R.id.pbBuffering)
+        public ProgressBar pbBuffering;
+        public RequestManager requestManager;
         @BindView(R.id.llbreadcrumbs)
         LinearLayout llbreadcrumbs;
         @BindView(R.id.ll_share_memes)
@@ -454,22 +521,10 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView ivInstagram;
         @BindView(R.id.ivMeme)
         AspectRatioImageView ivMeme;
-        @BindView(R.id.progress_bar)
-        public ProgressBar progressBar;
         @BindView(R.id.tv_like_count)
         TextView tv_like_count;
-        @BindView(R.id.ivMediaCoverImage)
-        public ImageView ivMediaCoverImage;
-        @BindView(R.id.ivVolumeControl)
-        public ImageView ivVolumeControl;
-        @BindView(R.id.mediaContainer)
-        public FrameLayout mediaContainer;
-        @BindView(R.id.pbBuffering)
-        public ProgressBar pbBuffering;
-        private boolean isSharelayoutVisible = false;
-        public RequestManager requestManager;
-        private final ShareableIntents shareableIntents;
         HomeDetailList imageTOBeShared;
+        private boolean isSharelayoutVisible = false;
 
 
         public MemesVideoViewHolder(@NonNull View itemView) {
@@ -594,7 +649,6 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
 
-
         @Override
         public void onBitmapLoaded(Bitmap bitmap, String platform) {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -625,7 +679,6 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
     }
-
 
     class JokesHolder extends RecyclerView.ViewHolder {
 
@@ -704,13 +757,12 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
 
-            if (model.getFavCount()!=null && model.getFavCount() == 0) {
+            if (model.getFavCount() != null && model.getFavCount() == 0) {
                 tv_like_count.setVisibility(View.GONE);
             } else {
                 tv_like_count.setVisibility(View.GONE);
                 tv_like_count.setText(String.valueOf(model.getFavCount()));
             }
-
 
 
             if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
@@ -730,7 +782,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             tv_title.setText(Html.fromHtml(model.getTitle()));
             tvContent.setText(Html.fromHtml(model.getContent()));
-            setBreadCrumbs(model, llbreadcrumbs,"jokes");
+            setBreadCrumbs(model, llbreadcrumbs, "jokes");
             ll_share_home.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -741,7 +793,6 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                 }
             });
-
 
 
             if (model.getFavourites() != null && model.getFavourites().size() != 0) {
@@ -931,7 +982,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     }
 
-    class SmsViewHolder extends RecyclerView.ViewHolder implements BitmapLoadedCallback{
+    class SmsViewHolder extends RecyclerView.ViewHolder implements BitmapLoadedCallback {
 
         @BindView(R.id.ivMeme)
         AspectRatioImageView ivMeme;
@@ -963,10 +1014,9 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         LinearLayout ll_share_home;
         @BindView(R.id.tv_like_count)
         TextView tv_like_count;
-        private boolean isSharelayoutVisible = false;
-
         ShareableIntents shareableIntents;
         HomeDetailList imageTOBeShared;
+        private boolean isSharelayoutVisible = false;
 
         public SmsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -986,7 +1036,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             imageTOBeShared = model;
             Utils.loadGlideImage(mActivity, ivMeme, model.getImage());
-            setBreadCrumbs(model, llbreadcrumbs,"sms");
+            setBreadCrumbs(model, llbreadcrumbs, "sms");
             if (model.getFavourites() != null && model.getFavourites().size() != 0) {
                 for (Favourite favouriteModel : model.getFavourites()) {
                     if (favouriteModel.getDeviceId().equals(Utils.getMyDeviceId(mActivity))) {
@@ -1005,7 +1055,6 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
         }
-
 
 
         private void smsItemListeners(HomeDetailList obj, int position) {
@@ -1124,7 +1173,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             switch (platform) {
                 case GlobalConstants.COMMON.WHATSAPP:
-                shareableIntents.shareOnWhatsapp(imageUri);
+                    shareableIntents.shareOnWhatsapp(imageUri);
                     break;
             /*    case Constants.COMMON.FACEBOOK :
                 shareableIntents.shareOnWhatsapp(imageUri);
@@ -1145,59 +1194,6 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-
-    private void setBreadCrumbs(HomeDetailList obj, LinearLayout llbreadcrumbs,String type) {
-        if (obj.getBreadcrumbs()!=null) {
-            TextView[] textView = new TextView[obj.getBreadcrumbs().size()];
-
-            if (llbreadcrumbs.getChildCount() > 0)
-                llbreadcrumbs.removeAllViews();
-
-
-            for (int i = 0; i < obj.getBreadcrumbs().size(); i++) {
-                textView[i] = new TextView(mActivity);
-
-                if (i == 0) {
-                    textView[i].setText(obj.getBreadcrumbs().get(i).getLabel());
-
-                } else {
-                    textView[i].setText(" > " + obj.getBreadcrumbs().get(i).getLabel());
-
-                }
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-
-                );
-                llbreadcrumbs.setOrientation(LinearLayout.HORIZONTAL);
-                params.setMargins(3, 3, 3, 3);
-                textView[i].setLayoutParams(params);
-                llbreadcrumbs.addView(textView[i]);
-
-                String slug = obj.getBreadcrumbs().get(i).getLink();
-                textView[i].setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        switch (type) {
-                            case "sms":
-                                mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                        .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "sms").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, slug));
-                                break;
-
-                            case "jokes":
-                                mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                        .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, slug));
-                                break;
-
-                            case "memes":
-                                mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                        .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "memes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, slug));
-                                break;
-                        }
-                    }
-                });
-            }
-        }
-    }
     class LoadingVH extends RecyclerView.ViewHolder {
 
         LoadingVH(View itemView) {

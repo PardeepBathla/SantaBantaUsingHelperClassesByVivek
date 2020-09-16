@@ -25,6 +25,7 @@ import com.app.santabanta.Activites.MainActivity;
 import com.app.santabanta.Callbacks.BitmapLoadedCallback;
 import com.app.santabanta.Events.Events;
 import com.app.santabanta.Events.GlobalBus;
+import com.app.santabanta.Fragment.FragmentSms;
 import com.app.santabanta.Helper.FragmentSmsHelper;
 import com.app.santabanta.Modals.SmsDetailModel;
 import com.app.santabanta.Modals.SmsFavouriteModel;
@@ -56,13 +57,15 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
     private Activity mActivity;
     private boolean isSharelayoutVisible = false;
     private boolean isLoadingAdded = false;
+    private FragmentSms fragmentSms;
 
-    public SmsHomeAdapter(FragmentSmsHelper fragmentSmsHelper,Activity mActivity) {
+    public SmsHomeAdapter(FragmentSmsHelper fragmentSmsHelper,Activity mActivity,FragmentSms fragmentSms) {
         mList = new ArrayList<>();
         this.mActivity = mActivity;
         this.fragmentSmsHelper = fragmentSmsHelper;
         shareableIntents = new ShareableIntents(mActivity);
         pref = Utils.getSharedPref(mActivity);
+        this.fragmentSms = fragmentSms;
     }
 
     private SmsDetailModel getItem(int position) {
@@ -158,8 +161,9 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
                 llbreadcrumbs.addView(textView[i]);
                 String slug = obj.getBreadcrumbs().get(i).getLink();
                 textView[i].setOnClickListener(v -> {
-                    Events.SMSEvent onFileSelected = new Events.SMSEvent(slug,"Veg");
-                    GlobalBus.getBus().post(onFileSelected);
+//                    Events.SMSEvent onFileSelected = new Events.SMSEvent(slug,"Veg");
+//                    GlobalBus.getBus().post(onFileSelected);
+                    fragmentSms.enterSubCategorySms(true, slug, "Veg");
 //                    mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
 //                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "sms").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, slug));
                 });

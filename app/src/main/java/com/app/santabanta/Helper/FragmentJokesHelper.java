@@ -64,7 +64,7 @@ public class FragmentJokesHelper {
 
         mLinearLayoutManager = new LinearLayoutManager(mActivity,RecyclerView.VERTICAL,false);
         fragmentJokes.recyclerJokes.setLayoutManager(mLinearLayoutManager);
-        mJokesHomeAdapter = new JokesHomeAdapter(mActivity, FragmentJokesHelper.this);
+        mJokesHomeAdapter = new JokesHomeAdapter(mActivity, FragmentJokesHelper.this,fragmentJokes);
         fragmentJokes.recyclerJokes.setAdapter(mJokesHomeAdapter);
         fragmentJokes.swipeRefreshJokes.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

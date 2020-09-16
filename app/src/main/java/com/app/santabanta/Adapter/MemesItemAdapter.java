@@ -63,15 +63,17 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private boolean isSharelayoutVisible = false;
     private boolean isDialogSharelayoutVisible = false;
     private SharedPreferences pref;
-    FragmentMemesHelper fragmentMemesHelper;
+    private FragmentMemesHelper fragmentMemesHelper;
+    private FragmentMemes fragmentMemes;
 
-    public MemesItemAdapter(Activity mCtx, FragmentMemes memesFragment, ProgressBar progressBar, FragmentMemesHelper fragmentMemesHelper) {
+    public MemesItemAdapter(Activity mCtx, FragmentMemes memesFragment, ProgressBar progressBar, FragmentMemesHelper fragmentMemesHelper,FragmentMemes fragmentMemes) {
         this.memesFragment = memesFragment;
         MemesItemAdapter.mCtx = mCtx;
         shareableIntents = new ShareableIntents(mCtx);
         pref = Utils.getSharedPref(mCtx);
         this.memesData = new ArrayList<>();
         this.fragmentMemesHelper = fragmentMemesHelper;
+        this.fragmentMemes = fragmentMemes;
         setHasStableIds(true);
     }
 
@@ -317,8 +319,9 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     String slug = obj.getBreadcrumbs().get(i).getLink();
                     textView[i].setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
-                            Events.MemesEvent memesEvent= new Events.MemesEvent(slug);
-                            GlobalBus.getBus().post(memesEvent);
+//                            Events.MemesEvent memesEvent= new Events.MemesEvent(slug);
+//                            GlobalBus.getBus().post(memesEvent);
+                            fragmentMemes.enterSubCategoryMemes(true, slug);
 //                            mCtx.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
 //                                    .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"memes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug));
                         }

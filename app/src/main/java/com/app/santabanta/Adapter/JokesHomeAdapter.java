@@ -18,10 +18,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.santabanta.Events.Events;
 import com.app.santabanta.Events.GlobalBus;
+import com.app.santabanta.Fragment.FragmentJokes;
 import com.app.santabanta.Helper.FragmentJokesHelper;
 import com.app.santabanta.Modals.HomeDetailList;
 import com.app.santabanta.Modals.JokesDetailModel;
@@ -47,14 +49,16 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
     private List<JokesDetailModel> mData;
     private Activity mActivity;
     private boolean isSharelayoutVisible = false;
-    FragmentJokesHelper fragmentJokesHelper;
+    private FragmentJokesHelper fragmentJokesHelper;
+    private FragmentJokes fragmentJokes;
 
-    public JokesHomeAdapter(Activity mActivity, FragmentJokesHelper fragmentJokesHelper) {
+    public JokesHomeAdapter(Activity mActivity, FragmentJokesHelper fragmentJokesHelper, FragmentJokes fragmentJokes) {
         this.mData = new ArrayList<>();
         this.mActivity = mActivity;
         pref = Utils.getSharedPref(mActivity);
         shareableIntents = new ShareableIntents(mActivity);
         this.fragmentJokesHelper = fragmentJokesHelper;
+        this.fragmentJokes = fragmentJokes;
     }
 
     @NonNull
@@ -105,11 +109,14 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
 
                 int finalI = i;
                 String slug = obj.getBreadcrumbs().get(i).getLink();
-                textView[i].setOnClickListener(v -> {
-                    Events.JokesEvent jokesEvent= new Events.JokesEvent(slug);
-                    GlobalBus.getBus().post(jokesEvent);
+                textView[i].setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+//                        Events.JokesEvent jokesEvent= new Events.JokesEvent(slug);
+//                        GlobalBus.getBus().post(jokesEvent);
+                        fragmentJokes.enterSubCategoryJoke(true,slug);
 //                        mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
 //                                .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug));
+                    }
                 });
             }
         }

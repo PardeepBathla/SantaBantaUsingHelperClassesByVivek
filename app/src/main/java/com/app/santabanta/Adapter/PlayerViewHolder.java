@@ -154,8 +154,9 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
 //                        intent.putExtra("id", obj.getCategories().get(0).getCategoryId());
 //                        intent.putExtra("slug", obj.getBreadcrumbs().get(finalI).getLink());
 //                        mCtx.sendBroadcast(intent);
-                        Events.MemesEvent memesEvent= new Events.MemesEvent(obj.getBreadcrumbs().get(finalI).getLink());
-                        GlobalBus.getBus().post(memesEvent);
+//                        Events.MemesEvent memesEvent= new Events.MemesEvent(obj.getBreadcrumbs().get(finalI).getLink());
+//                        GlobalBus.getBus().post(memesEvent);
+                          memesFragment.enterSubCategoryMemes(true,obj.getBreadcrumbs().get(finalI).getLink());
                     }
                 });
             }

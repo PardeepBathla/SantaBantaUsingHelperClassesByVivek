@@ -71,7 +71,7 @@ public class FragmentSmsHelper {
         mLinearLayoutManager = new LinearLayoutManager(mActivity);
         fragmentSms.recyclerSms.setLayoutManager(mLinearLayoutManager);
 
-        smsHomeAdapter = new SmsHomeAdapter(FragmentSmsHelper.this, mActivity);
+        smsHomeAdapter = new SmsHomeAdapter(FragmentSmsHelper.this, mActivity,fragmentSms);
         fragmentSms.recyclerSms.setAdapter(smsHomeAdapter);
 
         fragmentSms.swipeRefreshSms.setOnRefreshListener(() -> getSms(GlobalConstants.COMMON.LANGUAGE_SELECTED, "", ""));

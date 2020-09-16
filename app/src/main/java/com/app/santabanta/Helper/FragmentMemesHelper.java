@@ -88,7 +88,7 @@ public class FragmentMemesHelper {
         mLinearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         recyclerMemes.setLayoutManager(mLinearLayoutManager);
 
-        memesItemAdapter = new MemesItemAdapter(mFragment.getActivity(), mFragment, null, this);
+        memesItemAdapter = new MemesItemAdapter(mFragment.getActivity(), mFragment, null, this,mFragment);
         memesItemAdapter.setHasStableIds(true);
         recyclerMemes.setAdapter(memesItemAdapter);
         recyclerMemes.setNestedScrollingEnabled(false);

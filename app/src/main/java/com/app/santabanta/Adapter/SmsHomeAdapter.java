@@ -251,12 +251,12 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
 
         void bindData(SmsDetailModel model, int position) {
             Log.e("sms_url",model.getImage());
-            if (model.getFav_count() == 0) {
+           /* if (model.getFav_count() == 0) {
                 tv_like_count.setVisibility(View.GONE);
             } else {
-                tv_like_count.setVisibility(View.VISIBLE);
+                tv_like_count.setVisibility(View.GONE);
                 tv_like_count.setText(String.valueOf(model.getFav_count()));
-            }
+            }*/
 
             Utils.loadGlideImage(mActivity, ivMeme, model.getImage());
             smsItemListeners(model, position);

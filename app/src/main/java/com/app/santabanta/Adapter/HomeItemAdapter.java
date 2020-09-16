@@ -707,7 +707,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (model.getFavCount()!=null && model.getFavCount() == 0) {
                 tv_like_count.setVisibility(View.GONE);
             } else {
-                tv_like_count.setVisibility(View.VISIBLE);
+                tv_like_count.setVisibility(View.GONE);
                 tv_like_count.setText(String.valueOf(model.getFavCount()));
             }
 
@@ -862,7 +862,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ScrollView content_scroll = dialog.findViewById(R.id.content_scroll);
 
             if (model.getFavCount() != null && !model.getFavCount().equals(0)) {
-                tv_fav_count.setVisibility(View.VISIBLE);
+                tv_fav_count.setVisibility(View.GONE);
                 tv_fav_count.setText(String.valueOf(model.getFavCount()));
             } else {
                 tv_fav_count.setVisibility(View.GONE);
@@ -980,7 +980,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (model.getFavCount() == 0) {
                 tv_like_count.setVisibility(View.GONE);
             } else {
-                tv_like_count.setVisibility(View.VISIBLE);
+                tv_like_count.setVisibility(View.GONE);
                 tv_like_count.setText(String.valueOf(model.getFavCount()));
             }
 

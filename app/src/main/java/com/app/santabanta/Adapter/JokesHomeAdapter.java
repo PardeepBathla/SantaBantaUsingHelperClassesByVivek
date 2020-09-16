@@ -219,13 +219,13 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
             }
 
 
-            if (model.getFav_count() == 0) {
+           /* if (model.getFav_count() == 0) {
                 tv_like_count.setVisibility(View.GONE);
             } else {
-                tv_like_count.setVisibility(View.VISIBLE);
+                tv_like_count.setVisibility(View.GONE);
                 tv_like_count.setText(String.valueOf(model.getFav_count()));
             }
-
+*/
 
             if (model.getmFavourite() != null && model.getmFavourite().size() != 0) {
                 for (JokesFavouriteModel favouriteModel : model.getmFavourite()) {
@@ -321,12 +321,15 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
 
                         if (isChecked) {
                             if (!tv_fav_count.getText().toString().equals("")) {
+                                tv_fav_count.setVisibility(View.GONE);
                                 tv_fav_count.setText(String.valueOf(Integer.parseInt(tv_fav_count.getText().toString()) + 1));
                             } else {
+                                tv_fav_count.setVisibility(View.GONE);
                                 tv_fav_count.setText("0");
                             }
                         } else {
                             if (!tv_fav_count.getText().equals("0")) {
+                                tv_fav_count.setVisibility(View.GONE);
                                 tv_fav_count.setText(String.valueOf(Integer.parseInt(tv_fav_count.getText().toString()) - 1));
                             }
                         }

@@ -176,7 +176,7 @@ public class MainActivity extends BaseActivity {
         });
         dialog.show();
     }
-
+//
 
     public void showCurrentPage(int pos) {
         if (navFragment != null)

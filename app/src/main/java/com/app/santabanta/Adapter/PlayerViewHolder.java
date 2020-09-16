@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.santabanta.AppController;
 import com.app.santabanta.Callbacks.MemesCallback;
+import com.app.santabanta.Events.Events;
+import com.app.santabanta.Events.GlobalBus;
 import com.app.santabanta.Fragment.FragmentMemes;
 import com.app.santabanta.Helper.FragmentMemesHelper;
 import com.app.santabanta.Modals.AddFavouriteRequest;
@@ -147,11 +149,13 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
                 int finalI = i;
                 textView[i].setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        Intent intent = new Intent();
-                        intent.setAction(GlobalConstants.COMMON.SHOW_SMS);
-                        intent.putExtra("id", obj.getCategories().get(0).getCategoryId());
-                        intent.putExtra("slug", obj.getBreadcrumbs().get(finalI).getLink());
-                        mCtx.sendBroadcast(intent);
+//                        Intent intent = new Intent();
+//                        intent.setAction(GlobalConstants.COMMON.SHOW_SMS);
+//                        intent.putExtra("id", obj.getCategories().get(0).getCategoryId());
+//                        intent.putExtra("slug", obj.getBreadcrumbs().get(finalI).getLink());
+//                        mCtx.sendBroadcast(intent);
+                        Events.MemesEvent memesEvent= new Events.MemesEvent(obj.getBreadcrumbs().get(finalI).getLink());
+                        GlobalBus.getBus().post(memesEvent);
                     }
                 });
             }

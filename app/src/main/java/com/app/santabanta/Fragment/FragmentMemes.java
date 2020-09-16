@@ -10,12 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.santabanta.Events.Events;
 import com.app.santabanta.Helper.FragmentMemesHelper;
 import com.app.santabanta.R;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.MemesExoPlayerRecyclerView;
 import com.app.santabanta.Utils.Utils;
 import com.app.santabanta.base.BaseFragment;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.nio.file.Path;
 
@@ -66,6 +70,23 @@ public class FragmentMemes extends BaseFragment {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Subscribe
+    public void onEvent(Events.MemesEvent memesEvent) {
+        enterSubCategoryMemes(true,memesEvent.getSlug());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     private void initFragment(View view) {

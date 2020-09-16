@@ -16,11 +16,15 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.app.santabanta.Events.Events;
 import com.app.santabanta.Helper.FragmentJokesHelper;
 import com.app.santabanta.R;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.Utils;
 import com.app.santabanta.base.BaseFragment;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -88,6 +92,24 @@ public class FragmentJokes extends BaseFragment {
             e.printStackTrace();
         }
     }
+
+    @Subscribe
+    public void onEvent(Events.JokesEvent jokesEvent) {
+        enterSubCategoryJoke(true,jokesEvent.getSlug());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

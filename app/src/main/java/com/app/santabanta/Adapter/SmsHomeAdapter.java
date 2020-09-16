@@ -23,6 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.santabanta.Activites.MainActivity;
 import com.app.santabanta.Callbacks.BitmapLoadedCallback;
+import com.app.santabanta.Events.Events;
+import com.app.santabanta.Events.GlobalBus;
 import com.app.santabanta.Helper.FragmentSmsHelper;
 import com.app.santabanta.Modals.SmsDetailModel;
 import com.app.santabanta.Modals.SmsFavouriteModel;
@@ -155,8 +157,12 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
                 textView[i].setLayoutParams(params);
                 llbreadcrumbs.addView(textView[i]);
                 String slug = obj.getBreadcrumbs().get(i).getLink();
-                textView[i].setOnClickListener(v -> mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                        .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"sms").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug)));
+                textView[i].setOnClickListener(v -> {
+                    Events.SMSEvent onFileSelected = new Events.SMSEvent(slug,"Veg");
+                    GlobalBus.getBus().post(onFileSelected);
+//                    mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+//                            .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE, "sms").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG, slug));
+                });
             }
         }
     }

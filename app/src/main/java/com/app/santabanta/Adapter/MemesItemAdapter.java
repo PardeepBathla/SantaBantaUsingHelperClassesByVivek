@@ -22,6 +22,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.santabanta.Callbacks.BitmapLoadedCallback;
+import com.app.santabanta.Events.Events;
+import com.app.santabanta.Events.GlobalBus;
 import com.app.santabanta.Fragment.FragmentMemes;
 import com.app.santabanta.Helper.FragmentMemesHelper;
 import com.app.santabanta.Modals.SmsDetailModel;
@@ -315,8 +317,10 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     String slug = obj.getBreadcrumbs().get(i).getLink();
                     textView[i].setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
-                            mCtx.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                    .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"memes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug));
+                            Events.MemesEvent memesEvent= new Events.MemesEvent(slug);
+                            GlobalBus.getBus().post(memesEvent);
+//                            mCtx.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+//                                    .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"memes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug));
                         }
                     });
                 }

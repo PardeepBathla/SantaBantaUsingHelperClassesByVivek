@@ -18,12 +18,16 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.app.santabanta.Events.Events;
 import com.app.santabanta.Helper.FragmentSmsHelper;
 import com.app.santabanta.Modals.SmsFeaturedCategory;
 import com.app.santabanta.R;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.Utils;
 import com.app.santabanta.base.BaseFragment;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,7 +67,7 @@ public class FragmentSms extends BaseFragment {
         return myFragment;
     }
 
-    BroadcastReceiver receiver = new BroadcastReceiver() {
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
 
@@ -88,6 +92,11 @@ public class FragmentSms extends BaseFragment {
         return view;
     }
 
+    @Subscribe
+    public void onEvent(Events.SMSEvent smsEvent) {
+        enterSubCategorySms(true,smsEvent.getSlug(),smsEvent.getCategory());
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -96,6 +105,18 @@ public class FragmentSms extends BaseFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -128,5 +149,6 @@ public class FragmentSms extends BaseFragment {
         FragmentSms fragmentSms1 = FragmentSms.newInstance(bundle);
         Utils.switchFragment(getChildFragmentManager().beginTransaction(), fragmentSms1, R.id.frameSms);
     }
+
 
 }

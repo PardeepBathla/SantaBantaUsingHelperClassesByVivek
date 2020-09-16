@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +19,8 @@ import com.app.santabanta.Adapter.SideMenuAdapter;
 import com.app.santabanta.AppController;
 import com.app.santabanta.Callbacks.CategoriesCallback;
 import com.app.santabanta.Callbacks.DrawerMenuClickListener;
+import com.app.santabanta.Events.Events;
+import com.app.santabanta.Events.GlobalBus;
 import com.app.santabanta.Modals.NavMenuResponse;
 import com.app.santabanta.R;
 import com.app.santabanta.RestClient.Webservices;
@@ -161,19 +164,25 @@ public class MainActivityHelper {
     public void openMemesFragment(String slug) {
         drawer.closeDrawer(Gravity.LEFT);
         mActivity.navFragment.mPager.setCurrentItem(3);
-        mActivity.sendBroadcast(new Intent().setAction(SHOW_MEMES_FRAGMENT).putExtra(GlobalConstants.INTENT_PARAMS.MEME_SLUG, slug));
+        Events.MemesEvent memesEvent= new Events.MemesEvent(slug);
+        GlobalBus.getBus().post(memesEvent);
+//        mActivity.sendBroadcast(new Intent().setAction(SHOW_MEMES_FRAGMENT).putExtra(GlobalConstants.INTENT_PARAMS.MEME_SLUG, slug));
     }
 
     public void openJokesFragment(String slug) {
         drawer.closeDrawer(Gravity.LEFT);
         mActivity.navFragment.mPager.setCurrentItem(2);
-        mActivity.sendBroadcast(new Intent().setAction(SHOW_JOKES_FRAGMENT).putExtra(GlobalConstants.INTENT_PARAMS.JOKE_SLUG, slug));
+        Events.JokesEvent jokesEvent= new Events.JokesEvent(slug);
+        GlobalBus.getBus().post(jokesEvent);
+//        mActivity.sendBroadcast(new Intent().setAction(SHOW_JOKES_FRAGMENT).putExtra(GlobalConstants.INTENT_PARAMS.JOKE_SLUG, slug));
     }
 
     public void openSmsFragment(String slug, String category) {
         drawer.closeDrawer(Gravity.LEFT);
         mActivity.navFragment.mPager.setCurrentItem(1);
-        mActivity.sendBroadcast(new Intent().setAction(SHOW_SMS_FRAGMENT).putExtra(GlobalConstants.INTENT_PARAMS.SMS_CATEGORY, category).putExtra(GlobalConstants.INTENT_PARAMS.SMS_SLUG, slug));
+        Events.SMSEvent onFileSelected = new Events.SMSEvent(slug,category);
+        GlobalBus.getBus().post(onFileSelected);
+//        mActivity.sendBroadcast(new Intent().setAction(SHOW_SMS_FRAGMENT).putExtra(GlobalConstants.INTENT_PARAMS.SMS_CATEGORY, category).putExtra(GlobalConstants.INTENT_PARAMS.SMS_SLUG, slug));
     }
 
     public boolean iSelectedThemeLight() {

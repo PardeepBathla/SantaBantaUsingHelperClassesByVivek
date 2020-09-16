@@ -20,6 +20,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.app.santabanta.Events.Events;
+import com.app.santabanta.Events.GlobalBus;
 import com.app.santabanta.Helper.FragmentJokesHelper;
 import com.app.santabanta.Modals.HomeDetailList;
 import com.app.santabanta.Modals.JokesDetailModel;
@@ -103,11 +105,11 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
 
                 int finalI = i;
                 String slug = obj.getBreadcrumbs().get(i).getLink();
-                textView[i].setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
-                                .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug));
-                    }
+                textView[i].setOnClickListener(v -> {
+                    Events.JokesEvent jokesEvent= new Events.JokesEvent(slug);
+                    GlobalBus.getBus().post(jokesEvent);
+//                        mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
+//                                .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug));
                 });
             }
         }

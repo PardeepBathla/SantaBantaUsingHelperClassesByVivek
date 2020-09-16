@@ -110,6 +110,4 @@ public class FragmentMemes extends BaseFragment {
                 subcat_slug_name = getArguments().getString(GlobalConstants.INTENT_PARAMS.MEME_SLUG);
             }
     }
-
-
 }

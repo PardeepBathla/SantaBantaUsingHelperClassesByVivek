@@ -133,7 +133,7 @@ public class FragmentMemesHelper {
                         swipeContainer.setRefreshing(false);
                     }
 
-                    total_pages = response.getTotal();
+                    total_pages = response.getLastPage();
                     currentPage =response.getCurrentPage();
                     currentPage = currentPage+1;
 

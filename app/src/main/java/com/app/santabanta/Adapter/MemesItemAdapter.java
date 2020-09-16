@@ -247,16 +247,13 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         ProgressBar progressBar;
         @BindView(R.id.tv_like_count)
         TextView tv_like_count;
-
         View memesImageItemBinding;
-
 
         ImageViewHolder(View memesImageItemBinding) {
             super(memesImageItemBinding);
             this.memesImageItemBinding = memesImageItemBinding;
 
             ButterKnife.bind(this, memesImageItemBinding);
-
         }
 
         void bindData(MemesDetailModel obj, int position) {
@@ -266,7 +263,7 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } else {
                 tv_like_count.setVisibility(View.GONE);
                 tv_like_count.setText(String.valueOf(obj.getFavCount()));
-            }//
+            }
 
             setMemeImage(obj.getImage(), ivMeme);
 
@@ -295,7 +292,6 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 if (llbreadcrumbs.getChildCount() > 0)
                     llbreadcrumbs.removeAllViews();
-
 
                 for (int i = 0; i < obj.getBreadcrumbs().size(); i++) {
                     textView[i] = new TextView(mCtx);
@@ -369,11 +365,9 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         private void memesItemListener(MemesDetailModel obj, int position,ImageView ivMeme) {
-
             ivWhatsapp.setOnClickListener(v -> {
                 shareLayoutGone();
                 Utils.vibrate(mCtx);
-
                 if (CheckPermissions.isStoragePermissionGranted(mCtx)) {
                     BitmapConversion(obj, GlobalConstants.COMMON.WHATSAPP);
                 }
@@ -422,9 +416,7 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
             llShareMemes.setOnClickListener(v -> {
-
                 Utils.vibrate(mCtx);
-
                 if (isSharelayoutVisible) {
                     shareLayoutGone();
                 } else {
@@ -438,7 +430,6 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         private void shareLayoutGone() {
-
             isSharelayoutVisible = false;
             llShareMemes.setBackground(null);
             llShareOptionsSms.setVisibility(View.GONE);
@@ -473,5 +464,4 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         }
     }
-
 }

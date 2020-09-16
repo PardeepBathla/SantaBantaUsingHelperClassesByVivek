@@ -88,7 +88,7 @@ public class Utils {
             public void run() {
                 try {
                     transaction.addToBackStack(null);
-                    transaction.add(containerViewId, fragment).commit();
+                    transaction.replace(containerViewId, fragment).commit();
                 } catch (Exception e) {
                     e.printStackTrace();
 //                    showToast("Error!");

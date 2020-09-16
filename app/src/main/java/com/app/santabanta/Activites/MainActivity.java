@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
@@ -140,14 +139,44 @@ public class MainActivity extends BaseActivity {
                 if (mHelper.drawer.isDrawerOpen(GravityCompat.END))
                     mHelper.drawer.closeDrawer(GravityCompat.END);
                 else {
-                    finish();
-                }
+                    if (!(navFragment.mPager.getCurrentItem() == 0)) {
+                        navFragment.mPager.setCurrentItem(0);
+                    } else {
+                        showExitAlert();
+                    }
 
+                }
             }
         } else {
             super.onBackPressed();
         }
     }
+
+    private void showExitAlert() {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.dialog_18_plus, null);
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.setContentView(view);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+
+        TextView txt_dia = dialog.findViewById(R.id.txt_dia);
+        Button btn_yes = dialog.findViewById(R.id.btn_yes);
+        Button btn_no = dialog.findViewById(R.id.btn_no);
+
+        btn_yes.setText(getString(R.string.ok));
+        btn_no.setText(getString(R.string.cancel));
+        txt_dia.setText(getString(R.string.are_you_sure_you_want_to_exit));
+        btn_no.setOnClickListener(view13 -> {
+            dialog.dismiss();
+        });
+        btn_yes.setOnClickListener(view1 -> {
+            dialog.dismiss();
+            finish();
+        });
+        dialog.show();
+    }
+
 
     public void showCurrentPage(int pos) {
         if (navFragment != null)
@@ -167,7 +196,6 @@ public class MainActivity extends BaseActivity {
     public void switchTheme() {
         if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
             onCheckedChanged(false);
-
         } else {
             onCheckedChanged(true);
         }

@@ -109,6 +109,14 @@ public class FragmentMemesHelper {
         }
     }
 
+    private void loadNext() {
+        if (isLoading) {
+            if (currentPage < total_pages) {
+                getApiData();
+            }
+            isLoading = false;
+        }
+    }
     private void getApiData() {
 
 //        progressBar.setVisibility(View.VISIBLE);
@@ -134,7 +142,7 @@ public class FragmentMemesHelper {
                         @Override
                         protected void loadMoreItems() {
                             isLoading = true;
-                            new Handler().postDelayed(() -> getApiData(), 1000);
+                            new Handler().postDelayed(() -> loadNext(), 1000);
                         }
 
                         @Override
@@ -204,6 +212,7 @@ public class FragmentMemesHelper {
 //                mFragment.IS_FROM_MENU = false;
 //                mFragment.subcat_slug_name = "";
                 currentPage = PAGE_START;
+                memesItemAdapter.clearList();
                 getApiData();
 
             }

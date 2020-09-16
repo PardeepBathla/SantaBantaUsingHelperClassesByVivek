@@ -46,9 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/rl_image"
                 android:layout_marginStart="@dimen/_20sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginEnd="@dimen/_20sdp"
-                android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:orientation="horizontal">
 
 
@@ -57,10 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingTop="@dimen/_10sdp"
-                    android:paddingEnd="@dimen/_10sdp"
-                    android:paddingBottom="@dimen/_10sdp">
+                    android:orientation="horizontal">
 
 
                     <!-- <com.jackandphantom.androidlikebutton.AndroidLikeButton
@@ -96,6 +91,7 @@
                         android:id="@+id/tv_like_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         android:layout_marginStart="@dimen/_5sdp"
                         android:fontFamily="@font/roboto_regular"
                         android:textSize="@dimen/_10ssp" />
@@ -109,7 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/ll_like_dislike"
                     android:orientation="horizontal"
-                    android:padding="@dimen/_10sdp">
+                    android:layout_marginLeft="@dimen/_10sdp">
 
 
                     <ImageView
@@ -145,8 +141,8 @@
                         android:layout_width="@dimen/_10sdp"
                         android:layout_height="@dimen/_10sdp"
                         android:layout_gravity="center_vertical"
-                        android:tint="?android:textColor"
-                        android:src="@drawable/ic_tag" />
+                        android:src="@drawable/ic_tag"
+                        app:tint="?android:textColor" />
 
                     <TextView
                         android:id="@+id/tv_categories"

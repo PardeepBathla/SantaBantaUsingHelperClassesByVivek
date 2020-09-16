@@ -210,6 +210,10 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
+    public void clearList(){
+        this.memesData = new ArrayList<>();
+        notifyDataSetChanged();
+    }
     private void setMemeImage(String url, AspectRatioImageView ivMeme) {
         Utils.loadGlideImage(mCtx, ivMeme, url);
     }

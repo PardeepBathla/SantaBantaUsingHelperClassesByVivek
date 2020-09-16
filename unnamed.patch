@@ -1,0 +1,16 @@
+Index: app/src/main/java/com/app/santabanta/Adapter/MemesItemAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/app/santabanta/Adapter/MemesItemAdapter.java	(revision ddc8ba78b5b6bee110b02831d504a8ee84b449ca)
++++ app/src/main/java/com/app/santabanta/Adapter/MemesItemAdapter.java	(date 1600233068000)
+@@ -260,7 +260,7 @@
+             } else {
+                 tv_like_count.setVisibility(View.GONE);
+                 tv_like_count.setText(String.valueOf(obj.getFavCount()));
+-            }
++            }//
+ 
+ 
+             setMemeImage(obj.getImage(), ivMeme);

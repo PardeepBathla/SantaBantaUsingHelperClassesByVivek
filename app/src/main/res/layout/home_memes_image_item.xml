@@ -36,7 +36,7 @@
                 <com.app.santabanta.Utils.AspectRatioImageView
                     android:id="@+id/ivMeme"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/_250sdp"
                     android:scaleType="fitXY" />
 
             </RelativeLayout>

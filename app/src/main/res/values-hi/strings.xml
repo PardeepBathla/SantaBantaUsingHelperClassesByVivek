@@ -29,4 +29,6 @@
     <string name="are_you_sure">क्या आप वाकई 18+ के हैं?</string>
     <string name="yes">हाँ</string>
     <string name="no">नहीं</string>
+    <string name="are_you_sure_you_want_to_exit">क्या आप निश्चित हैं आपकी बाहर निकलने की इच्छा है?</string>
+
 </resources>

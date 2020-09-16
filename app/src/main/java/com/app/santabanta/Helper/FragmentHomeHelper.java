@@ -76,25 +76,8 @@ public class FragmentHomeHelper {
 
     private void initViews() {
 
-        fragmentHome.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getHomeData(AppController.LANGUAGE_SELECTED);
-            }
-        });
+        fragmentHome.swipeRefreshLayout.setOnRefreshListener(() -> getHomeData(AppController.LANGUAGE_SELECTED));
         getHomeData(AppController.LANGUAGE_SELECTED);
-        fragmentHome.ivNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        fragmentHome.ivPrevious.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
-        });
 
     }
 
@@ -334,6 +317,7 @@ public class FragmentHomeHelper {
 
                 if (fragmentHome.swipeRefreshLayout != null && fragmentHome.swipeRefreshLayout.isRefreshing())
                     fragmentHome.swipeRefreshLayout.setRefreshing(false);
+
 
                 if (progressDialog.isShowing())
                     progressDialog.dismiss();

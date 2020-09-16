@@ -24,7 +24,6 @@ public class Splash extends AppCompatActivity {
         pref = Utils.getSharedPref(Splash.this);
         setThemePreference();
         setContentView(R.layout.activity_splash);
-//        pref = Utils.getSharedPref(Main2Activity.this);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

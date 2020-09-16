@@ -195,8 +195,8 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    public void add(MemesDetailModel datu) {
-        this.memesData.add(datu);
+    public void add(MemesDetailModel data) {
+        this.memesData.add(data);
         notifyItemInserted(memesData.size() - 1);
     }
 
@@ -206,8 +206,6 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-
-
     private void setMemeImage(String url, AspectRatioImageView ivMeme) {
         Utils.loadGlideImage(mCtx, ivMeme, url);
     }
@@ -216,40 +214,28 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @BindView(R.id.llbreadcrumbs)
         LinearLayout llbreadcrumbs;
-
         @BindView(R.id.ll_share_memes)
         LinearLayout llShareMemes;
-
         @BindView(R.id.ll_share_options_sms)
         LinearLayout llShareOptionsSms;
-
         @BindView(R.id.cb_like)
         CheckBox cbLike;
-
         @BindView(R.id.iv_facebook)
         ImageView ivFacebook;
-
         @BindView(R.id.iv_whatsapp)
         ImageView ivWhatsapp;
-
         @BindView(R.id.iv_twitter)
         ImageView ivTwitter;
-
         @BindView(R.id.iv_snapchat)
         ImageView ivSnapchat;
-
         @BindView(R.id.iv_pintrest)
         ImageView ivPintrest;
-
         @BindView(R.id.iv_instagram)
         ImageView ivInstagram;
-
         @BindView(R.id.ivMeme)
         AspectRatioImageView ivMeme;
-
         @BindView(R.id.progress_bar)
         ProgressBar progressBar;
-
         @BindView(R.id.tv_like_count)
         TextView tv_like_count;
 

@@ -328,7 +328,7 @@ public class FragmentHomeHelper {
     private void loadNextPage() {
         if (isLoading) {
             if (currentPage <= total_pages) {
-                getHomeData(GlobalConstants.COMMON.LANGUAGE_SELECTED);
+                getHomeData(AppController.LANGUAGE_SELECTED);
                 isLoading = false;
             }
         }

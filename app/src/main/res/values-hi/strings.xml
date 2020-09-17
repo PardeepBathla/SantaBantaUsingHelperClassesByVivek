@@ -12,7 +12,7 @@
     <string name="light">लाइट मोड</string>
     <string name="dark">डार्क मोड</string>
     <string name="no_content">एपीआई से कोई सामग्री नहीं</string>
-    <string name="search_text">सांताबंटा खोजें</string>
+    <string name="search_text">संताबंता खोजें</string>
     <string name="no_data_found">कोई डेटा नहीं मिला</string>
 
     <string name="dsv_ex_msg_dont_set_lm">You should not set LayoutManager on DiscreteScrollView.class instance. Library uses a special one. Just don\'t call the method.</string>

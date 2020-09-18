@@ -32,7 +32,7 @@ public class FragmentMemes extends BaseFragment {
     public  String subcat_slug_name = "";
     private static String TAG = FragmentMemes.class.getSimpleName();
     private Activity mActivity;
-    private FragmentMemesHelper mHelper;
+    public FragmentMemesHelper mHelper;
 
     BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override

@@ -139,10 +139,16 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
 
     public void add(JokesDetailModel item) {
         this.mData.add(item);
-        notifyItemInserted(mData.size() - 1);
+        //notifyItemInserted(mData.size() - 1);
+        notifyDataSetChanged();
     }
 
-
+    public void resetList(){
+        if (this.mData!=null){
+            this.mData = new ArrayList<>();
+            notifyDataSetChanged();
+        }
+    }
 
 
     class ViewHolder extends RecyclerView.ViewHolder {

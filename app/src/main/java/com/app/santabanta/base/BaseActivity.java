@@ -20,8 +20,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = BaseActivity.this;
-
-
     }
 
     public void showToast(String message) {

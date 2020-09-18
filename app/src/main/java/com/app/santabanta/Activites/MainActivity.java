@@ -13,6 +13,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -53,26 +54,28 @@ public class MainActivity extends BaseActivity {
     RelativeLayout rvBottom;
     @BindView(R.id.tv_selected_module)
     TextView tvTitle;
-    BroadcastReceiver navigateReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver navigateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String navigateType = intent.getStringExtra(NAVIGATE_TYPE);
             String navigateSlug = intent.getStringExtra(NAVIGATE_SLUG);
-            switch (navigateType) {
-                case "sms":
-                    navFragment.mPager.setCurrentItem(1);
-                    mHelper.openSmsFragment(navigateSlug, "Veg");
-                    break;
+            if (navigateType != null) {
+                switch (navigateType) {
+                    case "sms":
+                        navFragment.mPager.setCurrentItem(1);
+                        mHelper.openSmsFragment(navigateSlug, "Veg");
+                        break;
 
-                case "jokes":
-                    navFragment.mPager.setCurrentItem(2);
-                    mHelper.openJokesFragment(navigateSlug);
-                    break;
+                    case "jokes":
+                        navFragment.mPager.setCurrentItem(2);
+                        mHelper.openJokesFragment(navigateSlug);
+                        break;
 
-                case "memes":
-                    navFragment.mPager.setCurrentItem(3);
-                    mHelper.openMemesFragment(navigateSlug);
-                    break;
+                    case "memes":
+                        navFragment.mPager.setCurrentItem(3);
+                        mHelper.openMemesFragment(navigateSlug);
+                        break;
+                }
             }
         }
     };
@@ -154,29 +157,33 @@ public class MainActivity extends BaseActivity {
 
     private void showExitAlert() {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.dialog_18_plus, null);
-        final Dialog dialog = new Dialog(MainActivity.this);
-        dialog.setContentView(view);
-        dialog.setCancelable(true);
-        dialog.setCanceledOnTouchOutside(true);
+        View view = null;
+        if (inflater != null) {
+            ViewGroup viewGroup = null;
+            view = inflater.inflate(R.layout.dialog_18_plus, null);
+            final Dialog dialog = new Dialog(MainActivity.this);
+            dialog.setContentView(view);
+            dialog.setCancelable(true);
+            dialog.setCanceledOnTouchOutside(true);
 
-        TextView txt_dia = dialog.findViewById(R.id.txt_dia);
-        Button btn_yes = dialog.findViewById(R.id.btn_yes);
-        Button btn_no = dialog.findViewById(R.id.btn_no);
+            TextView txt_dia = dialog.findViewById(R.id.txt_dia);
+            Button btn_yes = dialog.findViewById(R.id.btn_yes);
+            Button btn_no = dialog.findViewById(R.id.btn_no);
 
-        btn_yes.setText(getString(R.string.ok));
-        btn_no.setText(getString(R.string.cancel));
-        txt_dia.setText(getString(R.string.are_you_sure_you_want_to_exit));
-        btn_no.setOnClickListener(view13 -> {
-            dialog.dismiss();
-        });
-        btn_yes.setOnClickListener(view1 -> {
-            dialog.dismiss();
-            finish();
-        });
-        dialog.show();
+            btn_yes.setText(getString(R.string.ok));
+            btn_no.setText(getString(R.string.cancel));
+            txt_dia.setText(getString(R.string.are_you_sure_you_want_to_exit));
+            btn_no.setOnClickListener(view13 -> {
+                dialog.dismiss();
+            });
+            btn_yes.setOnClickListener(view1 -> {
+                dialog.dismiss();
+                finish();
+            });
+            dialog.show();
+        }
     }
-//
+
 
     public void showCurrentPage(int pos) {
         if (navFragment != null)
@@ -221,11 +228,11 @@ public class MainActivity extends BaseActivity {
         Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (v != null) {
                 v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
-            } else {
+            }
+        } else {
+            if (v != null) {
                 v.vibrate(100);
             }
         }

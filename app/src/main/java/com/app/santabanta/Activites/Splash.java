@@ -39,8 +39,5 @@ public class Splash extends AppCompatActivity {
         } else {
             setTheme(R.style.AppThemeDark);
         }
-
     }
-
-
 }

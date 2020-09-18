@@ -150,6 +150,11 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    public void resetList(){
+        this.mList = new ArrayList<>();
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof SmsViewHolder) {

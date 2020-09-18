@@ -74,7 +74,12 @@ public class FragmentSmsHelper {
         smsHomeAdapter = new SmsHomeAdapter(FragmentSmsHelper.this, mActivity,fragmentSms);
         fragmentSms.recyclerSms.setAdapter(smsHomeAdapter);
 
-        fragmentSms.swipeRefreshSms.setOnRefreshListener(() -> getSms(GlobalConstants.COMMON.LANGUAGE_SELECTED, "", ""));
+        fragmentSms.swipeRefreshSms.setOnRefreshListener(() -> {
+            currentPage = PAGE_START;
+            if (smsHomeAdapter!=null)
+                smsHomeAdapter.resetList();
+            getSms(GlobalConstants.COMMON.LANGUAGE_SELECTED, "", "");
+        });
 
         getSms(AppController.LANGUAGE_SELECTED, "", "");
     }

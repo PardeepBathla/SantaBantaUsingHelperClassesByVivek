@@ -66,6 +66,7 @@
             <com.app.santabanta.Utils.HomeMemesExoPlayerRecyclerview
                 android:id="@+id/recyclerHome"
                 android:layout_width="match_parent"
+                android:background="?card_bg_color"
                 android:visibility="gone"
                 android:layout_height="wrap_content"/>
 

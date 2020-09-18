@@ -43,7 +43,6 @@ import retrofit2.Response;
 public class FragmentHomeHelper {
 
     private static final int PAGE_START = 0;
-    int mFirst = 0, mLast = 0;
     private Activity mActivity;
     private Webservices mInterface_method = AppController.getRetroInstance().create(Webservices.class);
     private FragmentHome fragmentHome;
@@ -66,8 +65,8 @@ public class FragmentHomeHelper {
                       /*  } else {
                             mAdapter.notifyDataSetChanged();
                         }*/
-        fragmentHome.recyclerHome.setNestedScrollingEnabled(false);
-        fragmentHome.recyclerHome.setHasFixedSize(false);
+//        fragmentHome.recyclerHome.setNestedScrollingEnabled(false);
+//        fragmentHome.recyclerHome.setHasFixedSize(true);
         mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
         fragmentHome.recyclerHome.setLayoutManager(mLinearLayoutManager);
         fragmentHome.recyclerHome.setAdapter(mAdapter);
@@ -76,8 +75,27 @@ public class FragmentHomeHelper {
 
     private void initViews() {
 
-        fragmentHome.swipeRefreshLayout.setOnRefreshListener(() -> getHomeData(AppController.LANGUAGE_SELECTED));
+        fragmentHome.swipeRefreshLayout.setOnRefreshListener(() -> {
+            if (mAdapter!=null)
+                mAdapter.resetList();
+
+            currentPage = PAGE_START;
+            getHomeData(AppController.LANGUAGE_SELECTED);
+        });
         getHomeData(AppController.LANGUAGE_SELECTED);
+
+//        fragmentHome.recyclerHome.setOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+////                                super.onScrolled(recyclerView, dx, dy);
+////                fragmentHome.swipeRefreshLayout.setEnabled(mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+//            }
+//        });
 
     }
 
@@ -88,9 +106,7 @@ public class FragmentHomeHelper {
         addFavouriteRequest.setType(type);
         addFavouriteRequest.setItemId(obj.getId().intValue());
 
-
-        Call<ResponseBody> call = null;
-
+        Call<ResponseBody> call;
         call = mInterface_method.saveFavouriteJoke(addFavouriteRequest);
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -187,7 +203,7 @@ public class FragmentHomeHelper {
     }
 
     private void removeFavItemFromModel(int position, HomeDetailList obj) {
-        ArrayList<HomeDetailList> pagedLists = null;
+        ArrayList<HomeDetailList> pagedLists;
         pagedLists = mAdapter.getCurrentList();
 
         pagedLists.get(position).setFavourites(null);
@@ -275,18 +291,7 @@ public class FragmentHomeHelper {
 
 
 
-                        fragmentHome.recyclerHome.setOnScrollListener(new RecyclerView.OnScrollListener() {
-                            @Override
-                            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                                super.onScrollStateChanged(recyclerView, newState);
-                            }
 
-                            @Override
-                            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                                super.onScrolled(recyclerView, dx, dy);
-                                fragmentHome.swipeRefreshLayout.setEnabled(mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
-                            }
-                        });
 
                         fragmentHome.ivNext.setOnClickListener(new View.OnClickListener() {
                             @Override

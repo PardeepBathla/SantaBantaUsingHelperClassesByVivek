@@ -63,7 +63,7 @@ public class FragmentMemesHelper {
     private Webservices mInterface_method = AppController.getRetroInstance().create(Webservices.class);
     private SwipeRefreshLayout swipeContainer;
     private LinearLayoutManager mLinearLayoutManager;
-    private MemesExoPlayerRecyclerView recyclerMemes;
+    public MemesExoPlayerRecyclerView recyclerMemes;
     private RecyclerView rvSubCategory;
     private LinearLayoutManager mSubListLayoutManager;
     private ImageView ivPrevious;

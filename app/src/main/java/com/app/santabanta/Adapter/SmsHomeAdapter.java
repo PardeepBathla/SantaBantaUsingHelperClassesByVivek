@@ -92,7 +92,8 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
 
     public void add(SmsDetailModel datu) {
         this.mList.add(datu);
-        notifyItemInserted(mList.size() - 1);
+//        notifyItemInserted(mList.size() - 1);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -115,6 +116,11 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
             mList.remove(position);
             notifyItemRemoved(position);
         }
+    }
+
+    public void resetList(){
+        mList = new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     @Override

@@ -20,6 +20,7 @@ public class Events {
         }
     }
 
+
     public static class JokesEvent{
         private String slug;
 

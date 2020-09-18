@@ -71,6 +71,9 @@ public class FragmentJokesHelper {
             public void onRefresh() {
 //                fragmentJokes.IS_SUB_CAT = false;
 //                fragmentJokes.slugName = "";
+                if (mJokesHomeAdapter!=null)
+                    mJokesHomeAdapter.resetList();
+
                 currentPage = PAGE_START;
                 getJokes(AppController.LANGUAGE_SELECTED, fragmentJokes.slugName);
             }

@@ -82,19 +82,11 @@ public class NavFragmentHelper {
                     ((FragmentMemes)adapter.getRegisteredFragment(3)).mHelper.recyclerMemes.pausePlayer();
                 }
                 if (tab.getPosition() == 0){
-
-                    if (Utils.getSharedPref(AppController.getInstance()).getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
-                        ((ImageView) tab.getCustomView().findViewById(R.id.IconImageView)).setImageResource(R.drawable.ic_home_black);
-                    } else {
-                        ((ImageView) tab.getCustomView().findViewById(R.id.IconImageView)).setImageResource(R.drawable.ic_home_white);
-                    }
+                    ((ImageView) tab.getCustomView().findViewById(R.id.IconImageView)).setImageResource(Utils.getSharedPref(AppController.getInstance())
+                            .getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false) ? R.drawable.ic_home_black : R.drawable.ic_home_white);
 
                 }
-                if (Utils.getSharedPref(AppController.getInstance()).getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
-                    ((TextView) tab.getCustomView().findViewById(R.id.tvMenuTitle)).setTextColor(ResUtils.getColor(R.color.black));
-                } else {
-                    ((TextView) tab.getCustomView().findViewById(R.id.tvMenuTitle)).setTextColor(ResUtils.getColor(R.color.white));
-                }
+                ((TextView) tab.getCustomView().findViewById(R.id.tvMenuTitle)).setTextColor(Utils.getSharedPref(AppController.getInstance()).getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false) ? ResUtils.getColor(R.color.black) : ResUtils.getColor(R.color.white));
             }
 
             @Override

@@ -92,8 +92,6 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.tv_like_count)
     public TextView tv_like_count;
 
-
-
     MemesDetailModel currentList;
     View parent;
     View memesVideoItemBinding;
@@ -115,7 +113,6 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, memesVideoItemBinding);
         shareableIntents = new ShareableIntents(mCtx);
 
-
     }
 
     private void setBreadCrumbs(View binding, MemesDetailModel obj, int position) {
@@ -125,16 +122,14 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
             if (llbreadcrumbs.getChildCount() > 0)
                 llbreadcrumbs.removeAllViews();
 
-
             for (int i = 0; i < obj.getBreadcrumbs().size(); i++) {
                 textView[i] = new TextView(mCtx);
 
                 if (i == 0) {
                     textView[i].setText(obj.getBreadcrumbs().get(i).getLabel());
-
-                } else {
+                }
+                else {
                     textView[i].setText(" > " + obj.getBreadcrumbs().get(i).getLabel());
-
                 }
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -166,7 +161,6 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
     public void onBind(MemesDetailModel obj, RequestManager requestManager, int position) {
         this.requestManager = requestManager;
         this.parent.setTag(this);
-
 
 
         if (obj.getFavCount()==0) {
@@ -300,10 +294,6 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
                     }
                 }
             }
-
         }
     }
-
-
-
 }

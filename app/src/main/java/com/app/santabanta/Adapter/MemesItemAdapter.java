@@ -407,7 +407,6 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 if (buttonView.isPressed()) {
                     progressBar.setVisibility(View.VISIBLE);
                     cbLike.setClickable(false);
-                    /*TODO like dislike share*/
                     onFavCheckChanged(isChecked, obj, position, cbLike, progressBar);
                 }
                 //FUNCTIONALITY NOT IN SCOPE FOR THE TIME BEING

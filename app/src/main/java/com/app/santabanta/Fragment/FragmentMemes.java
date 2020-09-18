@@ -89,6 +89,15 @@ public class FragmentMemes extends BaseFragment {
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            new MemesExoPlayerRecyclerView(getActivity()).onPausePlayer();
+        }catch (Exception e){
+        }
+    }
+
     private void initFragment(View view) {
         mHelper = new FragmentMemesHelper(getActivity(),FragmentMemes.this,view);
     }

@@ -66,17 +66,14 @@ public class FragmentJokesHelper {
         fragmentJokes.recyclerJokes.setLayoutManager(mLinearLayoutManager);
         mJokesHomeAdapter = new JokesHomeAdapter(mActivity, FragmentJokesHelper.this,fragmentJokes);
         fragmentJokes.recyclerJokes.setAdapter(mJokesHomeAdapter);
-        fragmentJokes.swipeRefreshJokes.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+        fragmentJokes.swipeRefreshJokes.setOnRefreshListener(() -> {
 //                fragmentJokes.IS_SUB_CAT = false;
 //                fragmentJokes.slugName = "";
-                if (mJokesHomeAdapter!=null)
-                    mJokesHomeAdapter.resetList();
+            if (mJokesHomeAdapter!=null)
+                mJokesHomeAdapter.resetList();
 
-                currentPage = PAGE_START;
-                getJokes(AppController.LANGUAGE_SELECTED, fragmentJokes.slugName);
-            }
+            currentPage = PAGE_START;
+            getJokes(AppController.LANGUAGE_SELECTED, fragmentJokes.slugName);
         });
 
         getJokes(AppController.LANGUAGE_SELECTED, fragmentJokes.slugName);
@@ -154,19 +151,9 @@ public class FragmentJokesHelper {
 
                             fragmentJokes.recyclerJokes.setVisibility(View.VISIBLE);
                             fragmentJokes.tvNoDataFound.setVisibility(View.GONE);
-                            fragmentJokes.ivNext.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    fragmentJokes.rvSubCategoryJokes.getLayoutManager().scrollToPosition(mSubListLayoutManager.findLastVisibleItemPosition() + 1);
-                                }
-                            });
+                            fragmentJokes.ivNext.setOnClickListener(view -> fragmentJokes.rvSubCategoryJokes.getLayoutManager().scrollToPosition(mSubListLayoutManager.findLastVisibleItemPosition() + 1));
 
-                            fragmentJokes.ivPrevious.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    fragmentJokes.rvSubCategoryJokes.getLayoutManager().scrollToPosition(mSubListLayoutManager.findFirstVisibleItemPosition() - 1);
-                                }
-                            });
+                            fragmentJokes.ivPrevious.setOnClickListener(view -> fragmentJokes.rvSubCategoryJokes.getLayoutManager().scrollToPosition(mSubListLayoutManager.findFirstVisibleItemPosition() - 1));
                         } else {
                             fragmentJokes.recyclerJokes.setVisibility(View.GONE);
                             fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
@@ -177,7 +164,6 @@ public class FragmentJokesHelper {
                     fragmentJokes.recyclerJokes.setVisibility(View.GONE);
                     fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
                 }
-
             }
 
             @Override
@@ -197,7 +183,6 @@ public class FragmentJokesHelper {
             }
         });
     }
-
 
     public void addJokeTOFav(JokesDetailModel obj, int position, Dialog progressBar, CheckBox cbLike) {
 
@@ -228,13 +213,10 @@ public class FragmentJokesHelper {
                                 Toast.makeText(mActivity, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                             }
                         }
-
                     } catch (IOException | JSONException e) {
                         e.printStackTrace();
                     }
                 }
-
-
             }
 
             @Override
@@ -242,8 +224,6 @@ public class FragmentJokesHelper {
                 Log.e("onFailure", "onFailure");
             }
         });
-
-
     }
 
 
@@ -264,7 +244,6 @@ public class FragmentJokesHelper {
         }
         pagedLists.get(position).setmFavourite(obj.getmFavourite());
         mJokesHomeAdapter.updateList(pagedLists); //paging method
-
     }
 
     public void removeFromFav(JokesDetailModel obj, int position, int id, Dialog progressBar, CheckBox cbLike) {
@@ -290,22 +269,16 @@ public class FragmentJokesHelper {
                                 Toast.makeText(mActivity, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                             }
                         }
-
                     } catch (IOException | JSONException e) {
                         e.printStackTrace();
                     }
                 }
-
-
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
-
-
     }
 
     private void removeFavItemFromModel(int position, JokesDetailModel obj) {
@@ -314,6 +287,5 @@ public class FragmentJokesHelper {
         pagedLists.get(position).setmFavourite(null);
         obj.setFav_count(obj.getFav_count() - 1);
         mJokesHomeAdapter.updateList(pagedLists);
-
     }
 }

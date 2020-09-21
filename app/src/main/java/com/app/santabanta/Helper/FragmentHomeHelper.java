@@ -60,8 +60,6 @@ public class FragmentHomeHelper {
         this.fragmentHome = fragmentHome;
         mAdapter = new HomeItemAdapter(mActivity,FragmentHomeHelper.this);
         mAdapter.setHasStableIds(true);
-
-
                       /*  } else {
                             mAdapter.notifyDataSetChanged();
                         }*/
@@ -83,7 +81,6 @@ public class FragmentHomeHelper {
             getHomeData(AppController.LANGUAGE_SELECTED);
         });
         getHomeData(AppController.LANGUAGE_SELECTED);
-
 //        fragmentHome.recyclerHome.setOnScrollListener(new RecyclerView.OnScrollListener() {
 //            @Override
 //            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -96,7 +93,6 @@ public class FragmentHomeHelper {
 ////                fragmentHome.swipeRefreshLayout.setEnabled(mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
 //            }
 //        });
-
     }
 
     public void addToFav(HomeDetailList obj, int position, String type, CheckBox cbLike, Dialog progressBar) {
@@ -131,7 +127,6 @@ public class FragmentHomeHelper {
                         e.printStackTrace();
                     }
                 }
-
             }
 
             @Override
@@ -139,8 +134,6 @@ public class FragmentHomeHelper {
                 Log.e("onFailure", "onFailure");
             }
         });
-
-
     }
 
     private void setFavItemToModel(int position, AddFavouriteRequest addFavouriteRequest, HomeDetailList obj, int fav_id) {
@@ -165,11 +158,8 @@ public class FragmentHomeHelper {
 
     public void removeFromFav(HomeDetailList obj, int id, int position, CheckBox cbLike, Dialog progressBar) {
 
-
-        Call<ResponseBody> call = null;
-
+        Call<ResponseBody> call;
         call = mInterface_method.removeJokeFromFav(id);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -190,7 +180,6 @@ public class FragmentHomeHelper {
                         e.printStackTrace();
                     }
                 }
-
             }
 
             @Override
@@ -198,8 +187,6 @@ public class FragmentHomeHelper {
                 Log.e("onFailure", "onFailure");
             }
         });
-
-
     }
 
     private void removeFavItemFromModel(int position, HomeDetailList obj) {
@@ -281,7 +268,6 @@ public class FragmentHomeHelper {
                                 return false;
                             }
 
-
                             @Override
                             public void onScrolled() {
 
@@ -289,23 +275,9 @@ public class FragmentHomeHelper {
                         });
 
 
+                        fragmentHome.ivNext.setOnClickListener(view -> fragmentHome.rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findLastVisibleItemPosition() + 1));
 
-
-
-
-                        fragmentHome.ivNext.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                fragmentHome.rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findLastVisibleItemPosition() + 1);
-                            }
-                        });
-
-                        fragmentHome.ivPrevious.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                fragmentHome.rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findFirstVisibleItemPosition() - 1);
-                            }
-                        });
+                        fragmentHome.ivPrevious.setOnClickListener(view -> fragmentHome.rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findFirstVisibleItemPosition() - 1));
 
                         fragmentHome.recyclerHome.setVisibility(View.VISIBLE);
                         fragmentHome.tvNoDataFound.setVisibility(View.GONE);

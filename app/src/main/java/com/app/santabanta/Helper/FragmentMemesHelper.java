@@ -206,16 +206,13 @@ public class FragmentMemesHelper {
         swipeContainer = view.findViewById(R.id.swipeContainer);
         recyclerMemes = view.findViewById(R.id.recyclerMemes);
 
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+        swipeContainer.setOnRefreshListener(() -> {
 //                mFragment.IS_FROM_MENU = false;
 //                mFragment.subcat_slug_name = "";
-                currentPage = PAGE_START;
-                memesItemAdapter.clearList();
-                getApiData();
+            currentPage = PAGE_START;
+            memesItemAdapter.clearList();
+            getApiData();
 
-            }
         });
     }
 

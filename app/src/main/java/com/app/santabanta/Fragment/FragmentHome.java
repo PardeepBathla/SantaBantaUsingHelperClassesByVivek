@@ -40,13 +40,11 @@ public class FragmentHome extends BaseFragment {
     private Activity mActivity;
     private FragmentHomeHelper mHelper;
 
-
     public static FragmentHome newInstance(Bundle bundle) {
         FragmentHome myFragment = new FragmentHome();
         myFragment.setArguments(bundle);
         return myFragment;
     }
-
 
     @Override
     public View getFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {

@@ -34,7 +34,7 @@ public class FragmentMemes extends BaseFragment {
     private Activity mActivity;
     public FragmentMemesHelper mHelper;
 
-    BroadcastReceiver receiver = new BroadcastReceiver() {
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String slug = intent.getStringExtra(GlobalConstants.INTENT_PARAMS.MEME_SLUG);
@@ -66,7 +66,8 @@ public class FragmentMemes extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         try {
-            getActivity().unregisterReceiver(receiver);
+            if (getActivity()!=null)
+                getActivity().unregisterReceiver(receiver);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -93,8 +94,10 @@ public class FragmentMemes extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         try {
+
             new MemesExoPlayerRecyclerView(getActivity()).onPausePlayer();
         }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

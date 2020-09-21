@@ -1,21 +1,15 @@
 package com.app.santabanta.Fragment;
 
 import android.app.Activity;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.app.santabanta.Activites.MainActivity;
 import com.app.santabanta.Callbacks.OnBackPressListener;
 import com.app.santabanta.Helper.NavFragmentHelper;
 import com.app.santabanta.R;
-import com.app.santabanta.Utils.NonSwipeableViewPager;
 import com.app.santabanta.base.BaseFragment;
 import com.google.android.material.tabs.TabLayout;
 
@@ -34,7 +28,6 @@ public class NavFragment extends BaseFragment {
     @Override
     public View getFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         mActivity = getActivity();
-
         View view = inflater.inflate(R.layout.fragment_nav, parent, false);
         ButterKnife.bind(this, view);
         mHelper = new NavFragmentHelper(this, mPager, mTabLayout,mActivity);

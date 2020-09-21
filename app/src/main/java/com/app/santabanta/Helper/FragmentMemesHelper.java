@@ -258,7 +258,7 @@ public class FragmentMemesHelper {
 
             @Override
             public void onFailure(Call<MemesResposeModel> call, Throwable t) {
-                Log.e("onFailure", "onFailure");
+                Utils.showLog("onFailure", "onFailure");
             }
         });
     }
@@ -308,7 +308,7 @@ public class FragmentMemesHelper {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("onFailure", "onFailure");
+                Utils.showLog("onFailure", "onFailure");
             }
         });
 

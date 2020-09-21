@@ -131,7 +131,7 @@ public class FragmentHomeHelper {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("onFailure", "onFailure");
+                Utils.showLog("onFailure", "onFailure");
             }
         });
     }
@@ -184,7 +184,7 @@ public class FragmentHomeHelper {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("onFailure", "onFailure");
+                Utils.showLog("onFailure", "onFailure");
             }
         });
     }

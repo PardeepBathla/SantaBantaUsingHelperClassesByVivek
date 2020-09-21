@@ -31,8 +31,6 @@ public class NavFragmentHelper {
     private ViewPagerAdapter adapter;
     private ViewPager mPager;
     private TabLayout mTabLayout;
-    private RelativeLayout profileLayout;
-    private ImageView iv_hamburger;
 
     public NavFragmentHelper(NavFragment fragment, ViewPager mPager, TabLayout mTabLayout, Activity mActivity) {
         this.fragment = fragment;
@@ -74,20 +72,23 @@ public class NavFragmentHelper {
                         ((MainActivity)mActivity).getTitleView().setText(ResUtils.getString(R.string.MemesTab));
                         break;
                 }
+                try {
+                    ((FragmentHome) adapter.getRegisteredFragment(0)).recyclerHome.onPausePlayer();
+                    ((FragmentMemes) adapter.getRegisteredFragment(3)).mHelper.recyclerMemes.onPausePlayer();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
 
-                if (tab.getPosition() == 3){
-                    ((FragmentMemes)adapter.getRegisteredFragment(3)).mHelper.recyclerMemes.pausePlayer();
-                }
 
                 if (tab.getPosition() == 0){
                     ((ImageView) tab.getCustomView().findViewById(R.id.IconImageView)).setImageResource(Utils.getSharedPref(AppController.getInstance())
                             .getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false) ? R.drawable.ic_home_black : R.drawable.ic_home_white);
 
-                    ((FragmentHome) adapter.getRegisteredFragment(0)).recyclerHome.onPausePlayer();
+
                 }
                 ((TextView) tab.getCustomView().findViewById(R.id.tvMenuTitle)).setTextColor(Utils.getSharedPref(AppController.getInstance()).getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false) ? ResUtils.getColor(R.color.black) : ResUtils.getColor(R.color.white));
             }

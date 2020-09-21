@@ -308,7 +308,7 @@ public class MemesExoPlayerRecyclerView extends RecyclerView {
             targetPosition = mediaObjects.size() - 1;
         }
 
-        Log.d(TAG, "playVideo: target position: " + targetPosition);
+        Utils.showLog(TAG, "playVideo: target position: " + targetPosition);
 
         // video is already playing so return
         if (targetPosition == playPosition) {
@@ -395,7 +395,7 @@ public class MemesExoPlayerRecyclerView extends RecyclerView {
 
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context, Util.getUserAgent(context, AppName));
         String mediaUrl = mediaObjects.get(targetPosition).getImage();
-        Log.d("url_media", mediaUrl);
+        Utils.showLog("url_media", mediaUrl);
         if (mediaObjects.get(targetPosition).getMemeType().equals("video")) {
             MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(mediaUrl));
             MediaSource audioSource = new ExtractorMediaSource(Uri.parse(mediaUrl), new CacheDataSourceFactory(context, 100 * 1024 * 1024, 5 * 1024 * 1024), new DefaultExtractorsFactory(), null, null);
@@ -439,7 +439,7 @@ public class MemesExoPlayerRecyclerView extends RecyclerView {
     private int getVisibleVideoSurfaceHeight(int playPosition) {
         int at = playPosition - ((LinearLayoutManager) Objects.requireNonNull(
                 getLayoutManager())).findFirstVisibleItemPosition();
-        Log.d(TAG, "getVisibleVideoSurfaceHeight: at: " + at);
+        Utils.showLog(TAG, "getVisibleVideoSurfaceHeight: at: " + at);
 
         showLog(TAG, "getVisibleVideoSurfaceHeight pos " + playPosition);
         View child = getChildAt(at);
@@ -541,10 +541,10 @@ public class MemesExoPlayerRecyclerView extends RecyclerView {
     private void toggleVolume() {
         if (videoPlayer != null) {
             if (volumeState == VolumeState.OFF) {
-                Log.d(TAG, "togglePlaybackState: enabling volume.");
+                Utils.showLog(TAG, "togglePlaybackState: enabling volume.");
                 setVolumeControl(VolumeState.ON);
             } else if (volumeState == VolumeState.ON) {
-                Log.d(TAG, "togglePlaybackState: disabling volume.");
+                Utils.showLog(TAG, "togglePlaybackState: disabling volume.");
                 setVolumeControl(VolumeState.OFF);
             }
         }

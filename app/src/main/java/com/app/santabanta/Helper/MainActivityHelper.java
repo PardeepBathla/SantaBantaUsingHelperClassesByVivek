@@ -94,7 +94,7 @@ public class MainActivityHelper {
         });
 
         ivMenu.setOnClickListener(view -> {
-            Log.e("test", "test");
+            Utils.showLog("test", "test");
             drawer.openDrawer(Gravity.LEFT);
         });
 
@@ -141,7 +141,7 @@ public class MainActivityHelper {
             recyclerViewItems.setAdapter(new SideMenuAdapter(mActivity, response.getData(), new DrawerMenuClickListener() {
                 @Override
                 public void onSmsClicked(String slugName, String slugId, String category) {
-                    Log.e("onSmsClicked", slugName + " " + slugId + " " + category);
+                    Utils.showLog("onSmsClicked", slugName + " " + slugId + " " + category);
 //                    Toast.makeText(mActivity,"slug" + " " + slugName ,Toast.LENGTH_SHORT).show();
                     openSmsFragment(slugName, category);
                 }
@@ -200,7 +200,7 @@ public class MainActivityHelper {
 
             @Override
             public void onFailure(Call<NavMenuResponse> call, Throwable t) {
-                Log.e("onFailure", "onFailure");
+                Utils.showLog("onFailure", "onFailure");
             }
         });
     }

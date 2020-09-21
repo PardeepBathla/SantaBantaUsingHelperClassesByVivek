@@ -221,7 +221,7 @@ public class FragmentJokesHelper {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("onFailure", "onFailure");
+                Utils.showLog("onFailure", "onFailure");
             }
         });
     }

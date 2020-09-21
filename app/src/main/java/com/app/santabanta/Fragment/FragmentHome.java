@@ -55,4 +55,11 @@ public class FragmentHome extends BaseFragment {
         return view;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (recyclerHome!=null){
+             recyclerHome.onPausePlayer();
+        }
+    }
 }

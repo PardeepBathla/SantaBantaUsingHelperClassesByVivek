@@ -70,7 +70,6 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
     RelativeLayout rl_tag_ic;
     private ImageView mediaCoverImage, volumeControl;
     private RelativeLayout heartLayout;
-    private ProgressBar progressBar;
     private ProgressBar pbBuffering;
     private View viewHolderParent;
     private FrameLayout mediaContainer;
@@ -221,8 +220,8 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
                     case Player.STATE_READY:
                         pbBuffering.setVisibility(GONE);
                         Log.e(TAG, "onPlayerStateChanged: Ready to play.");
-                        if (progressBar != null) {
-                            progressBar.setVisibility(GONE);
+                        if (pbBuffering != null) {
+                            pbBuffering.setVisibility(GONE);
                         }
                         if (!isVideoViewAdded) {
                             addVideoView();
@@ -335,13 +334,12 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
             return;
         }
         mediaCoverImage = holder.ivMediaCoverImage;
-        progressBar = holder.pbBuffering;
+        pbBuffering = holder.pbBuffering;
         volumeControl = holder.ivVolumeControl;
 
         viewHolderParent = holder.itemView;
         requestManager = holder.requestManager;
         mediaContainer = holder.mediaContainer;
-        pbBuffering = holder.pbBuffering;
 
         pbBuffering.setVisibility(VISIBLE);
 
@@ -394,8 +392,10 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
         if (mediaObjects.size()>0){
             String mediaUrl = mediaObjects.get(targetPosition).getImage();
             Log.d("url_media", mediaUrl);
-            if (mediaObjects.get(targetPosition).equals("memes")) {
+            if (mediaObjects.get(targetPosition).getType().equals("memes")) {
+                Log.e("inside","inside first");
                 if (mediaObjects.get(targetPosition).getImage().endsWith(".mp4")){
+                    Log.e("inside second","inside second");
                     MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(mediaUrl));
                     MediaSource audioSource = new ExtractorMediaSource(Uri.parse(mediaUrl), new CacheDataSourceFactory(context, 100 * 1024 * 1024, 5 * 1024 * 1024), new DefaultExtractorsFactory(), null, null);
                     videoPlayer.prepare(audioSource);
@@ -445,7 +445,7 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
         if (index >= 0) {
             parent.removeViewAt(index);
             isVideoViewAdded = false;
-            progressBar.setVisibility(GONE);
+            pbBuffering.setVisibility(GONE);
             mediaCoverImage.setVisibility(VISIBLE);
             viewHolderParent.setOnClickListener(null);
 
@@ -479,7 +479,7 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
             volumeControl.setVisibility(GONE);
             videoSurfaceView.setVisibility(INVISIBLE);
             mediaCoverImage.setVisibility(VISIBLE);
-            progressBar.setVisibility(GONE);
+            pbBuffering.setVisibility(GONE);
             if (videoPlayer != null) {
                 videoPlayer.stop();
             }
@@ -606,7 +606,7 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            progressBar.setVisibility(View.VISIBLE);
+            pbBuffering.setVisibility(View.VISIBLE);
             mediaCoverImage.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
@@ -628,7 +628,7 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
             super.onPostExecute(aVoid);
 
 
-            progressBar.setVisibility(View.GONE);
+            pbBuffering.setVisibility(View.GONE);
             if (image != null) {
 
                 videoSurfaceView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, image.getHeight()));
@@ -650,7 +650,7 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            progressBar.setVisibility(View.VISIBLE);
+            pbBuffering.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -662,8 +662,6 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
 
                 image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -676,8 +674,7 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-
-            progressBar.setVisibility(View.GONE);
+            pbBuffering.setVisibility(View.GONE);
             if (image != null) {
                 mediaCoverImage.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, image.getHeight()));
             }

@@ -94,8 +94,8 @@ public class FragmentMemes extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         try {
-
-            new MemesExoPlayerRecyclerView(getActivity()).onPausePlayer();
+            if (mHelper!=null && mHelper.recyclerMemes!=null)
+                mHelper.recyclerMemes.onPausePlayer();
         }catch (Exception e){
             e.printStackTrace();
         }

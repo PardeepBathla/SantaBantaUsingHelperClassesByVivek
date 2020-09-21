@@ -14,6 +14,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.app.santabanta.Activites.MainActivity;
 import com.app.santabanta.Adapter.ViewPagerAdapter;
 import com.app.santabanta.AppController;
+import com.app.santabanta.Fragment.FragmentHome;
 import com.app.santabanta.Fragment.FragmentMemes;
 import com.app.santabanta.Fragment.NavFragment;
 import com.app.santabanta.R;
@@ -81,10 +82,12 @@ public class NavFragmentHelper {
                 if (tab.getPosition() == 3){
                     ((FragmentMemes)adapter.getRegisteredFragment(3)).mHelper.recyclerMemes.pausePlayer();
                 }
+
                 if (tab.getPosition() == 0){
                     ((ImageView) tab.getCustomView().findViewById(R.id.IconImageView)).setImageResource(Utils.getSharedPref(AppController.getInstance())
                             .getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false) ? R.drawable.ic_home_black : R.drawable.ic_home_white);
 
+                    ((FragmentHome) adapter.getRegisteredFragment(0)).recyclerHome.onPausePlayer();
                 }
                 ((TextView) tab.getCustomView().findViewById(R.id.tvMenuTitle)).setTextColor(Utils.getSharedPref(AppController.getInstance()).getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false) ? ResUtils.getColor(R.color.black) : ResUtils.getColor(R.color.white));
             }

@@ -21,6 +21,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -493,8 +494,6 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public class MemesVideoViewHolder extends RecyclerView.ViewHolder implements BitmapLoadedCallback {
         private final ShareableIntents shareableIntents;
-        @BindView(R.id.progress_bar)
-        public ProgressBar progressBar;
         @BindView(R.id.ivMediaCoverImage)
         public ImageView ivMediaCoverImage;
         @BindView(R.id.ivVolumeControl)
@@ -506,9 +505,9 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public RequestManager requestManager;
         @BindView(R.id.llbreadcrumbs)
         LinearLayout llbreadcrumbs;
-        @BindView(R.id.ll_share_memes)
+        @BindView(R.id.ll_share_home)
         LinearLayout llShareMemes;
-        @BindView(R.id.ll_share_options_sms)
+        @BindView(R.id.ll_share_options_home)
         LinearLayout llShareOptionsSms;
         @BindView(R.id.cb_like)
         CheckBox cbLike;
@@ -524,10 +523,8 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView ivPintrest;
         @BindView(R.id.iv_instagram)
         ImageView ivInstagram;
-        @BindView(R.id.ivMeme)
-        AspectRatioImageView ivMeme;
-        @BindView(R.id.tv_like_count)
-        TextView tv_like_count;
+//        @BindView(R.id.tv_like_count)
+//        TextView tv_like_count;
         HomeDetailList imageTOBeShared;
         private boolean isSharelayoutVisible = false;
 
@@ -535,11 +532,13 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public MemesVideoViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            Glide.with(mActivity).setDefaultRequestOptions(new RequestOptions());
+
+            requestManager = Glide.with(mActivity).setDefaultRequestOptions(new RequestOptions());
             shareableIntents = new ShareableIntents(mActivity);
         }
 
         void bindData(HomeDetailList model, int position) {
+            this.itemView.setTag(this);
             imageTOBeShared = model;
             MemesImageItemListeners(model, position);
 

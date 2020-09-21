@@ -256,7 +256,7 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
         }
 
         void bindData(SmsDetailModel model, int position) {
-            Utils.showLog("sms_url",model.getImage());
+//            Utils.showLog("sms_url",model.getImage());
            /* if (model.getFav_count() == 0) {
                 tv_like_count.setVisibility(View.GONE);
             } else {

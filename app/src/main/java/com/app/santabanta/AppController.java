@@ -28,10 +28,10 @@ public class AppController extends Application {
     public static synchronized AppController getInstance() {
         return mInstance;
     }
+
     public static Retrofit getRetroInstance() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
 
         Dispatcher dispatcher = new Dispatcher();
         dispatcher.setMaxRequests(1);
@@ -41,17 +41,16 @@ public class AppController extends Application {
             return chain.proceed(chain.request());
         };
         TLSSocketFactory tlsSocketFactory= null;
-        okHttpClient = null;
+           okHttpClient = null;
         try {
             tlsSocketFactory = new TLSSocketFactory();
 
             okHttpClient = new OkHttpClient.Builder()
-                    .connectTimeout(100, TimeUnit.SECONDS)
-                    .readTimeout(100,TimeUnit.SECONDS)
-                    .writeTimeout(100,TimeUnit.SECONDS)
-                    .addInterceptor(logging)
-
-                    .addNetworkInterceptor(interceptor)
+                    .connectTimeout(10, TimeUnit.MINUTES)
+                    .readTimeout(10, TimeUnit.MINUTES)
+                    .writeTimeout(10, TimeUnit.MINUTES)
+//                    .addInterceptor(logging)
+//                    .addNetworkInterceptor(interceptor)
                     .dispatcher(dispatcher)
                     .sslSocketFactory(tlsSocketFactory, tlsSocketFactory.getTrustManager())
                     .build();

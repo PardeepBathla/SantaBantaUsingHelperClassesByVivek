@@ -42,7 +42,6 @@ public class NavFragmentHelper {
     }
 
     private void initViews() {
-
         mPager.setAdapter(adapter);
         mPager.setOffscreenPageLimit(3);
         mTabLayout.setupWithViewPager(mPager);

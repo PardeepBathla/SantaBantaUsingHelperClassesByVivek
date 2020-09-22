@@ -258,6 +258,11 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         void bindData(MemesDetailModel obj, int position) {
 
+            ivMeme.setOnLongClickListener(v -> {
+                Utils.showImageSaveDialog(fragmentMemes.getActivity(),ivMeme);
+                return true;
+            });
+
             if (obj.getFavCount() == 0) {
                 tv_like_count.setVisibility(View.GONE);
             } else {

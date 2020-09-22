@@ -130,6 +130,8 @@ public class SideMenuAdapter extends RecyclerView.Adapter<SideMenuAdapter.ViewHo
                 }
             });
 
+            itemView.setOnClickListener(v -> viewMoreBtn.performClick());
+
             if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
                 if (currentSelectedItem == getAdapterPosition()) {
                     viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_minus));

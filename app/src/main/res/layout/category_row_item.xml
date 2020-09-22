@@ -33,6 +33,6 @@
         android:singleLine="true"
         android:textAllCaps="true"
         android:textColor="?text_color"
-        android:textSize="@dimen/_9sdp" />
+        android:textSize="@dimen/_7sdp" />
 
 </RelativeLayout>

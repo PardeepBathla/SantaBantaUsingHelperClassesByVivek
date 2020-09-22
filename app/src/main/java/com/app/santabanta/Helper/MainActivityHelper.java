@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,10 @@ public class MainActivityHelper {
     private Webservices mInterface_method = AppController.getRetroInstance().create(Webservices.class);
     private ImageView ivMenu;
     private ImageView iv_language;
+    private ImageView ivSearch;
+    private ImageView ivLogo;
+    private RelativeLayout rlSearch;
+    private ImageView ivCancel;
 
     public MainActivityHelper(MainActivity mActivity) {
         this.mActivity = mActivity;
@@ -71,31 +76,46 @@ public class MainActivityHelper {
     }
 
     private void findViews() {
-
+        ivCancel = mActivity.findViewById(R.id.iv_search);
         ivMenu = mActivity.findViewById(R.id.iv_hamburger);
+        rlSearch = mActivity.findViewById(R.id.rl_search);
+        ivLogo = mActivity.findViewById(R.id.ivLogo);
+        ivSearch = mActivity.findViewById(R.id.ivSearch);
         iv_language = mActivity.findViewById(R.id.iv_language);
         mViewPager = mActivity.findViewById(R.id.viewPager);
         mTabLayout = mActivity.findViewById(R.id.tabLayout);
         drawer = mActivity.findViewById(R.id.drawer_layout);
         navigationView = mActivity.findViewById(R.id.navigationView);
         ImageView ivChangeMode = navigationView.findViewById(R.id.ivChangeMode);
-        TextView name = navigationView.findViewById(R.id.name);
-        ivChangeMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
-                    name.setText(mActivity.getResources().getString(R.string.light));
-                } else {
-                    name.setText(mActivity.getResources().getString(R.string.dark));
-
-                }
-                ((MainActivity) mActivity).switchTheme();
-            }
+        ivChangeMode.setOnClickListener(view -> {
+//                if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
+//                    name.setText(mActivity.getResources().getString(R.string.light));
+//                } else {
+//                    name.setText(mActivity.getResources().getString(R.string.dark));
+//
+//                }
+            mActivity.switchTheme();
         });
 
+        ivCancel.setOnClickListener(v -> {
+            ivSearch.setVisibility(View.VISIBLE);
+            ivLogo.setVisibility(View.VISIBLE);
+            rlSearch.setVisibility(View.GONE);
+        });
+
+        ivSearch.setOnClickListener(v -> {
+            ivSearch.setVisibility(View.GONE);
+            ivLogo.setVisibility(View.GONE);
+            rlSearch.setVisibility(View.VISIBLE);
+        });
+
+
         ivMenu.setOnClickListener(view -> {
-            Utils.showLog("test", "test");
-            drawer.openDrawer(Gravity.LEFT);
+            if (drawer.isDrawerOpen(Gravity.LEFT)){
+                drawer.closeDrawer(Gravity.LEFT);
+            }else {
+                drawer.openDrawer(Gravity.LEFT);
+            }
         });
 
         String locale = LocaleHelper.getPersistedData(mActivity, Locale.getDefault().getLanguage());
@@ -121,7 +141,7 @@ public class MainActivityHelper {
 
                 LocaleHelper.setLocale(mActivity, languageToLoad);
                 mActivity.finish();
-                mActivity.startActivity(mActivity.getIntent());
+                mActivity.startActivity(mActivity.getIntent().putExtra("change",true));
             }
         });
         initDrawer();
@@ -134,7 +154,8 @@ public class MainActivityHelper {
         ImageView ivChangeMode = navigationView.findViewById(R.id.ivChangeMode);
         RecyclerView recyclerViewItems = navigationView.findViewById(R.id.recyclerViewItems);
 
-        name.setText(iSelectedThemeLight() ? ResUtils.getString(R.string.light) : ResUtils.getString(R.string.dark));
+//        name.setText(iSelectedThemeLight() ? ResUtils.getString(R.string.light) : ResUtils.getString(R.string.dark));
+        name.setText(ResUtils.getString(R.string.dark));
 
         getHomeCategories(response -> {
             recyclerViewItems.setLayoutManager(new LinearLayoutManager(mActivity));

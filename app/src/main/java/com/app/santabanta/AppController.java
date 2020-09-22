@@ -49,8 +49,8 @@ public class AppController extends Application {
                     .connectTimeout(10, TimeUnit.MINUTES)
                     .readTimeout(10, TimeUnit.MINUTES)
                     .writeTimeout(10, TimeUnit.MINUTES)
-//                    .addInterceptor(logging)
-//                    .addNetworkInterceptor(interceptor)
+                    .addInterceptor(logging)
+                    .addNetworkInterceptor(interceptor)
                     .dispatcher(dispatcher)
                     .sslSocketFactory(tlsSocketFactory, tlsSocketFactory.getTrustManager())
                     .build();

@@ -323,6 +323,11 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             imageTOBeShared = model;
 
 
+            ivMeme.setOnLongClickListener(v -> {
+                Utils.showImageSaveDialog(mActivity,ivMeme);
+                return true;
+            });
+
             if (model.getFavourites() != null && model.getFavourites().size() != 0) {
                 for (Favourite favouriteModel : model.getFavourites()) {
                     if (favouriteModel.getDeviceId().equals(Utils.getMyDeviceId(mActivity))) {
@@ -1030,6 +1035,11 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
         void bindData(HomeDetailList model, int position) {
+
+            ivMeme.setOnLongClickListener(v -> {
+                Utils.showImageSaveDialog(mActivity,ivMeme);
+                return true;
+            });
 
             if (model.getFavCount() == 0) {
                 tv_like_count.setVisibility(View.GONE);

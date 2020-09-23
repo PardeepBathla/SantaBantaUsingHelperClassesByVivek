@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -128,6 +129,7 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
 
             }
 
+
             name.setText(model.getName());
             recycler.setLayoutManager(new LinearLayoutManager(context));
             recycler.setAdapter(new ChildExpandableAdapter(context, model.getInfo(), model.getName(), menuClickListener, getAdapterPosition()));
@@ -182,11 +184,16 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
 
             itemView.setOnClickListener(view -> {
                 // for jokes
-                if (parentPosition == 1)
-                    menuClickListener.onJokesClicked(model.getSlug(), model.getId());
-                else // for memes
-                    if (parentPosition == 2)
-                        menuClickListener.onMemesClicked(model.getSlug(), model.getId());
+                if (model.getInfo()!=null && model.getInfo().size()>0){
+                    viewMoreBtn.performClick();
+                }else {
+                    if (parentPosition == 1)
+                        menuClickListener.onJokesClicked(model.getSlug(), model.getId());
+                    else // for memes
+                        if (parentPosition == 2)
+                            menuClickListener.onMemesClicked(model.getSlug(), model.getId());
+                }
+
             });
         }
     }

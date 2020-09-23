@@ -49,7 +49,7 @@ public class AppController extends Application {
                     .connectTimeout(10, TimeUnit.MINUTES)
                     .readTimeout(10, TimeUnit.MINUTES)
                     .writeTimeout(10, TimeUnit.MINUTES)
-                    //Todo :: uncomment this while making live
+
                     .addInterceptor(logging)
                     .addNetworkInterceptor(interceptor)
                     .dispatcher(dispatcher)

@@ -2,16 +2,15 @@ package com.app.santabanta.Adapter;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,10 +20,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.app.santabanta.Activites.MainActivity;
 import com.app.santabanta.Callbacks.BitmapLoadedCallback;
-import com.app.santabanta.Events.Events;
-import com.app.santabanta.Events.GlobalBus;
 import com.app.santabanta.Fragment.FragmentSms;
 import com.app.santabanta.Helper.FragmentSmsHelper;
 import com.app.santabanta.Modals.SmsDetailModel;
@@ -34,19 +30,21 @@ import com.app.santabanta.Utils.AspectRatioImageView;
 import com.app.santabanta.Utils.CheckPermissions;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.LoadImageBitmap;
+import com.app.santabanta.Utils.ResUtils;
 import com.app.santabanta.Utils.ShareableIntents;
 import com.app.santabanta.Utils.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.microedition.khronos.opengles.GL;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHolder> implements BitmapLoadedCallback {
 
@@ -59,7 +57,7 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
     private boolean isLoadingAdded = false;
     private FragmentSms fragmentSms;
 
-    public SmsHomeAdapter(FragmentSmsHelper fragmentSmsHelper,Activity mActivity,FragmentSms fragmentSms) {
+    public SmsHomeAdapter(FragmentSmsHelper fragmentSmsHelper, Activity mActivity, FragmentSms fragmentSms) {
         mList = new ArrayList<>();
         this.mActivity = mActivity;
         this.fragmentSmsHelper = fragmentSmsHelper;
@@ -118,7 +116,7 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
         }
     }
 
-    public void resetList(){
+    public void resetList() {
         mList = new ArrayList<>();
         notifyDataSetChanged();
     }
@@ -130,7 +128,7 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bindData(mList.get(position),position);
+        holder.bindData(mList.get(position), position);
     }
 
     @Override
@@ -139,21 +137,21 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
     }
 
     private void setBreadCrumbs(SmsDetailModel obj, LinearLayout llbreadcrumbs) {
-        if (obj.getBreadcrumbs() !=null){
+        if (obj.getBreadcrumbs() != null) {
             TextView[] textView = new TextView[obj.getBreadcrumbs().size()];
 
-            if(llbreadcrumbs.getChildCount()>0)
+            if (llbreadcrumbs.getChildCount() > 0)
                 llbreadcrumbs.removeAllViews();
 
 
-            for (int i = 0; i < obj.getBreadcrumbs().size(); i++){
+            for (int i = 0; i < obj.getBreadcrumbs().size(); i++) {
                 textView[i] = new TextView(mActivity);
 
-                if (i==0){
+                if (i == 0) {
                     textView[i].setText(obj.getBreadcrumbs().get(i).getLabel());
 
-                }else {
-                    textView[i].setText(" > "+obj.getBreadcrumbs().get(i).getLabel());
+                } else {
+                    textView[i].setText(" > " + obj.getBreadcrumbs().get(i).getLabel());
 
                 }
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -162,7 +160,7 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
 
                 );
                 llbreadcrumbs.setOrientation(LinearLayout.HORIZONTAL);
-                params.setMargins(3,3,3,3);
+                params.setMargins(3, 3, 3, 3);
                 textView[i].setLayoutParams(params);
                 llbreadcrumbs.addView(textView[i]);
                 String slug = obj.getBreadcrumbs().get(i).getLink();
@@ -256,13 +254,18 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
         }
 
         void bindData(SmsDetailModel model, int position) {
-//            Utils.showLog("sms_url",model.getImage());
+//            Utils.showLog("sms_url",model.getImage();
            /* if (model.getFav_count() == 0) {
                 tv_like_count.setVisibility(View.GONE);
             } else {
                 tv_like_count.setVisibility(View.GONE);
                 tv_like_count.setText(String.valueOf(model.getFav_count()));
             }*/
+
+            ivMeme.setOnLongClickListener(v -> {
+                Utils.showImageSaveDialog(mActivity,ivMeme);
+                return true;
+            });
 
             Utils.loadGlideImage(mActivity, ivMeme, model.getImage());
             smsItemListeners(model, position);
@@ -296,11 +299,12 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
 
 
 
+
         private void BitmapConversion(SmsDetailModel obj, String platform) {
             shareLayoutGone();
             try {
                 URL url = new URL(obj.getImage());
-                new LoadImageBitmap(mActivity,SmsHomeAdapter.this::onBitmapLoaded, platform).execute(url);
+                new LoadImageBitmap(mActivity, SmsHomeAdapter.this::onBitmapLoaded, platform).execute(url);
 
             } catch (IOException e) {
                 System.out.println(e);
@@ -310,13 +314,13 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
         private void shareLayoutGone() {
             isSharelayoutVisible = false;
             ll_share_home.setBackground(null);
-               ll_share_options_home.setVisibility(View.GONE);
+            ll_share_options_home.setVisibility(View.GONE);
         }
 
 
-           private void smsItemListeners(SmsDetailModel smsTOBeShared, int position) {
+        private void smsItemListeners(SmsDetailModel smsTOBeShared, int position) {
 
-               iv_whatsapp.setOnClickListener(v -> {
+            iv_whatsapp.setOnClickListener(v -> {
                 shareLayoutGone();
                 Utils.vibrate(mActivity);
                 if (CheckPermissions.isStoragePermissionGranted(mActivity)) {
@@ -328,7 +332,7 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
                 Utils.vibrate(mActivity);
                 shareableIntents.shareOnFbMesenger(smsTOBeShared.getImage());
 
-               });
+            });
             iv_twitter.setOnClickListener(v -> {
                 shareableIntents.shareOnTwitter(v, smsTOBeShared.getImage());
                 shareLayoutGone();
@@ -368,11 +372,11 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
                     int padding = (int) mActivity.getResources().getDimension(R.dimen._10sdp);
                     ll_share_home.setPadding(padding, padding, padding, padding);
                     ll_share_options_home.setVisibility(View.VISIBLE);
-                       isSharelayoutVisible = true;
+                    isSharelayoutVisible = true;
                 }
             });
 
-               cb_like.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            cb_like.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (buttonView.isPressed()) {
                     Utils.vibrate(mActivity);
 
@@ -380,7 +384,7 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
                     dialog.show();
                     cb_like.setClickable(false);
                     if (isChecked) {
-                        fragmentSmsHelper.addSmsToFav(smsTOBeShared, position,dialog, cb_like);
+                        fragmentSmsHelper.addSmsToFav(smsTOBeShared, position, dialog, cb_like);
                     } else {
                         if (smsTOBeShared.getmFavourite() != null) {
                             for (SmsFavouriteModel favouriteModel : smsTOBeShared.getmFavourite()) {
@@ -398,7 +402,6 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
         }
 
     }
-
 
 
 }

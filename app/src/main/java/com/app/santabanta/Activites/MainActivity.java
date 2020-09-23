@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
@@ -90,7 +92,13 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         pref = Utils.getSharedPref(MainActivity.this);
-        setThemePreference();
+//        if (getIntent().hasExtra("change"))
+            setThemePreference();
+//        else {
+//            setTheme(R.style.AppThemeLight);
+//            onCheckedChanged(true);
+//        }
+
         LocaleHelper.onAttach(MainActivity.this);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -206,8 +214,9 @@ public class MainActivity extends BaseActivity {
         } else {
             onCheckedChanged(true);
         }
+        startActivity(getIntent().putExtra("change",true));
         finish();
-        startActivity(getIntent());
+
     }
 
     public void onCheckedChanged(boolean checked) {

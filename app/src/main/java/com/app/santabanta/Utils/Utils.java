@@ -5,17 +5,26 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentTransaction;
@@ -32,7 +41,77 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Random;
+
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+
 public class Utils {
+
+    public static void showImageSaveDialog(Activity mActivity,ImageView imageView) {
+        LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View view1 = inflater.inflate(R.layout.dialog_common, null);
+        final Dialog dialog = new Dialog(mActivity);
+        dialog.setContentView(view1);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+
+        TextView tvMessage = dialog.findViewById(R.id.txt_dia);
+        Button btnYes = dialog.findViewById(R.id.btn_yes);
+        Button btnNo = dialog.findViewById(R.id.btn_no);
+
+        tvMessage.setText(ResUtils.getString(R.string.save_image));
+        btnYes.setText(ResUtils.getString(R.string.yes));
+        btnNo.setText(ResUtils.getString(R.string.no));
+
+        btnYes.setOnClickListener(v1 -> {
+            Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            saveImage(bitmap);
+            dialog.dismiss();
+        });
+
+        btnNo.setOnClickListener(v12 -> dialog.dismiss());
+
+        dialog.show();
+    }
+
+    public static void saveImage(Bitmap finalBitmap) {
+
+        String root = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES).toString();
+        File myDir = new File(root + "/santa_banta");
+        myDir.mkdirs();
+        Random generator = new Random();
+
+        int n = 10000;
+        n = generator.nextInt(n);
+        String fname = "Image-"+ n +".jpg";
+        File file = new File (myDir, fname);
+        if (file.exists ()) file.delete ();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            // sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
+            //     Uri.parse("file://"+ Environment.getExternalStorageDirectory())));
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+// Tell the media scanner about the new file so that it is
+// immediately available to the user.
+        MediaScannerConnection.scanFile(AppController.getInstance(), new String[]{file.toString()}, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                        Log.i("ExternalStorage", "Scanned " + path + ":");
+                        Log.i("ExternalStorage", "-> uri=" + uri);
+                    }
+                });
+        Toast.makeText(AppController.getInstance(), ResUtils.getString(R.string.image_saved), Toast.LENGTH_SHORT).show();
+    }
+
 
     public static ProgressDialog progressDialog;
 

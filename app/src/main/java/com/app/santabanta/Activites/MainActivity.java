@@ -92,12 +92,12 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         pref = Utils.getSharedPref(MainActivity.this);
-//        if (getIntent().hasExtra("change"))
+        if (getIntent().hasExtra("change"))
             setThemePreference();
-//        else {
-//            setTheme(R.style.AppThemeLight);
-//            onCheckedChanged(true);
-//        }
+        else {
+            setTheme(R.style.AppThemeLight);
+            onCheckedChanged(true);
+        }
 
         LocaleHelper.onAttach(MainActivity.this);
         setContentView(R.layout.activity_main);

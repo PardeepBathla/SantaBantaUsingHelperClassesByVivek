@@ -133,7 +133,7 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
             name.setText(model.getName());
             recycler.setLayoutManager(new LinearLayoutManager(context));
             recycler.setAdapter(new ChildExpandableAdapter(context, model.getInfo(), model.getName(), menuClickListener, getAdapterPosition(),parentPosition));
-            recycler.addItemDecoration(new SimpleDividerItemDecoration(context));
+            recycler.addItemDecoration(new SimpleDividerItemDecoration(context,40));
             viewMoreBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -143,30 +143,38 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
                         notifyDataSetChanged();
                     }else {
                         if (getAdapterPosition() == 1){
-                            if (AppController.SHOW_ADULT_DIALOG){
-                                LayoutInflater inflater = (LayoutInflater)context.getSystemService(LAYOUT_INFLATER_SERVICE);
-                                View view1 = inflater.inflate(R.layout.dialog_18_plus, null);
-                                final Dialog dialog = new Dialog(context);
-                                dialog.setContentView(view1);
-                                dialog.setCancelable(true);
-                                dialog.setCanceledOnTouchOutside(true);
 
-                                TextView txt_dia = dialog.findViewById(R.id.txt_dia);
-                                Button btn_yes = dialog.findViewById(R.id.btn_yes);
-                                Button btn_no = dialog.findViewById(R.id.btn_no);
-                                btn_yes.setOnClickListener(view2 -> {
-                                    AppController.SHOW_ADULT_DIALOG = false;
+                            if (parentPosition == 0){
+                                if (AppController.SHOW_ADULT_DIALOG){
+                                    LayoutInflater inflater = (LayoutInflater)context.getSystemService(LAYOUT_INFLATER_SERVICE);
+                                    View view1 = inflater.inflate(R.layout.dialog_18_plus, null);
+                                    final Dialog dialog = new Dialog(context);
+                                    dialog.setContentView(view1);
+                                    dialog.setCancelable(true);
+                                    dialog.setCanceledOnTouchOutside(true);
+
+                                    TextView txt_dia = dialog.findViewById(R.id.txt_dia);
+                                    Button btn_yes = dialog.findViewById(R.id.btn_yes);
+                                    Button btn_no = dialog.findViewById(R.id.btn_no);
+                                    btn_yes.setOnClickListener(view2 -> {
+                                        AppController.SHOW_ADULT_DIALOG = false;
+                                        currentPos = getAdapterPosition();
+                                        notifyDataSetChanged();
+                                        dialog.dismiss();
+
+                                    });
+                                    btn_no.setOnClickListener(view12 -> dialog.dismiss());
+                                    dialog.show();
+                                }else {
                                     currentPos = getAdapterPosition();
                                     notifyDataSetChanged();
-                                    dialog.dismiss();
-
-                                });
-                                btn_no.setOnClickListener(view12 -> dialog.dismiss());
-                                dialog.show();
+                                }
                             }else {
                                 currentPos = getAdapterPosition();
                                 notifyDataSetChanged();
                             }
+
+
 
                         }else {
                             currentPos = getAdapterPosition();
@@ -177,16 +185,15 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
                 }
             });
 
-            if (parentPosition == 2)
-                viewMoreBtn.setVisibility(View.GONE);
-            else
-                viewMoreBtn.setVisibility(View.VISIBLE);
+
+            viewMoreBtn.setVisibility(model.getInfo().size() > 0 ? View.VISIBLE : View.GONE);
 
             itemView.setOnClickListener(view -> {
                 // for jokes
                 if (model.getInfo()!=null && model.getInfo().size()>0){
                     viewMoreBtn.performClick();
                 }else {
+
                     if (parentPosition == 1)
                         menuClickListener.onJokesClicked(model.getSlug(), model.getId());
                     else // for memes

@@ -43,9 +43,6 @@ import com.app.santabanta.Utils.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
-import com.daasuu.bl.ArrowDirection;
-import com.daasuu.bl.BubbleLayout;
-import com.daasuu.bl.BubblePopupHelper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -1170,14 +1167,14 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 } else {
                     if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
                         ll_share_home.setBackgroundDrawable(mActivity.getDrawable(R.drawable.share_round_corner_bg_light));
-                        int padding = (int) mActivity.getResources().getDimension(R.dimen._10sdp);
-                        ll_share_home.setPadding(padding, padding, padding, padding);
+//                        int padding = (int) mActivity.getResources().getDimension(R.dimen._10sdp);
+//                        ll_share_home.setPadding(padding, padding, padding, padding);
                         ll_share_options_home.setVisibility(View.VISIBLE);
                         isSharelayoutVisible = true;
                     } else {
                         ll_share_home.setBackgroundDrawable(mActivity.getDrawable(R.drawable.bottom_round_corner_bg));
-                        int padding = (int) mActivity.getResources().getDimension(R.dimen._10sdp);
-                        ll_share_home.setPadding(padding, padding, padding, padding);
+//                        int padding = (int) mActivity.getResources().getDimension(R.dimen._10sdp);
+//                        ll_share_home.setPadding(padding, padding, padding, padding);
                         ll_share_options_home.setVisibility(View.VISIBLE);
                         isSharelayoutVisible = true;
                     }

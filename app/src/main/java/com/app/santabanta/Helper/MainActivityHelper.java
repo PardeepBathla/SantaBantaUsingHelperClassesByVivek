@@ -1,14 +1,11 @@
 package com.app.santabanta.Helper;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,7 +26,6 @@ import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.LocaleHelper;
 import com.app.santabanta.Utils.NonSwipeableViewPager;
 import com.app.santabanta.Utils.ResUtils;
-import com.app.santabanta.Utils.SimpleDividerItemDecoration;
 import com.app.santabanta.Utils.Utils;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -41,9 +37,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.app.santabanta.AppController.LANGUAGE_SELECTED;
-import static com.app.santabanta.Utils.GlobalConstants.INTENT_PARAMS.SHOW_JOKES_FRAGMENT;
-import static com.app.santabanta.Utils.GlobalConstants.INTENT_PARAMS.SHOW_MEMES_FRAGMENT;
-import static com.app.santabanta.Utils.GlobalConstants.INTENT_PARAMS.SHOW_SMS_FRAGMENT;
 
 public class MainActivityHelper {
 
@@ -121,28 +114,45 @@ public class MainActivityHelper {
         String locale = LocaleHelper.getPersistedData(mActivity, Locale.getDefault().getLanguage());
         if (locale.equalsIgnoreCase("en")) {
             LANGUAGE_SELECTED = GlobalConstants.COMMON.ENGLISH;
-            iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_hindi_language));
+            if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
+                iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_hindi_language));
+            } else {
+                iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_hindi_language_black));
+            }
 
         } else {
             LANGUAGE_SELECTED = GlobalConstants.COMMON.HINDI;
-            iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_english_language_new));
+            if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
+                iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_english_language_new));
+            } else {
+                iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_english_language_new_black_new));
+            }
         }
-        iv_language.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (LANGUAGE_SELECTED.equalsIgnoreCase(GlobalConstants.COMMON.HINDI)) {
-                    languageToLoad = "en";
+        iv_language.setOnClickListener(view -> {
+            if (LANGUAGE_SELECTED.equalsIgnoreCase(GlobalConstants.COMMON.HINDI)) {
+                languageToLoad = "en";
+                if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT,false)){
                     iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_hindi_language));
-                } else {
-                    languageToLoad = "hi";
-                    iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_english_language_new));
-
+                }else{
+                    iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_hindi_language_black));
                 }
 
-                LocaleHelper.setLocale(mActivity, languageToLoad);
-                mActivity.finish();
-                mActivity.startActivity(mActivity.getIntent().putExtra("change",true));
+            } else {
+                languageToLoad = "hi";
+
+                if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT,false)){
+                    iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_english_language_new));
+                }else{
+                    iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_english_language_new_black_new));
+                }
+
+//                iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_english_language_new));
+
             }
+
+            LocaleHelper.setLocale(mActivity, languageToLoad);
+            mActivity.finish();
+            mActivity.startActivity(mActivity.getIntent().putExtra("change",true));
         });
         initDrawer();
     }

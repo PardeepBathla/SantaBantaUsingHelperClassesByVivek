@@ -40,6 +40,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.fevziomurtekin.customprogress.Type;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -142,6 +143,7 @@ public class Utils {
         progressDialog.setCancelable(true);
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         progressDialog.setContentView(R.layout.progress_layout);
+
         progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         return progressDialog;
     }

@@ -14,10 +14,11 @@ import com.app.santabanta.R;
 public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
     public SharedPreferences pref;
+    private int margin;
 
-    public SimpleDividerItemDecoration(Context context) {
+    public SimpleDividerItemDecoration(Context context, int margin) {
         pref = Utils.getSharedPref(context);
-
+        this.margin = margin;
         if (Utils.getSharedPref(AppController.getInstance()).getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
             mDivider = context.getResources().getDrawable(R.drawable.line_divider);
         } else {
@@ -39,7 +40,7 @@ public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
             int top = child.getBottom() + params.bottomMargin;
             int bottom = top + mDivider.getIntrinsicHeight();
 
-            mDivider.setBounds(left + 10 , top, right, bottom);
+            mDivider.setBounds(left + margin , top, right, bottom);
             mDivider.draw(c);
         }
     }

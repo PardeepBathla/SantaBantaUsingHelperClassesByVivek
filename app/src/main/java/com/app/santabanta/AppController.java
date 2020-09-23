@@ -40,8 +40,8 @@ public class AppController extends Application {
             SystemClock.sleep(700);
             return chain.proceed(chain.request());
         };
-        TLSSocketFactory tlsSocketFactory= null;
-           okHttpClient = null;
+        TLSSocketFactory tlsSocketFactory;
+        okHttpClient = null;
         try {
             tlsSocketFactory = new TLSSocketFactory();
 
@@ -49,18 +49,15 @@ public class AppController extends Application {
                     .connectTimeout(10, TimeUnit.MINUTES)
                     .readTimeout(10, TimeUnit.MINUTES)
                     .writeTimeout(10, TimeUnit.MINUTES)
-//                    .addInterceptor(logging)
-//                    .addNetworkInterceptor(interceptor)
+                    //Todo :: uncomment this while making live
+                    .addInterceptor(logging)
+                    .addNetworkInterceptor(interceptor)
                     .dispatcher(dispatcher)
                     .sslSocketFactory(tlsSocketFactory, tlsSocketFactory.getTrustManager())
                     .build();
 
 
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
+        } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
             e.printStackTrace();
         }
         return new Retrofit.Builder()
@@ -70,9 +67,9 @@ public class AppController extends Application {
                 .build();
     }
 
-    public static synchronized OkHttpClient getOkHttpClient(){
-        return okHttpClient;
-    }
+//    public static synchronized OkHttpClient getOkHttpClient(){
+//        return okHttpClient;
+//    }
 
     @Override
     public void onCreate() {

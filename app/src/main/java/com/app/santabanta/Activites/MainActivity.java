@@ -62,17 +62,17 @@ public class MainActivity extends BaseActivity {
             if (navigateType != null) {
                 switch (navigateType) {
                     case "sms":
-                        navFragment.mPager.setCurrentItem(1);
+                        navFragment.getViewPager().setCurrentItem(1);
                         mHelper.openSmsFragment(navigateSlug, "Veg");
                         break;
 
                     case "jokes":
-                        navFragment.mPager.setCurrentItem(2);
+                        navFragment.getViewPager().setCurrentItem(2);
                         mHelper.openJokesFragment(navigateSlug);
                         break;
 
                     case "memes":
-                        navFragment.mPager.setCurrentItem(3);
+                        navFragment.getViewPager().setCurrentItem(3);
                         mHelper.openMemesFragment(navigateSlug);
                         break;
                 }
@@ -142,8 +142,8 @@ public class MainActivity extends BaseActivity {
                 if (mHelper.drawer.isDrawerOpen(GravityCompat.END))
                     mHelper.drawer.closeDrawer(GravityCompat.END);
                 else {
-                    if (!(navFragment.mPager.getCurrentItem() == 0)) {
-                        navFragment.mPager.setCurrentItem(0);
+                    if (!(navFragment.getViewPager().getCurrentItem() == 0)) {
+                        navFragment.getViewPager().setCurrentItem(0);
                     } else {
                         showExitAlert();
                     }

@@ -110,7 +110,7 @@
                         android:id="@+id/ivLogo"
                         android:layout_centerInParent="true"
                         android:layout_width="@dimen/_35sdp"
-                        android:src="@drawable/ic_logo_no_text"
+                        android:src="@drawable/ic_logo_no_text_test"
                         android:layout_height="@dimen/_35sdp"/>
 
                     <ImageView

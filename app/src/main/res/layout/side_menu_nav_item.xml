@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/parent"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_30sdp"
+        android:layout_height="@dimen/_35sdp"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical">
 

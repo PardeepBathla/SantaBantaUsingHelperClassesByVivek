@@ -7,7 +7,7 @@
         android:id="@+id/rl_root"
         android:paddingLeft="@dimen/_20sdp"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_30sdp"
+        android:layout_height="@dimen/_35sdp"
         android:gravity="center_vertical">
 
 

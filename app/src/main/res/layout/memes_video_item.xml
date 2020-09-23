@@ -96,34 +96,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_below="@+id/mediaContainer"
-                android:layout_marginStart="@dimen/_20sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginEnd="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:orientation="horizontal">
 
 
                 <LinearLayout
                     android:id="@+id/ll_like_dislike"
                     android:layout_width="wrap_content"
+                    android:layout_marginLeft="@dimen/_10sdp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_5sdp">
+                    android:orientation="horizontal">
 
-
-                    <!-- <com.jackandphantom.androidlikebutton.AndroidLikeButton
-                         android:id="@+id/btn_like"
-                         android:layout_width="@dimen/_100sdp"
-                         android:layout_height="@dimen/_100sdp"
-                         android:layout_gravity="center"
-                         android:gravity="center"
-                         app:like_icon="@drawable/ic_santabanta_icon_heart_empty"
-                         app:unlike_icon="@drawable/ic_santabanta_icon_heart_filled"
-                         app:circle_startColor="#fcd229"
-                         app:circle_endColor="#f4ac1b"
-                         app:dot_color_1="#f5ce31"
-                         app:dot_color_2="#ed8128"
-                        />-->
 
                     <CheckBox
                         android:id="@+id/cb_like"
@@ -133,16 +117,12 @@
                         android:button="@drawable/like_icon"
                         android:checked="false"/>
 
-                    <!--   <ImageView
-                           android:id="@+id/iv_like"
-                           android:layout_width="@dimen/_12sdp"
-                           android:layout_height="@dimen/_12sdp"
-                           android:src="@drawable/empty_heart"/>-->
 
                     <TextView
                         android:id="@+id/tv_like_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         android:layout_marginStart="@dimen/_5sdp"
                         android:fontFamily="@font/roboto_regular"
                         android:textSize="@dimen/_10ssp" />
@@ -156,14 +136,14 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/ll_like_dislike"
                     android:orientation="horizontal"
-                    android:padding="@dimen/_5sdp">
+                    android:layout_marginLeft="@dimen/_10sdp">
 
 
                     <ImageView
                         android:layout_width="@dimen/_16sdp"
                         android:layout_height="@dimen/_16sdp"
                         android:src="@drawable/ic_share_alt"
-                        android:tint="?text_color" />
+                        app:tint="?shre_icon_color" />
 
                     <TextView
                         android:id="@+id/tv_share_count"
@@ -172,10 +152,11 @@
                         android:layout_marginStart="@dimen/_5sdp"
                         android:fontFamily="@font/roboto_regular"
                         android:text="20"
+                        android:visibility="gone"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_10ssp"
-                        android:visibility="gone" />
+                        android:textSize="@dimen/_10ssp" />
                 </LinearLayout>
+
 
 
                 <LinearLayout
@@ -193,7 +174,7 @@
                         android:layout_height="@dimen/_10sdp"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/ic_tag"
-                        android:tint="?android:textColor" />
+                        app:tint="?android:textColor" />
 
                     <TextView
                         android:id="@+id/tv_categories"
@@ -246,7 +227,7 @@
                     android:layout_weight="1"
                     android:padding="@dimen/_8sdp"
                     android:src="@drawable/ic_facebook"
-                    android:tint="@color/fb_blue" />
+                    app:tint="@color/fb_blue" />
 
                 <ImageView
                     android:id="@+id/iv_twitter"
@@ -256,7 +237,7 @@
                     android:layout_weight="1"
                     android:padding="@dimen/_8sdp"
                     android:src="@drawable/ic_twitter"
-                    android:tint="@color/twitter_blue" />
+                    app:tint="@color/twitter_blue" />
 
                 <ImageView
                     android:id="@+id/iv_instagram"
@@ -275,7 +256,7 @@
                     android:layout_weight="1"
                     android:padding="@dimen/_8sdp"
                     android:src="@drawable/ic_pinterest"
-                    android:tint="@color/pintrest_red" />
+                    app:tint="@color/pintrest_red" />
 
                 <ImageView
                     android:id="@+id/iv_snapchat"

@@ -132,7 +132,7 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
 
             name.setText(model.getName());
             recycler.setLayoutManager(new LinearLayoutManager(context));
-            recycler.setAdapter(new ChildExpandableAdapter(context, model.getInfo(), model.getName(), menuClickListener, getAdapterPosition()));
+            recycler.setAdapter(new ChildExpandableAdapter(context, model.getInfo(), model.getName(), menuClickListener, getAdapterPosition(),parentPosition));
             recycler.addItemDecoration(new SimpleDividerItemDecoration(context));
             viewMoreBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -177,7 +177,7 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
                 }
             });
 
-            if (parentPosition == 1 || parentPosition == 2)
+            if (parentPosition == 2)
                 viewMoreBtn.setVisibility(View.GONE);
             else
                 viewMoreBtn.setVisibility(View.VISIBLE);

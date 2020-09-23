@@ -35,15 +35,17 @@ public class ChildExpandableAdapter extends RecyclerView.Adapter<ChildExpandable
     private String name;
     private DrawerMenuClickListener menuClickListener;
     private int parentPosition = 0;
+    private int mainParentPosition = 0;
     public SharedPreferences pref;
 
     public ChildExpandableAdapter(Activity context, ArrayList<NavMenuResponse.NavMenuDetail.NavMenuDetailChildInfo.NavMenuDetailChildSubInfo> children
-            , String name,DrawerMenuClickListener menuClickListener,int parentPosition) {
+            , String name,DrawerMenuClickListener menuClickListener,int parentPosition, int mainParentPosition) {
         this.context = context;
         this.children = children;
         this.name = name;
         this.menuClickListener = menuClickListener;
         this.parentPosition = parentPosition;
+        this.mainParentPosition = mainParentPosition;
         pref = Utils.getSharedPref(context);
     }
 
@@ -91,7 +93,10 @@ public class ChildExpandableAdapter extends RecyclerView.Adapter<ChildExpandable
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    menuClickListener.onSmsClicked(model.getSlug(), String.valueOf(model.getId()),parentPosition == 0 ? "Veg" : "");
+                    if (mainParentPosition == 0)
+                        menuClickListener.onSmsClicked(model.getSlug(), String.valueOf(model.getId()),parentPosition == 0 ? "Veg" : "");
+                    else if (mainParentPosition == 1)
+                        menuClickListener.onJokesClicked(model.getSlug(),String.valueOf(model.getId()));
                 }
             });
         }

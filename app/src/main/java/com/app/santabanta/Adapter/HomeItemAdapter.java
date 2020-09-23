@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -41,12 +43,16 @@ import com.app.santabanta.Utils.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
+import com.daasuu.bl.ArrowDirection;
+import com.daasuu.bl.BubbleLayout;
+import com.daasuu.bl.BubblePopupHelper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -1136,6 +1142,27 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 //FUNCTIONALITY NOT IN SCOPE FOR THE TIME BEING
 //                    SmsRepository.getInstance().InsertFavourite(obj,fragmentSms);
             });
+//
+//            BubbleLayout bubbleLayout = (BubbleLayout) LayoutInflater.from(mActivity).inflate(R.layout.share_bubble_layout, null);
+//            PopupWindow popupWindow = BubblePopupHelper.create(mActivity, bubbleLayout);
+//            final Random random = new Random();
+//            ll_share_home.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Utils.vibrate(mActivity);
+//                    int[] location = new int[2];
+//                    view.getLocationInWindow(location);
+////                    if (random.nextBoolean()) {
+////                        bubbleLayout.setArrowDirection(ArrowDirection.TOP);
+////                    } else {
+//                        bubbleLayout.setArrowDirection(ArrowDirection.BOTTOM);
+////                    }
+//                    popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0], view.getHeight() + location[1]);
+//                }
+//            });
+
+
+
             ll_share_home.setOnClickListener(v -> {
                 Utils.vibrate(mActivity);
                 if (isSharelayoutVisible) {

@@ -134,13 +134,11 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initScreen() {
-
         navFragment = new NavFragment();
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, navFragment)
                 .commit();
-
     }
 
     @Override

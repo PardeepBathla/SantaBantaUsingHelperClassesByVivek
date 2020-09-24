@@ -245,8 +245,8 @@ public class SmsHomeAdapter extends RecyclerView.Adapter<SmsHomeAdapter.ViewHold
         LinearLayout ll_share_home;
         @BindView(R.id.rl_sms)
         RelativeLayout rl_sms;
-        @BindView(R.id.tv_like_count)
-        TextView tv_like_count;
+//        @BindView(R.id.tv_like_count)
+//        TextView tv_like_count;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -1027,8 +1027,8 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         LinearLayout llbreadcrumbs;
         @BindView(R.id.ll_share_home)
         LinearLayout ll_share_home;
-        @BindView(R.id.tv_like_count)
-        TextView tv_like_count;
+//        @BindView(R.id.tv_like_count)
+//        TextView tv_like_count;
         ShareableIntents shareableIntents;
         HomeDetailList imageTOBeShared;
         private boolean isSharelayoutVisible = false;
@@ -1047,12 +1047,12 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return true;
             });
 
-            if (model.getFavCount() == 0) {
-                tv_like_count.setVisibility(View.GONE);
-            } else {
-                tv_like_count.setVisibility(View.GONE);
-                tv_like_count.setText(String.valueOf(model.getFavCount()));
-            }
+//            if (model.getFavCount() == 0) {
+//                tv_like_count.setVisibility(View.GONE);
+//            } else {
+//                tv_like_count.setVisibility(View.GONE);
+//                tv_like_count.setText(String.valueOf(model.getFavCount()));
+//            }
 
             imageTOBeShared = model;
             Utils.loadGlideImage(mActivity, ivMeme, model.getImage());

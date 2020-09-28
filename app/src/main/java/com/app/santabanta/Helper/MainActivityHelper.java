@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.santabanta.Activites.MainActivity;
+import com.app.santabanta.Adapter.SearchAdapter;
 import com.app.santabanta.Adapter.SectionsPagerAdapter;
 import com.app.santabanta.Adapter.SideMenuAdapter;
 import com.app.santabanta.AppController;
@@ -23,6 +24,7 @@ import com.app.santabanta.Callbacks.DrawerMenuClickListener;
 import com.app.santabanta.Events.Events;
 import com.app.santabanta.Events.GlobalBus;
 import com.app.santabanta.Modals.NavMenuResponse;
+import com.app.santabanta.Modals.SearchResponse;
 import com.app.santabanta.R;
 import com.app.santabanta.RestClient.Webservices;
 import com.app.santabanta.Utils.GlobalConstants;
@@ -45,7 +47,7 @@ import static com.app.santabanta.Utils.GlobalConstants.INTENT_PARAMS.SHOW_JOKES_
 import static com.app.santabanta.Utils.GlobalConstants.INTENT_PARAMS.SHOW_MEMES_FRAGMENT;
 import static com.app.santabanta.Utils.GlobalConstants.INTENT_PARAMS.SHOW_SMS_FRAGMENT;
 
-public class MainActivityHelper {
+public class MainActivityHelper implements SearchAdapter.SearchClickListener {
 
     public DrawerLayout drawer;
     public SharedPreferences pref;
@@ -62,9 +64,11 @@ public class MainActivityHelper {
     private ImageView ivLogo;
     private RelativeLayout rlSearch;
     private ImageView ivCancel;
+    private SearchAdapter mAdapter;
 
     public MainActivityHelper(MainActivity mActivity) {
         this.mActivity = mActivity;
+
         pref = Utils.getSharedPref(mActivity);
         findViews();
         setupViewPager();
@@ -72,8 +76,12 @@ public class MainActivityHelper {
 
     private void setupViewPager() {
         mSectionPagerAdapter = new SectionsPagerAdapter(mActivity.getSupportFragmentManager());
+        mAdapter = new SearchAdapter(mActivity, this);
+        mActivity.rvSearch.setLayoutManager(new LinearLayoutManager(mActivity));
+        mActivity.rvSearch.setAdapter(mAdapter);
 
     }
+
 
     private void findViews() {
         ivCancel = mActivity.findViewById(R.id.iv_search);
@@ -121,11 +129,23 @@ public class MainActivityHelper {
         String locale = LocaleHelper.getPersistedData(mActivity, Locale.getDefault().getLanguage());
         if (locale.equalsIgnoreCase("en")) {
             LANGUAGE_SELECTED = GlobalConstants.COMMON.ENGLISH;
-            iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_hindi_language));
+
+            if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
+                iv_language.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_hindi_language));
+            } else {
+                iv_language.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_hindi_language_black));
+            }
 
         } else {
             LANGUAGE_SELECTED = GlobalConstants.COMMON.HINDI;
-            iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_english_language_new));
+
+            if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
+                iv_language.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_english_language_new));
+            } else {
+                iv_language.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_english_language_blackjpg));
+            }
+
+//            iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_english_language_new));
         }
         iv_language.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,6 +230,38 @@ public class MainActivityHelper {
         return pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false);
     }
 
+    public void searchText(String query){
+        mActivity.rvSearch.setVisibility(View.GONE);
+        mActivity.pbSearch.setVisibility(View.VISIBLE);
+        mActivity.tvNoDataFoundSearch.setText(ResUtils.getString(R.string.loading));
+        mActivity.tvNoDataFoundSearch.setVisibility(View.VISIBLE);
+        Call<SearchResponse> call = mInterface_method.search(query);
+        call.enqueue(new Callback<SearchResponse>() {
+            @Override
+            public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
+                if (response.isSuccessful()){
+                    mActivity.pbSearch.setVisibility(View.GONE);
+                    if (response.body().getHits().getHits().size()>0){
+                        mActivity.rvSearch.setVisibility(View.VISIBLE);
+                        mActivity.tvNoDataFoundSearch.setVisibility(View.GONE);
+                        mAdapter.setItems(response.body().getHits().getHits());
+                    }else {
+                        mActivity.tvNoDataFoundSearch.setText(ResUtils.getString(R.string.no_data_found));
+                        mActivity.rvSearch.setVisibility(View.GONE);
+                        mActivity.tvNoDataFoundSearch.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchResponse> call, Throwable t) {
+                mActivity.pbSearch.setVisibility(View.GONE);
+                mActivity.tvNoDataFoundSearch.setText(ResUtils.getString(R.string.no_data_found));
+            }
+        });
+    }
+
+
     private void getHomeCategories(CategoriesCallback categoriesCallback) {
         Call<NavMenuResponse> call = mInterface_method.getNavList(LANGUAGE_SELECTED);
         call.enqueue(new Callback<NavMenuResponse>() {
@@ -224,5 +276,25 @@ public class MainActivityHelper {
                 Utils.showLog("onFailure", "onFailure");
             }
         });
+    }
+
+    @Override
+    public void onSearchClicked(SearchResponse.Hits.Hit.Source model) {
+        mActivity.flSearch.setVisibility(View.GONE);
+        mActivity.container.setVisibility(View.VISIBLE);
+        mActivity.etSearch.setText("");
+        switch (model.getType()){
+            case "sms":
+                openSmsFragment(model.getSlug(),"V eg");
+                break;
+
+            case "jokes":
+                openJokesFragment(model.getSlug());
+                break;
+
+            case "memes":
+                openMemesFragment(model.getSlug());
+                break;
+        }
     }
 }

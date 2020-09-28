@@ -4,6 +4,7 @@ import com.app.santabanta.Modals.AddFavouriteRequest;
 import com.app.santabanta.Modals.HomeDetailsModel;
 import com.app.santabanta.Modals.JokesDataModel;
 import com.app.santabanta.Modals.NavMenuResponse;
+import com.app.santabanta.Modals.SearchResponse;
 import com.app.santabanta.Modals.SmsResponseModel;
 import com.app.santabanta.Modals.memesModel.MemesResposeModel;
 
@@ -47,6 +48,7 @@ public interface Webservices {
     @GET("memes/latest/{language}")
     Call<MemesResposeModel> getMemesList(@Path("language") String lang, @Query("page") int page_num);
 
-
+    @GET("search")
+    Call<SearchResponse> search(@Query(value = "q", encoded =true) String query);
 
 }

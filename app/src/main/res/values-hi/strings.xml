@@ -32,5 +32,5 @@
     <string name="are_you_sure_you_want_to_exit">क्या आप निश्चित हैं आपकी बाहर निकलने की इच्छा है?</string>
     <string name="image_saved">चित्र सफलतापूर्वक डाउनलोड किया गया!</string>
     <string name="save_image">चित्र डाउनलोड करें?</string>
-
+    <string name="loading">लोड हो रहा है</string>
 </resources>

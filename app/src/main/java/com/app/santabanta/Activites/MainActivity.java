@@ -9,15 +9,20 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +30,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.santabanta.Fragment.NavFragment;
 import com.app.santabanta.Helper.MainActivityHelper;
@@ -32,6 +38,7 @@ import com.app.santabanta.R;
 import com.app.santabanta.Utils.CheckPermissions;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.LocaleHelper;
+import com.app.santabanta.Utils.ResUtils;
 import com.app.santabanta.Utils.Utils;
 import com.app.santabanta.base.BaseActivity;
 import com.google.android.material.tabs.TabLayout;
@@ -49,13 +56,23 @@ public class MainActivity extends BaseActivity {
     public NavFragment navFragment;
     public MainActivityHelper mHelper;
     @BindView(R.id.container)
-    FrameLayout container;
+    public FrameLayout container;
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
     @BindView(R.id.rvBottom)
     RelativeLayout rvBottom;
     @BindView(R.id.tv_selected_module)
     TextView tvTitle;
+    @BindView(R.id.et_search)
+    public EditText etSearch;
+    @BindView(R.id.flSearch)
+    public FrameLayout flSearch;
+    @BindView(R.id.pbSearch)
+    public ProgressBar pbSearch;
+    @BindView(R.id.tvNoDataFoundSearch)
+    public TextView tvNoDataFoundSearch;
+    @BindView(R.id.rvSearch)
+    public RecyclerView rvSearch;
     private BroadcastReceiver navigateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -82,6 +99,28 @@ public class MainActivity extends BaseActivity {
         }
     };
 
+    private long delay = 700; // 1 seconds after user stops typing
+    private long last_text_edit = 0;
+    private Handler handler = new Handler();
+
+
+    private Runnable input_finish_checker = new Runnable() {
+        public void run() {
+            if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
+                String searchText = etSearch.getText().toString().trim();
+                if (searchText.length() > 0) {
+                    flSearch.setVisibility(View.VISIBLE);
+                    container.setVisibility(View.GONE);
+                    mHelper.searchText(searchText);
+                    tvNoDataFoundSearch.setText(ResUtils.getString(R.string.loading));
+                }else {
+                    flSearch.setVisibility(View.GONE);
+                    container.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    };
+
     public Object getSystemService() {
 
         return getSystemService(VIBRATOR_SERVICE);
@@ -92,12 +131,14 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         pref = Utils.getSharedPref(MainActivity.this);
-//        if (getIntent().hasExtra("change"))
+
+        //// TODO: 9/28/20 Uncomment this before build
+        if (getIntent().hasExtra("change"))
             setThemePreference();
-//        else {
-//            setTheme(R.style.AppThemeLight);
-//            onCheckedChanged(true);
-//        }
+        else {
+            setTheme(R.style.AppThemeLight);
+            onCheckedChanged(true);
+        }
 
         LocaleHelper.onAttach(MainActivity.this);
         setContentView(R.layout.activity_main);
@@ -115,6 +156,8 @@ public class MainActivity extends BaseActivity {
                 e.printStackTrace();
             }
         }
+
+
     }
 
     public TextView getTitleView() {
@@ -124,6 +167,33 @@ public class MainActivity extends BaseActivity {
     private void initActivity() {
         mHelper = new MainActivityHelper(MainActivity.this);
         pref = Utils.getSharedPref(MainActivity.this);
+
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                handler.removeCallbacks(input_finish_checker);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (s.length() > 0) {
+                    last_text_edit = System.currentTimeMillis();
+                    handler.postDelayed(input_finish_checker, delay);
+                } else {
+                    flSearch.setVisibility(View.GONE);
+                    container.setVisibility(View.VISIBLE);
+                }
+
+
+            }
+        });
+
+        etSearch.setTextColor(pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false) ? ResUtils.getColor(R.color.off_black) : ResUtils.getColor(R.color.off_black));
 
     }
 
@@ -151,7 +221,14 @@ public class MainActivity extends BaseActivity {
                     if (!(navFragment.getViewPager().getCurrentItem() == 0)) {
                         navFragment.getViewPager().setCurrentItem(0);
                     } else {
-                        showExitAlert();
+                        if (flSearch.getVisibility() == View.VISIBLE){
+                            flSearch.setVisibility(View.GONE);
+                            etSearch.setText("");
+                            container.setVisibility(View.VISIBLE);
+                        }else{
+                            showExitAlert();
+                        }
+
                     }
 
                 }
@@ -218,22 +295,13 @@ public class MainActivity extends BaseActivity {
     }
 
     public void onCheckedChanged(boolean checked) {
-
         SharedPreferences.Editor editor = pref.edit();
-
-        if (checked) {
-            editor.putBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, checked); // Storing boolean - true/false
-        } else {
-            editor.putBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, checked); // Storing boolean - true/false
-        }
+        editor.putBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, checked);
         editor.apply();
-
     }
 
     public void vibrate() {
-
         Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (v != null) {
                 v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));

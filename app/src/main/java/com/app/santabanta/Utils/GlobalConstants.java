@@ -3,8 +3,8 @@ package com.app.santabanta.Utils;
 public interface GlobalConstants {
 
     interface API {
-//        String BASE_URL = "https://santabantaapi.techpss.com/api/v1/";
-        String BASE_URL = "https://backend.pprod.santabanta.com/api/v1/";
+        String BASE_URL = "https://santabantaapi.techpss.com/api/v1/";
+//        String BASE_URL = "https://backend.pprod.santabanta.com/api/v1/";
     }
 
     interface COMMON {

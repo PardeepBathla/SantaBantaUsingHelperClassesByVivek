@@ -88,7 +88,7 @@ public class ChildExpandableAdapter extends RecyclerView.Adapter<ChildExpandable
             } else {
                 rlRoot.setBackgroundColor(Color.parseColor("#DAD8D9"));
             }
-            text.setText(model.getName());
+            text.setText(model.getName().toUpperCase());
             Utils.loadGlideImage(context,iv_cat,model.getIcon());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

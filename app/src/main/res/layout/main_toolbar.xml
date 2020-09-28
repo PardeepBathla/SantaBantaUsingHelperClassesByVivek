@@ -88,7 +88,7 @@
                             android:hint="@string/search_text"
                             android:paddingLeft="@dimen/_10sdp"
                             android:singleLine="true"
-                            android:textColor="?text_color"
+                            android:textColor="?text_color_reverse"
                             android:textColorHint="@android:color/darker_gray"
                             android:textCursorDrawable="@drawable/text_curcor"
                             android:textSize="@dimen/_12sdp" />
@@ -102,6 +102,7 @@
                             android:layout_gravity="center"
                             android:padding="@dimen/_2sdp"
                             android:src="?searchIcon" />
+
 
 
                     </RelativeLayout>

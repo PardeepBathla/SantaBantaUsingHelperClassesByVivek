@@ -19,9 +19,7 @@ public abstract class BaseFragment extends Fragment implements OnBackPressListen
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanseState) {
-        View view = getFragmentView(inflater, parent, savedInstanseState);
-
-        return view;
+        return getFragmentView(inflater, parent, savedInstanseState);
     }
 
     public abstract View getFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState);

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="?card_bg_color"
+    android:layout_height="@dimen/_30sdp">
+
+    <TextView
+        android:id="@+id/tvSearchItem"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:textColor="?text_color"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

@@ -15,6 +15,47 @@
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|enterAlways|snap" />
 
+
+        <FrameLayout
+            android:id="@+id/flSearch"
+            android:visibility="gone"
+            android:background="@color/off_black"
+            android:alpha=".7"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:id="@+id/rvSearch"
+                    android:layout_height="wrap_content"/>
+
+
+                <ProgressBar
+                    android:id="@+id/pbSearch"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="@dimen/_25sdp"
+                    android:layout_height="@dimen/_25sdp"/>
+
+                <TextView
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:text="@string/no_data_found"
+                    android:textSize="@dimen/_12ssp"
+                    android:id="@+id/tvNoDataFoundSearch"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+        </FrameLayout>
+
+
         <com.app.santabanta.Utils.NonSwipeableViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"

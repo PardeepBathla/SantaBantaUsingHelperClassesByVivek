@@ -132,7 +132,6 @@ public class MainActivity extends BaseActivity {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         pref = Utils.getSharedPref(MainActivity.this);
 
-        //// TODO: 9/28/20 Uncomment this before build
         if (getIntent().hasExtra("change"))
             setThemePreference();
         else {

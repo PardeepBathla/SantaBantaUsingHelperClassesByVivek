@@ -90,14 +90,22 @@ public class ChildExpandableAdapter extends RecyclerView.Adapter<ChildExpandable
             }
             text.setText(model.getName().toUpperCase());
             Utils.loadGlideImage(context,iv_cat,model.getIcon());
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mainParentPosition == 0)
+            itemView.setOnClickListener(view -> {
+
+                switch (mainParentPosition){
+                    case 0:
                         menuClickListener.onSmsClicked(model.getSlug(), String.valueOf(model.getId()),parentPosition == 0 ? "Veg" : "");
-                    else if (mainParentPosition == 1)
+                        break;
+
+                    case 1:
                         menuClickListener.onJokesClicked(model.getSlug(),String.valueOf(model.getId()));
+                        break;
+
+                    case 2:
+                        menuClickListener.onMemesClicked(model.getSlug(),String.valueOf(model.getId()));
+                        break;
                 }
+
             });
         }
     }

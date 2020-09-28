@@ -49,10 +49,21 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewItems"
-        android:layout_width="match_parent"
-        android:background="?card_bg_color"
-        android:layout_height="match_parent"/>
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+       <View
+           android:visibility="gone"
+           android:layout_width="match_parent"
+           android:background="?card_bg_color"
+           android:layout_height="match_parent"/>
+
+       <androidx.recyclerview.widget.RecyclerView
+           android:id="@+id/recyclerViewItems"
+           android:layout_width="match_parent"
+           android:background="?card_bg_color"
+           android:layout_height="match_parent"/>
+   </RelativeLayout>
 
 </LinearLayout>

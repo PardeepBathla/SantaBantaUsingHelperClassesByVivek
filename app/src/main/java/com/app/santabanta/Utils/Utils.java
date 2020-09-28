@@ -142,6 +142,7 @@ public class Utils {
         progressDialog.setCancelable(true);
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         progressDialog.setContentView(R.layout.progress_layout);
+
         progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         return progressDialog;
     }

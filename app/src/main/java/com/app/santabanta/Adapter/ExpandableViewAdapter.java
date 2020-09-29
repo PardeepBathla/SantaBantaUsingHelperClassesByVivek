@@ -152,8 +152,6 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
                                     dialog.setContentView(view1);
                                     dialog.setCancelable(true);
                                     dialog.setCanceledOnTouchOutside(true);
-
-                                    TextView txt_dia = dialog.findViewById(R.id.txt_dia);
                                     Button btn_yes = dialog.findViewById(R.id.btn_yes);
                                     Button btn_no = dialog.findViewById(R.id.btn_no);
                                     btn_yes.setOnClickListener(view2 -> {

@@ -193,7 +193,6 @@ public class MainActivity extends BaseActivity {
         });
 
         etSearch.setTextColor(pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false) ? ResUtils.getColor(R.color.off_black) : ResUtils.getColor(R.color.off_black));
-
     }
 
     @Override

@@ -1,8 +1,11 @@
 package com.app.santabanta.Helper;
 
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,6 +41,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.app.santabanta.AppController.LANGUAGE_SELECTED;
 
 public class MainActivityHelper implements SearchAdapter.SearchClickListener {
@@ -112,9 +116,9 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
 
 
         ivMenu.setOnClickListener(view -> {
-            if (drawer.isDrawerOpen(Gravity.LEFT)){
+            if (drawer.isDrawerOpen(Gravity.LEFT)) {
                 drawer.closeDrawer(Gravity.LEFT);
-            }else {
+            } else {
                 drawer.openDrawer(Gravity.LEFT);
             }
         });
@@ -144,18 +148,18 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
         iv_language.setOnClickListener(view -> {
             if (LANGUAGE_SELECTED.equalsIgnoreCase(GlobalConstants.COMMON.HINDI)) {
                 languageToLoad = "en";
-                if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT,false)){
+                if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
                     iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_hindi_language));
-                }else{
+                } else {
                     iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_hindi_language_black));
                 }
 
             } else {
                 languageToLoad = "hi";
 
-                if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT,false)){
+                if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
                     iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_english_language_new));
-                }else{
+                } else {
                     iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_english_language_new_black_new));
                 }
 
@@ -165,7 +169,7 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
 
             LocaleHelper.setLocale(mActivity, languageToLoad);
             mActivity.finish();
-            mActivity.startActivity(mActivity.getIntent().putExtra("change",true));
+            mActivity.startActivity(mActivity.getIntent().putExtra("change", true));
         });
         initDrawer();
     }
@@ -208,7 +212,7 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
     public void openMemesFragment(String slug) {
         drawer.closeDrawer(Gravity.LEFT);
         mActivity.navFragment.getViewPager().setCurrentItem(3);
-        Events.MemesEvent memesEvent= new Events.MemesEvent(slug);
+        Events.MemesEvent memesEvent = new Events.MemesEvent(slug);
         GlobalBus.getBus().post(memesEvent);
 //        mActivity.sendBroadcast(new Intent().setAction(SHOW_MEMES_FRAGMENT).putExtra(GlobalConstants.INTENT_PARAMS.MEME_SLUG, slug));
     }
@@ -216,7 +220,7 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
     public void openJokesFragment(String slug) {
         drawer.closeDrawer(Gravity.LEFT);
         mActivity.navFragment.getViewPager().setCurrentItem(2);
-        Events.JokesEvent jokesEvent= new Events.JokesEvent(slug);
+        Events.JokesEvent jokesEvent = new Events.JokesEvent(slug);
         GlobalBus.getBus().post(jokesEvent);
 //        mActivity.sendBroadcast(new Intent().setAction(SHOW_JOKES_FRAGMENT).putExtra(GlobalConstants.INTENT_PARAMS.JOKE_SLUG, slug));
     }
@@ -224,7 +228,7 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
     public void openSmsFragment(String slug, String category) {
         drawer.closeDrawer(Gravity.LEFT);
         mActivity.navFragment.getViewPager().setCurrentItem(1);
-        Events.SMSEvent onFileSelected = new Events.SMSEvent(slug,category);
+        Events.SMSEvent onFileSelected = new Events.SMSEvent(slug, category);
         GlobalBus.getBus().post(onFileSelected);
 //        mActivity.sendBroadcast(new Intent().setAction(SHOW_SMS_FRAGMENT).putExtra(GlobalConstants.INTENT_PARAMS.SMS_CATEGORY, category).putExtra(GlobalConstants.INTENT_PARAMS.SMS_SLUG, slug));
     }
@@ -233,7 +237,7 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
         return pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false);
     }
 
-    public void searchText(String query){
+    public void searchText(String query) {
         mActivity.rvSearch.setVisibility(View.GONE);
         mActivity.pbSearch.setVisibility(View.VISIBLE);
         mActivity.tvNoDataFoundSearch.setText(ResUtils.getString(R.string.loading));
@@ -242,13 +246,13 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
         call.enqueue(new Callback<SearchResponse>() {
             @Override
             public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     mActivity.pbSearch.setVisibility(View.GONE);
-                    if (response.body().getHits().getHits().size()>0){
+                    if (response.body().getHits().getHits().size() > 0) {
                         mActivity.rvSearch.setVisibility(View.VISIBLE);
                         mActivity.tvNoDataFoundSearch.setVisibility(View.GONE);
                         mAdapter.setItems(response.body().getHits().getHits());
-                    }else {
+                    } else {
                         mActivity.tvNoDataFoundSearch.setText(ResUtils.getString(R.string.no_data_found));
                         mActivity.rvSearch.setVisibility(View.GONE);
                         mActivity.tvNoDataFoundSearch.setVisibility(View.VISIBLE);
@@ -283,12 +287,41 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
 
     @Override
     public void onSearchClicked(SearchResponse.Hits.Hit.Source model) {
+        if (model.getViewingPrefrence().equalsIgnoreCase("restricted")) {
+            if (AppController.SHOW_ADULT_DIALOG) {
+                LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(LAYOUT_INFLATER_SERVICE);
+                View view1 = inflater.inflate(R.layout.dialog_18_plus, null);
+                final Dialog dialog = new Dialog(mActivity);
+                dialog.setContentView(view1);
+                dialog.setCancelable(true);
+                dialog.setCanceledOnTouchOutside(true);
+
+                Button btn_yes = dialog.findViewById(R.id.btn_yes);
+                Button btn_no = dialog.findViewById(R.id.btn_no);
+                btn_yes.setOnClickListener(view2 -> {
+                    AppController.SHOW_ADULT_DIALOG = false;
+                    navigate(model);
+                    dialog.dismiss();
+
+                });
+                btn_no.setOnClickListener(view12 -> dialog.dismiss());
+                dialog.show();
+            } else {
+                navigate(model);
+            }
+
+        } else {
+            navigate(model);
+        }
+    }
+
+    private void navigate(SearchResponse.Hits.Hit.Source model) {
         mActivity.flSearch.setVisibility(View.GONE);
         mActivity.container.setVisibility(View.VISIBLE);
         mActivity.etSearch.setText("");
-        switch (model.getType()){
+        switch (model.getType()) {
             case "sms":
-                openSmsFragment(model.getSlug(),"V eg");
+                openSmsFragment(model.getSlug(), "V eg");
                 break;
 
             case "jokes":

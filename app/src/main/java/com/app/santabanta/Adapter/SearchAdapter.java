@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.santabanta.Modals.SearchResponse;
 import com.app.santabanta.R;
+import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
         @BindView(R.id.tvSearchItem)
         TextView tvText;
+        @BindView(R.id.tvSearchItemParent)
+        TextView tvParent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -66,6 +69,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
         public void bindData(SearchResponse.Hits.Hit model){
             tvText.setText(model.getSource().getName());
+            tvParent.setText(model.getSource().getParentName());
             itemView.setOnClickListener(view -> mClickListener.onSearchClicked(model.getSource()));
         }
     }

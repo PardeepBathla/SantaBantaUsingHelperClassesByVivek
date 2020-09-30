@@ -34,7 +34,7 @@ public interface Webservices {
     Call<ResponseBody> removeJokeFromFav(@Path("id") int id);
 
     @GET("sms/latest/{language}")
-    Call<SmsResponseModel> getSmsList(@Path("language") String lang, @Query(value = "slug1", encoded = true) String slug, @Query("page") int page_num, @Query("selected_category") String selected_category);
+    Call<SmsResponseModel> getSmsList(@Path("language") String lang, @Query(value = "slug1", encoded = true) String slug, @Query("page") int page_num, @Query(value = "selected_category", encoded =  true) String selected_category);
 
     @GET("newjokes/{slug}")
     Call<JokesDataModel> getJokesListNew(@Path(value = "slug", encoded =true) String slug, @Query("page") int page_num);

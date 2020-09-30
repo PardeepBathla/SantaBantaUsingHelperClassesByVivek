@@ -28,6 +28,7 @@ import com.app.santabanta.Modals.SmsResponseModel;
 import com.app.santabanta.R;
 import com.app.santabanta.RestClient.Webservices;
 import com.app.santabanta.Utils.PaginationScrollListener;
+import com.app.santabanta.Utils.ResUtils;
 import com.app.santabanta.Utils.ShareableIntents;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.Utils;
@@ -76,6 +77,8 @@ public class FragmentSmsHelper {
 
         fragmentSms.swipeRefreshSms.setOnRefreshListener(() -> {
             currentPage = PAGE_START;
+            fragmentSms.recyclerSms.setVisibility(View.VISIBLE);
+            fragmentSms.tvNoDataFound.setVisibility(View.GONE);
             if (smsHomeAdapter!=null)
                 smsHomeAdapter.resetList();
             getSms(GlobalConstants.COMMON.LANGUAGE_SELECTED, "", "");
@@ -173,6 +176,10 @@ public class FragmentSmsHelper {
                         fragmentSms.tvNoDataFound.setVisibility(View.VISIBLE);
                     }
 
+                }else{
+                    fragmentSms.recyclerSms.setVisibility(View.GONE);
+                    fragmentSms.tvNoDataFound.setVisibility(View.VISIBLE);
+                    fragmentSms.tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
                 }
             }
 
@@ -186,6 +193,7 @@ public class FragmentSmsHelper {
 
                 fragmentSms.recyclerSms.setVisibility(View.GONE);
                 fragmentSms.tvNoDataFound.setVisibility(View.VISIBLE);
+                fragmentSms.tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
             }
         });
     }

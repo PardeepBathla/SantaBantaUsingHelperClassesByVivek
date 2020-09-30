@@ -158,6 +158,9 @@ public class FragmentJokesHelper {
                             fragmentJokes.recyclerJokes.setVisibility(View.GONE);
                             fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
                         }
+                    }else{
+                        fragmentJokes.recyclerJokes.setVisibility(View.GONE);
+                        fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
                     }
                 }catch (Exception e){
                     e.printStackTrace();

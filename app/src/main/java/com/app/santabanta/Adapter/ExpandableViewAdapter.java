@@ -144,7 +144,7 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
                     }else {
                         if (getAdapterPosition() == 1){
 
-                            if (parentPosition == 0){
+                            if (parentPosition == 0 || parentPosition == 1){
                                 if (AppController.SHOW_ADULT_DIALOG){
                                     LayoutInflater inflater = (LayoutInflater)context.getSystemService(LAYOUT_INFLATER_SERVICE);
                                     View view1 = inflater.inflate(R.layout.dialog_18_plus, null);

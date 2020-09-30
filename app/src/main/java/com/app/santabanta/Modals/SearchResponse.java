@@ -240,6 +240,17 @@ public class SearchResponse {
                 @SerializedName("viewing_prefrence")
                 @Expose
                 private String viewingPrefrence;
+                @SerializedName("parent_name")
+                @Expose
+                private String parentName;
+
+                public String getParentName() {
+                    return parentName;
+                }
+
+                public void setParentName(String parentName) {
+                    this.parentName = parentName;
+                }
 
                 public Integer getId() {
                     return id;

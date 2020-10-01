@@ -114,7 +114,7 @@ public class FragmentJokesHelper {
                             }
                         }));
 
-                        total_pages = response.body().getTotal();
+                        total_pages = (int)response.body().getTotal() / response.body().getPerPage() ;
                         currentPage =response.body().getCurrentPage();
                         currentPage = currentPage+1;
 

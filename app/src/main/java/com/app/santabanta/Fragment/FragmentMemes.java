@@ -106,6 +106,7 @@ public class FragmentMemes extends BaseFragment {
     }
 
     public void enterSubCategoryMemes(boolean isSubCategoryMeme, String slug) {
+        mHelper.recyclerMemes.pausePlayer();
         Bundle bundle = new Bundle();
         bundle.putBoolean(GlobalConstants.INTENT_PARAMS.IS_SUB_CATEGORY_MEMES, isSubCategoryMeme);
         bundle.putString(GlobalConstants.INTENT_PARAMS.MEME_SLUG, slug);

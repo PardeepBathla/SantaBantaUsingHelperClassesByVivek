@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.santabanta.Helper.FragmentHomeHelper;
 import com.app.santabanta.R;
+import com.app.santabanta.Utils.ExoPlayerRecyclerView;
 import com.app.santabanta.Utils.HomeMemesExoPlayerRecyclerview;
 import com.app.santabanta.base.BaseFragment;
 
@@ -32,11 +34,13 @@ public class FragmentHome extends BaseFragment {
     @BindView(R.id.rlSubCategories)
     public RelativeLayout rlSubCategories;
     @BindView(R.id.recyclerHome)
-    public HomeMemesExoPlayerRecyclerview recyclerHome;
+    public ExoPlayerRecyclerView recyclerHome;
     @BindView(R.id.swipeRefreshHome)
     public SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.tvNoDataFound)
     public TextView tvNoDataFound;
+    @BindView(R.id.btnTryAgain)
+    public Button btnTryAgain;
     private Activity mActivity;
     private FragmentHomeHelper mHelper;
 

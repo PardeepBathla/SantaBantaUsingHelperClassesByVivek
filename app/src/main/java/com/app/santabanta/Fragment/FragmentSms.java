@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -58,6 +59,8 @@ public class FragmentSms extends BaseFragment {
     public FrameLayout frameSms;
     @BindView(R.id.tvNoDataFound)
     public TextView tvNoDataFound;
+    @BindView(R.id.btnTryAgain)
+    public Button btnTryAgain;
     private Activity mActivity;
     private FragmentSmsHelper mHelper;
 

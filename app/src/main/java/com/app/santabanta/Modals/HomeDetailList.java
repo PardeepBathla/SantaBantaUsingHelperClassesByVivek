@@ -57,6 +57,17 @@ public class HomeDetailList {
     @SerializedName("fav_count")
     @Expose
     private Integer favCount;
+    @SerializedName("meme_type")
+    @Expose
+    private String memeType;
+
+    public String getMemeType() {
+        return memeType;
+    }
+
+    public void setMemeType(String memeType) {
+        this.memeType = memeType;
+    }
 
     public Integer getId() {
         return id;

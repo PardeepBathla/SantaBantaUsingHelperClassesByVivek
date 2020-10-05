@@ -61,6 +61,7 @@
                     tools:listitem="@layout/home_featured_row_item"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_8sdp"
                     android:layout_centerInParent="true"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/llNext"
@@ -92,30 +93,38 @@
                 android:background="?view_line_color" />
 
 
-            <TextView
-                android:id="@+id/tvNoData"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="No Data Available"
-                android:textColor="@android:color/white"
-                android:visibility="gone" />
 
             <com.app.santabanta.Utils.MemesExoPlayerRecyclerView
                 android:id="@+id/recyclerMemes"
                 android:layout_width="match_parent"
+                android:visibility="visible"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/lowerView"
                 android:background="?card_bg_color" />
 
             <TextView
                 android:id="@+id/tvNoDataFound"
-                android:visibility="gone"
+                android:visibility="visible"
+                android:layout_marginTop="@dimen/_200sdp"
                 android:layout_width="match_parent"
                 android:gravity="center"
                 android:textColor="?text_color"
                 android:text="@string/no_data_found"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btnTryAgain"
+                android:layout_below="@id/tvNoDataFound"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:paddingHorizontal="@dimen/_10sdp"
+                android:paddingVertical="@dimen/_5sdp"
+                android:text="@string/try_again"
+                android:textColor="@color/off_black" />
 
             <!-- Custom animated loader-->
 

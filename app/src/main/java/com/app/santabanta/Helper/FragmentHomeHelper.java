@@ -23,9 +23,11 @@ import com.app.santabanta.Modals.Favourite;
 import com.app.santabanta.Modals.FeaturedCategory;
 import com.app.santabanta.Modals.HomeDetailList;
 import com.app.santabanta.Modals.HomeDetailsModel;
+import com.app.santabanta.R;
 import com.app.santabanta.RestClient.Webservices;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.PaginationScrollListener;
+import com.app.santabanta.Utils.ResUtils;
 import com.app.santabanta.Utils.Utils;
 
 import org.json.JSONException;
@@ -73,26 +75,43 @@ public class FragmentHomeHelper {
 
     private void initViews() {
 
-        fragmentHome.swipeRefreshLayout.setOnRefreshListener(() -> {
-            if (mAdapter!=null)
-                mAdapter.resetList();
-
-            currentPage = PAGE_START;
-            getHomeData(AppController.LANGUAGE_SELECTED);
+        fragmentHome.btnTryAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Utils.isNetworkAvailable()){
+                    getHomeData(AppController.LANGUAGE_SELECTED);
+                }else {
+                    Toast.makeText(mActivity, ResUtils.getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
+                }
+            }
         });
-        getHomeData(AppController.LANGUAGE_SELECTED);
-//        fragmentHome.recyclerHome.setOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//            }
-//
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-////                                super.onScrolled(recyclerView, dx, dy);
-////                fragmentHome.swipeRefreshLayout.setEnabled(mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
-//            }
-//        });
+
+        fragmentHome.swipeRefreshLayout.setOnRefreshListener(() -> {
+            if (Utils.isNetworkAvailable()){
+                if (mAdapter!=null)
+                    mAdapter.resetList();
+
+
+                fragmentHome.recyclerHome.setVisibility(View.VISIBLE);
+                fragmentHome.tvNoDataFound.setVisibility(View.GONE);
+                fragmentHome.btnTryAgain.setVisibility(View.GONE);
+                currentPage = PAGE_START;
+                getHomeData(AppController.LANGUAGE_SELECTED);
+            }else {
+                fragmentHome.swipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(mActivity, ResUtils.getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        if (Utils.isNetworkAvailable()) {
+            getHomeData(AppController.LANGUAGE_SELECTED);
+        }else {
+            fragmentHome.btnTryAgain.setVisibility(View.VISIBLE);
+            fragmentHome.tvNoDataFound.setVisibility(View.VISIBLE);
+            fragmentHome.tvNoDataFound.setText(ResUtils.getString(R.string.internet_error));
+            fragmentHome.recyclerHome.setVisibility(View.GONE);
+        }
+
     }
 
     public void addToFav(HomeDetailList obj, int position, String type, CheckBox cbLike, Dialog progressBar) {
@@ -285,6 +304,7 @@ public class FragmentHomeHelper {
                     } else {
                         fragmentHome.recyclerHome.setVisibility(View.GONE);
                         fragmentHome.tvNoDataFound.setVisibility(View.VISIBLE);
+                        fragmentHome.tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
                     }
                 }
             }

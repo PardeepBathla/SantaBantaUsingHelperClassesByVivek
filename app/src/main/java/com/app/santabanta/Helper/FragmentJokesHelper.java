@@ -21,9 +21,11 @@ import com.app.santabanta.Modals.JokesDataModel;
 import com.app.santabanta.Modals.JokesDetailModel;
 import com.app.santabanta.Modals.JokesFavouriteModel;
 import com.app.santabanta.Modals.JokesFeaturedCategory;
+import com.app.santabanta.R;
 import com.app.santabanta.RestClient.Webservices;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.PaginationScrollListener;
+import com.app.santabanta.Utils.ResUtils;
 import com.app.santabanta.Utils.Utils;
 
 import org.json.JSONException;
@@ -67,16 +69,43 @@ public class FragmentJokesHelper {
         mJokesHomeAdapter = new JokesHomeAdapter(mActivity, FragmentJokesHelper.this,fragmentJokes);
         fragmentJokes.recyclerJokes.setAdapter(mJokesHomeAdapter);
         fragmentJokes.swipeRefreshJokes.setOnRefreshListener(() -> {
-//                fragmentJokes.IS_SUB_CAT = false;
-//                fragmentJokes.slugName = "";
-            if (mJokesHomeAdapter!=null)
-                mJokesHomeAdapter.resetList();
+            if (Utils.isNetworkAvailable()){
+                if (mJokesHomeAdapter!=null)
+                    mJokesHomeAdapter.resetList();
 
-            currentPage = PAGE_START;
-            getJokes(AppController.LANGUAGE_SELECTED, fragmentJokes.slugName);
+                fragmentJokes.recyclerJokes.setVisibility(View.VISIBLE);
+                fragmentJokes.tvNoDataFound.setVisibility(View.GONE);
+                fragmentJokes.btnTryAgain.setVisibility(View.GONE);
+                currentPage = PAGE_START;
+                getJokes(AppController.LANGUAGE_SELECTED, fragmentJokes.slugName);
+            }else {
+                fragmentJokes.swipeRefreshJokes.setRefreshing(false);
+                Toast.makeText(mActivity, ResUtils.getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
+            }
         });
 
-        getJokes(AppController.LANGUAGE_SELECTED, fragmentJokes.slugName);
+        fragmentJokes.btnTryAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Utils.isNetworkAvailable()){
+                    getJokes(AppController.LANGUAGE_SELECTED, fragmentJokes.slugName);
+                }else {
+                    Toast.makeText(mActivity, ResUtils.getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        if (Utils.isNetworkAvailable()) {
+            getJokes(AppController.LANGUAGE_SELECTED, fragmentJokes.slugName);
+        }else {
+            fragmentJokes.btnTryAgain.setVisibility(View.VISIBLE);
+            fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
+            fragmentJokes.tvNoDataFound.setText(ResUtils.getString(R.string.internet_error));
+            fragmentJokes.recyclerJokes.setVisibility(View.GONE);
+        }
+
+
+
     }
     private void loadNextPage() {
         if (isLoading) {
@@ -157,14 +186,17 @@ public class FragmentJokesHelper {
                         } else {
                             fragmentJokes.recyclerJokes.setVisibility(View.GONE);
                             fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
+                            fragmentJokes.tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
                         }
                     }else{
                         fragmentJokes.recyclerJokes.setVisibility(View.GONE);
                         fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
+                        fragmentJokes.tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
                     }
                 }catch (Exception e){
                     e.printStackTrace();
                     fragmentJokes.recyclerJokes.setVisibility(View.GONE);
+                    fragmentJokes.tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
                     fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
                 }
             }
@@ -180,6 +212,7 @@ public class FragmentJokesHelper {
 
                     fragmentJokes.recyclerJokes.setVisibility(View.GONE);
                     fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
+                    fragmentJokes.tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

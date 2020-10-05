@@ -118,7 +118,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             else if (type.equalsIgnoreCase("sms"))
                 return SMS_POST;
             else if (type.equalsIgnoreCase("memes")) {
-                if (mList.get(position).getImage().endsWith(".mp4")) {
+                if (mList.get(position).getMemeType().equals("video")) {
                     return MEMES_VIDEO_POST;
                 } else
                     return MEMES_IMAGE_POST;
@@ -502,54 +502,71 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public class MemesVideoViewHolder extends RecyclerView.ViewHolder implements BitmapLoadedCallback {
         private final ShareableIntents shareableIntents;
-        @BindView(R.id.ivMediaCoverImage)
+//        @BindView(R.id.ivMediaCoverImage)
         public ImageView ivMediaCoverImage;
-        @BindView(R.id.ivVolumeControl)
+//        @BindView(R.id.ivVolumeControl)
         public ImageView ivVolumeControl;
-        @BindView(R.id.mediaContainer)
+//        @BindView(R.id.mediaContainer)
         public FrameLayout mediaContainer;
-        @BindView(R.id.pbBuffering)
+//        @BindView(R.id.pbBuffering)
         public ProgressBar pbBuffering;
         public RequestManager requestManager;
-        @BindView(R.id.llbreadcrumbs)
+//        @BindView(R.id.llbreadcrumbs)
         LinearLayout llbreadcrumbs;
-        @BindView(R.id.ll_share_home)
+//        @BindView(R.id.ll_share_home)
         LinearLayout llShareMemes;
-        @BindView(R.id.ll_share_options_home)
+//        @BindView(R.id.ll_share_options_home)
         LinearLayout llShareOptionsSms;
-        @BindView(R.id.cb_like)
+//        @BindView(R.id.cb_like)
         CheckBox cbLike;
-        @BindView(R.id.iv_facebook)
+//        @BindView(R.id.iv_facebook)
         ImageView ivFacebook;
-        @BindView(R.id.iv_whatsapp)
+//        @BindView(R.id.iv_whatsapp)
         ImageView ivWhatsapp;
-        @BindView(R.id.iv_twitter)
+//        @BindView(R.id.iv_twitter)
         ImageView ivTwitter;
-        @BindView(R.id.iv_snapchat)
+//        @BindView(R.id.iv_snapchat)
         ImageView ivSnapchat;
-        @BindView(R.id.iv_pintrest)
+//        @BindView(R.id.iv_pintrest)
         ImageView ivPintrest;
-        @BindView(R.id.iv_instagram)
+//        @BindView(R.id.iv_instagram)
         ImageView ivInstagram;
-//        @BindView(R.id.tv_like_count)
-//        TextView tv_like_count;
         HomeDetailList imageTOBeShared;
         private boolean isSharelayoutVisible = false;
+        public View parent;
 
 
         public MemesVideoViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+//            ButterKnife.bind(this, itemView);
+//            this.itemView.setTag(this);
+            this.parent = itemView;
+            this.itemView.setTag(this);
+
+            ivMediaCoverImage = itemView.findViewById(R.id.ivMediaCoverImage);
+            ivVolumeControl = itemView.findViewById(R.id.ivVolumeControl);
+            mediaContainer = itemView.findViewById(R.id.mediaContainer);
+            pbBuffering  = itemView.findViewById(R.id.pbBuffering);
+            llbreadcrumbs = itemView.findViewById(R.id.llbreadcrumbs);
+            llShareMemes = itemView.findViewById(R.id.ll_share_home);
+            llShareMemes = itemView.findViewById(R.id.ll_share_home);
+            llShareOptionsSms = itemView.findViewById(R.id.ll_share_options_home);
+            cbLike = itemView.findViewById(R.id.cb_like);
+            ivFacebook = itemView.findViewById(R.id.iv_facebook);
+            ivWhatsapp = itemView.findViewById(R.id.iv_whatsapp);
+            ivTwitter = itemView.findViewById(R.id.iv_twitter);
+            ivSnapchat = itemView.findViewById(R.id.iv_snapchat);
+            ivPintrest = itemView.findViewById(R.id.iv_pintrest);
+            ivInstagram = itemView.findViewById(R.id.iv_instagram);
 
             requestManager = Glide.with(mActivity).setDefaultRequestOptions(new RequestOptions());
             shareableIntents = new ShareableIntents(mActivity);
         }
 
         void bindData(HomeDetailList model, int position) {
-            this.itemView.setTag(this);
+
             imageTOBeShared = model;
             MemesImageItemListeners(model, position);
-
         }
 
         private void MemesImageItemListeners(HomeDetailList obj, int position) {
@@ -1069,8 +1086,6 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
             smsItemListeners(model, position);
-
-
         }
 
 

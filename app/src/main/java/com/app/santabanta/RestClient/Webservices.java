@@ -49,6 +49,6 @@ public interface Webservices {
     Call<MemesResposeModel> getMemesList(@Path("language") String lang, @Query("page") int page_num);
 
     @GET("search")
-    Call<SearchResponse> search(@Query(value = "q", encoded =true) String query);
+    Call<SearchResponse> search(@Query(value = "q", encoded =true) String query,@Query(value = "language", encoded = true) String language);
 
 }

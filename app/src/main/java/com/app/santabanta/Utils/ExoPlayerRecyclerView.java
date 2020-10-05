@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.santabanta.Adapter.HomeItemAdapter;
 import com.app.santabanta.Modals.HomeDetailList;
+import com.app.santabanta.Modals.memesModel.MemesDetailModel;
 import com.app.santabanta.R;
 import com.bumptech.glide.RequestManager;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -60,25 +60,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
+import static com.app.santabanta.Utils.Utils.showLog;
 
+public class ExoPlayerRecyclerView extends RecyclerView {
     public static final String AppName = "Santa Banta";
     private static final String TAG = "ExoPlayerRecyclerView";
+
     /*  *
      * PlayerViewHolder UI component
      * Watch PlayerViewHolder class*/
     RelativeLayout rl_tag_ic;
     private ImageView mediaCoverImage, volumeControl;
     private RelativeLayout heartLayout;
+    private ProgressBar progressBar;
     private ProgressBar pbBuffering;
     private View viewHolderParent;
     private FrameLayout mediaContainer;
     private PlayerView videoSurfaceView;
     private SimpleExoPlayer videoPlayer;
-    /*  *
-     * variable declaration*/
 
-    // Media List
     private List<HomeDetailList> mediaObjects = new ArrayList<>();
     private int videoSurfaceDefaultHeight = 0;
     private int screenDefaultHeight = 0;
@@ -87,26 +87,27 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
     private boolean isVideoViewAdded;
     private RequestManager requestManager;
     // controlling volume state
-    private HomeMemesExoPlayerRecyclerview.VolumeState volumeState;
-    private View.OnClickListener videoViewClickListener = new View.OnClickListener() {
+    private ExoPlayerRecyclerView.VolumeState volumeState;
+
+    private OnClickListener videoViewClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             toggleVolume();
         }
     };
 
-    public HomeMemesExoPlayerRecyclerview(@NonNull Context context) {
+    public ExoPlayerRecyclerView(@NonNull Context context) {
         super(context);
         init(context);
     }
 
-    public HomeMemesExoPlayerRecyclerview(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ExoPlayerRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
     private void init(Context context) {
-        this.context = context.getApplicationContext();
+            this.context = context.getApplicationContext();
         Display display = ((WindowManager) Objects.requireNonNull(
                 getContext().getSystemService(Context.WINDOW_SERVICE))).getDefaultDisplay();
         Point point = new Point();
@@ -120,10 +121,8 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
 //        videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_HEIGHT);
 
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelection.Factory videoTrackSelectionFactory =
-                new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        TrackSelector trackSelector =
-                new DefaultTrackSelector(videoTrackSelectionFactory);
+        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
+        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
 
         //Create the player using ExoPlayerFactory
         videoPlayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
@@ -131,10 +130,10 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
         videoSurfaceView.setUseController(false);
         // Bind the player to the view.
         videoSurfaceView.setPlayer(videoPlayer);
-        Utils.showLog("setplayer", "setplayer");
+        showLog("setplayer", "setplayer");
         videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);
         // Turn on Volume
-        setVolumeControl(HomeMemesExoPlayerRecyclerview.VolumeState.OFF);
+        setVolumeControl(ExoPlayerRecyclerView.VolumeState.OFF);
 
         addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -175,7 +174,7 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
             public void onChildViewDetachedFromWindow(@NonNull View view) {
 
                 if (viewHolderParent != null && viewHolderParent.equals(view)) {
-                    Utils.showLog(TAG, "addOnChildAttachStateChangeListener");
+                    showLog(TAG, "addOnChildAttachStateChangeListener");
                     resetVideoView();
                 }
             }
@@ -203,25 +202,25 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
                 switch (playbackState) {
 
                     case Player.STATE_BUFFERING:
-                        Utils.showLog(TAG, "onPlayerStateChanged: Buffering video.");
+                        showLog(TAG, "onPlayerStateChanged: Buffering video.");
                         pbBuffering.setVisibility(VISIBLE);
                         pbBuffering.bringToFront();
                         mediaCoverImage.setVisibility(GONE);
                         break;
                     case Player.STATE_ENDED:
-                        Utils.showLog(TAG, "onPlayerStateChanged: Video ended.");
+                        showLog(TAG, "onPlayerStateChanged: Video ended.");
                         videoPlayer.seekTo(0);
                         pbBuffering.setVisibility(VISIBLE);
                         pbBuffering.bringToFront();
                         break;
                     case Player.STATE_IDLE:
-                        Utils.showLog(TAG, "STATE_IDLE");
+                        showLog(TAG, "STATE_IDLE");
                         break;
                     case Player.STATE_READY:
                         pbBuffering.setVisibility(GONE);
-                        Utils.showLog(TAG, "onPlayerStateChanged: Ready to play.");
-                        if (pbBuffering != null) {
-                            pbBuffering.setVisibility(GONE);
+                        showLog(TAG, "onPlayerStateChanged: Ready to play.");
+                        if (progressBar != null) {
+                            progressBar.setVisibility(GONE);
                         }
                         if (!isVideoViewAdded) {
                             addVideoView();
@@ -234,30 +233,30 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
 
             @Override
             public void onRepeatModeChanged(int repeatMode) {
-                Utils.showLog(TAG, "onRepeatModeChanged");
+                showLog(TAG, "onRepeatModeChanged");
             }
 
             @Override
             public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-                Utils.showLog(TAG, "onShuffleModeEnabledChanged");
+                showLog(TAG, "onShuffleModeEnabledChanged");
 
             }
 
             @Override
             public void onPlayerError(ExoPlaybackException error) {
-                Utils.showLog(TAG, "onPlayerError");
+                showLog(TAG, "onPlayerError");
 
             }
 
             @Override
             public void onPositionDiscontinuity(int reason) {
-                Utils.showLog(TAG, "onPositionDiscontinuity");
+                showLog(TAG, "onPositionDiscontinuity");
 
             }
 
             @Override
             public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-                Utils.showLog(TAG, "onPlaybackParametersChanged");
+                showLog(TAG, "onPlaybackParametersChanged");
 
             }
 
@@ -265,7 +264,7 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
             public void onSeekProcessed() {
                 pbBuffering.setVisibility(VISIBLE);
                 pbBuffering.bringToFront();
-                Utils.showLog(TAG, "onSeekProcessed");
+                showLog(TAG, "onSeekProcessed");
 
             }
         });
@@ -319,41 +318,40 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
         videoSurfaceView.setVisibility(INVISIBLE);
         removeVideoView(videoSurfaceView);
 
-        int currentPosition =
-                targetPosition - ((LinearLayoutManager) Objects.requireNonNull(
-                        getLayoutManager())).findFirstVisibleItemPosition();
+        int currentPosition = targetPosition - ((LinearLayoutManager) Objects.requireNonNull(getLayoutManager())).findFirstVisibleItemPosition();
 
         View child = getChildAt(currentPosition);
         if (child == null) {
             return;
         }
 
-        HomeItemAdapter.MemesVideoViewHolder holder = (HomeItemAdapter.MemesVideoViewHolder) child.getTag();
+        HomeItemAdapter.MemesVideoViewHolder holder= (HomeItemAdapter.MemesVideoViewHolder) child.getTag();
         if (holder == null) {
             playPosition = -1;
             return;
         }
         mediaCoverImage = holder.ivMediaCoverImage;
-        pbBuffering = holder.pbBuffering;
+        progressBar = holder.pbBuffering;
         volumeControl = holder.ivVolumeControl;
 
         viewHolderParent = holder.itemView;
         requestManager = holder.requestManager;
         mediaContainer = holder.mediaContainer;
+        pbBuffering = holder.pbBuffering;
 
         pbBuffering.setVisibility(VISIBLE);
 
         videoSurfaceView.setPlayer(videoPlayer);
 
 
-        volumeControl.setOnClickListener(new View.OnClickListener() {
+        volumeControl.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggleVolume();
 
             }
         });
-        mediaCoverImage.setOnClickListener(new View.OnClickListener() {
+        mediaCoverImage.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggleVolume();
@@ -381,41 +379,34 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
 
         // Turn on Volume
 
-        if (volumeState == HomeMemesExoPlayerRecyclerview.VolumeState.ON) {
-            setVolumeControl(HomeMemesExoPlayerRecyclerview.VolumeState.ON);
+        if (volumeState == ExoPlayerRecyclerView.VolumeState.ON) {
+            setVolumeControl(ExoPlayerRecyclerView.VolumeState.ON);
         } else {
-            setVolumeControl(HomeMemesExoPlayerRecyclerview.VolumeState.OFF);
+            setVolumeControl(ExoPlayerRecyclerView.VolumeState.OFF);
         }
 
 
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context, Util.getUserAgent(context, AppName));
-        if (mediaObjects.size()>0){
-            String mediaUrl = mediaObjects.get(targetPosition).getImage();
-            Utils.showLog("url_media", mediaUrl);
-            if (mediaObjects.get(targetPosition).getType().equals("memes")) {
-                if (mediaObjects.get(targetPosition).getImage().equals("video")){
-                    MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(mediaUrl));
-                    MediaSource audioSource = new ExtractorMediaSource(Uri.parse(mediaUrl), new CacheDataSourceFactory(context, 100 * 1024 * 1024, 5 * 1024 * 1024), new DefaultExtractorsFactory(), null, null);
-                    videoPlayer.prepare(audioSource);
-                    videoPlayer.setPlayWhenReady(true);
-                    videoPlayer.seekTo(10);
-                }
-
+        String mediaUrl = mediaObjects.get(targetPosition).getImage();
+        Utils.showLog("url_media", mediaUrl);
+        if (mediaObjects.get(targetPosition).getMemeType().equals("video")) {
+            MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(mediaUrl));
+            MediaSource audioSource = new ExtractorMediaSource(Uri.parse(mediaUrl), new CacheDataSourceFactory(context, 100 * 1024 * 1024, 5 * 1024 * 1024), new DefaultExtractorsFactory(), null, null);
+            if (videoPlayer != null) {
+                videoPlayer.prepare(audioSource);
+                videoPlayer.setPlayWhenReady(true);
+                videoPlayer.seekTo(10);
             }
         }
 
     }
 
-
-    /*  *
-     * Returns the visible region of the video surface on the screen.
-     * if some is cut off, it will return less than the @videoSurfaceDefaultHeight*/
-
     private int getVisibleVideoSurfaceHeight(int playPosition) {
         int at = playPosition - ((LinearLayoutManager) Objects.requireNonNull(
                 getLayoutManager())).findFirstVisibleItemPosition();
+        Utils.showLog(TAG, "getVisibleVideoSurfaceHeight: at: " + at);
 
-        Utils.showLog(TAG, "getVisibleVideoSurfaceHeight pos " + playPosition);
+        showLog(TAG, "getVisibleVideoSurfaceHeight pos " + playPosition);
         View child = getChildAt(at);
         if (child == null) {
             return 0;
@@ -431,7 +422,7 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
         }
     }
 
-    // Remove the old player
+
     private void removeVideoView(PlayerView videoView) {
         ViewGroup parent = (ViewGroup) videoView.getParent();
         if (parent == null) {
@@ -442,7 +433,7 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
         if (index >= 0) {
             parent.removeViewAt(index);
             isVideoViewAdded = false;
-            pbBuffering.setVisibility(GONE);
+            progressBar.setVisibility(GONE);
             mediaCoverImage.setVisibility(VISIBLE);
             viewHolderParent.setOnClickListener(null);
 
@@ -462,10 +453,10 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
         volumeControl.setVisibility(VISIBLE);
 
 
-        if (volumeState == HomeMemesExoPlayerRecyclerview.VolumeState.ON) {
-            setVolumeControl(HomeMemesExoPlayerRecyclerview.VolumeState.ON);
+        if (volumeState == ExoPlayerRecyclerView.VolumeState.ON) {
+            setVolumeControl(ExoPlayerRecyclerView.VolumeState.ON);
         } else {
-            setVolumeControl(HomeMemesExoPlayerRecyclerview.VolumeState.OFF);
+            setVolumeControl(ExoPlayerRecyclerView.VolumeState.OFF);
         }
     }
 
@@ -476,7 +467,7 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
             volumeControl.setVisibility(GONE);
             videoSurfaceView.setVisibility(INVISIBLE);
             mediaCoverImage.setVisibility(VISIBLE);
-            pbBuffering.setVisibility(GONE);
+            progressBar.setVisibility(GONE);
             if (videoPlayer != null) {
                 videoPlayer.stop();
             }
@@ -514,23 +505,25 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
 
     private void toggleVolume() {
         if (videoPlayer != null) {
-            if (volumeState == HomeMemesExoPlayerRecyclerview.VolumeState.OFF) {
+            if (volumeState == ExoPlayerRecyclerView.VolumeState.OFF) {
                 Utils.showLog(TAG, "togglePlaybackState: enabling volume.");
-                setVolumeControl(HomeMemesExoPlayerRecyclerview.VolumeState.ON);
-            } else if (volumeState == HomeMemesExoPlayerRecyclerview.VolumeState.ON) {
+                setVolumeControl(ExoPlayerRecyclerView.VolumeState.ON);
+            } else if (volumeState == ExoPlayerRecyclerView.VolumeState.ON) {
                 Utils.showLog(TAG, "togglePlaybackState: disabling volume.");
-                setVolumeControl(HomeMemesExoPlayerRecyclerview.VolumeState.OFF);
+                setVolumeControl(ExoPlayerRecyclerView.VolumeState.OFF);
             }
         }
     }
 
-    private void setVolumeControl(HomeMemesExoPlayerRecyclerview.VolumeState state) {
+    private void setVolumeControl(ExoPlayerRecyclerView.VolumeState state) {
         volumeState = state;
-        if (state == HomeMemesExoPlayerRecyclerview.VolumeState.OFF) {
-            videoPlayer.setVolume(0f);
+        if (state == ExoPlayerRecyclerView.VolumeState.OFF) {
+            if (videoPlayer != null)
+                videoPlayer.setVolume(0f);
             animateVolumeControl();
-        } else if (state == HomeMemesExoPlayerRecyclerview.VolumeState.ON) {
-            videoPlayer.setVolume(1f);
+        } else if (state == ExoPlayerRecyclerView.VolumeState.ON) {
+            if (videoPlayer!=null)
+                videoPlayer.setVolume(1f);
             animateVolumeControl();
         }
     }
@@ -538,10 +531,10 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
     private void animateVolumeControl() {
         if (volumeControl != null) {
             volumeControl.bringToFront();
-            if (volumeState == HomeMemesExoPlayerRecyclerview.VolumeState.OFF) {
+            if (volumeState == ExoPlayerRecyclerView.VolumeState.OFF) {
                 requestManager.load(R.drawable.ic_volume_off)
                         .into(volumeControl);
-            } else if (volumeState == HomeMemesExoPlayerRecyclerview.VolumeState.ON) {
+            } else if (volumeState == ExoPlayerRecyclerView.VolumeState.ON) {
                 requestManager.load(R.drawable.ic_volume_on)
                         .into(volumeControl);
             }
@@ -556,7 +549,9 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
     }
 
     public void setMediaObjects(List<HomeDetailList> mediaObjects) {
+
         this.mediaObjects = mediaObjects;
+        showLog("mediaset", "mediaset");
     }
 
     //public void onRestartPlayer() {
@@ -602,7 +597,7 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            pbBuffering.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
             mediaCoverImage.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
@@ -624,7 +619,7 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
             super.onPostExecute(aVoid);
 
 
-            pbBuffering.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
             if (image != null) {
 
                 videoSurfaceView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, image.getHeight()));
@@ -646,7 +641,7 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            pbBuffering.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -658,6 +653,8 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
 
                 image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -670,11 +667,11 @@ public class HomeMemesExoPlayerRecyclerview extends RecyclerView {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            pbBuffering.setVisibility(View.GONE);
+
+            progressBar.setVisibility(View.GONE);
             if (image != null) {
                 mediaCoverImage.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, image.getHeight()));
             }
         }
     }
-
 }

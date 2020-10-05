@@ -8,6 +8,7 @@ import android.media.Image;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -36,6 +37,7 @@ import com.app.santabanta.RestClient.Webservices;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.MemesExoPlayerRecyclerView;
 import com.app.santabanta.Utils.PaginationScrollListener;
+import com.app.santabanta.Utils.ResUtils;
 import com.app.santabanta.Utils.Utils;
 
 import org.json.JSONException;
@@ -72,6 +74,7 @@ public class FragmentMemesHelper {
     private int currentPage = PAGE_START;
     private int pageCount, total_pages, next_page;
     private boolean isLoading = false;
+    private Button btnTryAgain;
 
     public FragmentMemesHelper(Activity context, FragmentMemes mFragment, View view) {
         this.mFragment = mFragment;
@@ -79,8 +82,15 @@ public class FragmentMemesHelper {
         this.context = context;
         pref = Utils.getSharedPref(mFragment.getActivity());
         findViews();
-        getApiData();
-        setAdapter();
+//        if (Utils.isNetworkAvailable()){
+//            getApiData();
+//        }else {
+//            btnTryAgain.setVisibility(View.VISIBLE);
+//            tvNoDataFound.setVisibility(View.VISIBLE);
+//            tvNoDataFound.setText(ResUtils.getString(R.string.internet_error));
+//            recyclerMemes.setVisibility(View.GONE);
+//        }
+//        setAdapter();
     }
 
     private void setAdapter() {
@@ -133,6 +143,7 @@ public class FragmentMemesHelper {
                         swipeContainer.setRefreshing(false);
                     }
 
+
                     total_pages = (int)response.getTotal() / response.getPerPage() ;
                     currentPage =response.getCurrentPage();
                     currentPage = currentPage+1;
@@ -174,6 +185,7 @@ public class FragmentMemesHelper {
 
                     recyclerMemes.setVisibility(View.VISIBLE);
                     tvNoDataFound.setVisibility(View.GONE);
+                    btnTryAgain.setVisibility(View.GONE);
                     recyclerMemes.setOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override
                         public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -189,6 +201,7 @@ public class FragmentMemesHelper {
                 }else {
                     recyclerMemes.setVisibility(View.GONE);
                     tvNoDataFound.setVisibility(View.VISIBLE);
+                    tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
                 }
 
 
@@ -199,6 +212,7 @@ public class FragmentMemesHelper {
     private void findViews() {
 
         ivNext = view.findViewById(R.id.ivNext);
+        btnTryAgain = view.findViewById(R.id.btnTryAgain);
         ivPrevious = view.findViewById(R.id.ivPrevious);
         rvSubCategory = view.findViewById(R.id.rvSubCategory);
         tvNoDataFound = view.findViewById(R.id.tvNoDataFound);
@@ -206,12 +220,30 @@ public class FragmentMemesHelper {
         swipeContainer = view.findViewById(R.id.swipeContainer);
         recyclerMemes = view.findViewById(R.id.recyclerMemes);
 
+
+        btnTryAgain.setOnClickListener(view -> {
+            if (Utils.isNetworkAvailable()){
+                getApiData();
+            }else {
+                Toast.makeText(mFragment.getActivity(), ResUtils.getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         swipeContainer.setOnRefreshListener(() -> {
-//                mFragment.IS_FROM_MENU = false;
-//                mFragment.subcat_slug_name = "";
-            currentPage = PAGE_START;
-            memesItemAdapter.clearList();
-            getApiData();
+
+            if (Utils.isNetworkAvailable()){
+                currentPage = PAGE_START;
+                memesItemAdapter.clearList();
+
+
+                recyclerMemes.setVisibility(View.VISIBLE);
+                tvNoDataFound.setVisibility(View.GONE);
+                btnTryAgain.setVisibility(View.GONE);
+                getApiData();
+            }else {
+                swipeContainer.setRefreshing(false);
+                Toast.makeText(mFragment.getActivity(), ResUtils.getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
+            }
 
         });
     }
@@ -229,6 +261,12 @@ public class FragmentMemesHelper {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
                         memesCallback.onMemesFetched(response.body());
+
+                        if (response.body() !=null && response.body().getData().size() >0){
+                            tvNoDataFound.setVisibility(View.GONE);
+                            btnTryAgain.setVisibility(View.GONE);
+                            recyclerMemes.setVisibility(View.VISIBLE);
+                        }
 
                         mSubListLayoutManager = new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false);
                         rvSubCategory.setLayoutManager(mSubListLayoutManager);
@@ -339,7 +377,6 @@ public class FragmentMemesHelper {
     public void removeFromFav(MemesDetailModel obj, int id, int position, CheckBox cbLike, ProgressBar progressBar) {
 
         Call<ResponseBody> call = null;
-
         call = mInterface_method.removeJokeFromFav(id);
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -347,22 +384,20 @@ public class FragmentMemesHelper {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
 
-                    if (response != null) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response.body().string());
-                            if (jsonObject.has("status")) {
-                                String status = jsonObject.getString("status");
-                                if (status.equals("success")) {
-                                    cbLike.setClickable(true);
-                                    progressBar.setVisibility(View.GONE);
-                                    removeFavItemFromModel(position, obj);
-                                    Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
-                                }
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        if (jsonObject.has("status")) {
+                            String status = jsonObject.getString("status");
+                            if (status.equals("success")) {
+                                cbLike.setClickable(true);
+                                progressBar.setVisibility(View.GONE);
+                                removeFavItemFromModel(position, obj);
+                                Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                             }
-
-                        } catch (IOException | JSONException e) {
-                            e.printStackTrace();
                         }
+
+                    } catch (IOException | JSONException e) {
+                        e.printStackTrace();
                     }
                 }
 

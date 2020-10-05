@@ -49,6 +49,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/_8sdp"
                     android:layout_toLeftOf="@+id/llNext"
                     android:layout_toRightOf="@+id/llPrevious"
                     android:orientation="horizontal" />
@@ -57,17 +58,17 @@
                 <LinearLayout
                     android:id="@+id/llNext"
                     android:layout_width="@dimen/_30sdp"
-                    android:paddingBottom="@dimen/_12sdp"
+                    android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
                     android:gravity="center"
-                    android:layout_height="match_parent">
+                    android:paddingBottom="@dimen/_12sdp">
 
                     <ImageView
                         android:id="@+id/ivNext"
                         android:layout_width="@dimen/_30sdp"
                         android:layout_height="@dimen/_30sdp"
                         android:padding="@dimen/_5sdp"
-                        android:src="?next"/>
+                        android:src="?next" />
                 </LinearLayout>
             </RelativeLayout>
 
@@ -86,11 +87,24 @@
             <TextView
                 android:id="@+id/tvNoDataFound"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_150sdp"
                 android:gravity="center"
                 android:text="@string/no_data_found"
                 android:textColor="?text_color"
                 android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btnTryAgain"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:paddingHorizontal="@dimen/_10sdp"
+                android:paddingVertical="@dimen/_5sdp"
+                android:text="@string/try_again"
+                android:textColor="@color/off_black" />
         </LinearLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -75,16 +75,44 @@ public class FragmentSmsHelper {
         smsHomeAdapter = new SmsHomeAdapter(FragmentSmsHelper.this, mActivity,fragmentSms);
         fragmentSms.recyclerSms.setAdapter(smsHomeAdapter);
 
+
+        fragmentSms.btnTryAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Utils.isNetworkAvailable()){
+                    getSms(GlobalConstants.COMMON.LANGUAGE_SELECTED, "", "");
+                }else {
+                    Toast.makeText(mActivity, ResUtils.getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         fragmentSms.swipeRefreshSms.setOnRefreshListener(() -> {
-            currentPage = PAGE_START;
-            fragmentSms.recyclerSms.setVisibility(View.VISIBLE);
-            fragmentSms.tvNoDataFound.setVisibility(View.GONE);
-            if (smsHomeAdapter!=null)
-                smsHomeAdapter.resetList();
-            getSms(GlobalConstants.COMMON.LANGUAGE_SELECTED, "", "");
+            if (Utils.isNetworkAvailable()){
+                currentPage = PAGE_START;
+                fragmentSms.recyclerSms.setVisibility(View.VISIBLE);
+                fragmentSms.tvNoDataFound.setVisibility(View.GONE);
+                fragmentSms.btnTryAgain.setVisibility(View.GONE);
+                if (smsHomeAdapter!=null)
+                    smsHomeAdapter.resetList();
+                getSms(GlobalConstants.COMMON.LANGUAGE_SELECTED, "", "");
+            }else {
+                fragmentSms.swipeRefreshSms.setRefreshing(false);
+                Toast.makeText(mActivity, ResUtils.getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
+            }
         });
 
-        getSms(AppController.LANGUAGE_SELECTED, "", "");
+        if (Utils.isNetworkAvailable()) {
+            fragmentSms.btnTryAgain.setVisibility(View.GONE);
+            fragmentSms.tvNoDataFound.setVisibility(View.GONE);
+            getSms(AppController.LANGUAGE_SELECTED, "", "");
+        }else {
+            fragmentSms.btnTryAgain.setVisibility(View.VISIBLE);
+            fragmentSms.tvNoDataFound.setVisibility(View.VISIBLE);
+            fragmentSms.tvNoDataFound.setText(ResUtils.getString(R.string.internet_error));
+            fragmentSms.recyclerSms.setVisibility(View.GONE);
+        }
+
+
     }
     private void loadNextPage() {
         if (isLoading) {
@@ -174,6 +202,7 @@ public class FragmentSmsHelper {
                     }else {
                         fragmentSms.recyclerSms.setVisibility(View.GONE);
                         fragmentSms.tvNoDataFound.setVisibility(View.VISIBLE);
+                        fragmentSms.tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
                     }
 
                 }else{

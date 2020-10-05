@@ -242,7 +242,7 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
         mActivity.pbSearch.setVisibility(View.VISIBLE);
         mActivity.tvNoDataFoundSearch.setText(ResUtils.getString(R.string.loading));
         mActivity.tvNoDataFoundSearch.setVisibility(View.VISIBLE);
-        Call<SearchResponse> call = mInterface_method.search(query);
+        Call<SearchResponse> call = mInterface_method.search(query, LANGUAGE_SELECTED);
         call.enqueue(new Callback<SearchResponse>() {
             @Override
             public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
@@ -321,7 +321,7 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
         mActivity.etSearch.setText("");
         switch (model.getType()) {
             case "sms":
-                openSmsFragment(model.getSlug(), "V eg");
+                openSmsFragment(model.getSlug(), "Veg");
                 break;
 
             case "jokes":

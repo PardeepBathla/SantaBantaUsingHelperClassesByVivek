@@ -46,6 +46,7 @@
                     android:id="@+id/rvSubCategorySms"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_8sdp"
                     android:layout_centerInParent="true"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/llNext"
@@ -79,18 +80,31 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerSms"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/tvNoDataFound"
-                android:visibility="gone"
+                android:layout_marginTop="@dimen/_150sdp"
+                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:gravity="center"
                 android:textColor="?text_color"
                 android:text="@string/no_data_found"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btnTryAgain"
+                android:layout_width="wrap_content"
+                android:visibility="visible"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:paddingHorizontal="@dimen/_10sdp"
+                android:paddingVertical="@dimen/_5sdp"
+                android:text="@string/try_again"
+                android:textColor="@color/off_black" />
 
         </LinearLayout>
 

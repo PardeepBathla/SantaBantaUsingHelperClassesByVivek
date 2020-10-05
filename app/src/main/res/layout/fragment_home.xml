@@ -45,6 +45,7 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvSubCategory"
+                    android:layout_marginLeft="@dimen/_8sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -78,21 +79,33 @@
                 android:background="?view_line_color"
                 android:layout_height="0.5dp"/>
 
-            <com.app.santabanta.Utils.HomeMemesExoPlayerRecyclerview
+            <com.app.santabanta.Utils.ExoPlayerRecyclerView
                 android:id="@+id/recyclerHome"
                 android:layout_width="match_parent"
                 android:background="?card_bg_color"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/tvNoDataFound"
                 android:visibility="gone"
+                android:layout_marginTop="@dimen/_150sdp"
                 android:layout_width="match_parent"
                 android:gravity="center"
-                android:textColor="?text_color"
                 android:text="@string/no_data_found"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btnTryAgain"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:paddingHorizontal="@dimen/_10sdp"
+                android:paddingVertical="@dimen/_5sdp"
+                android:text="@string/try_again"
+                android:textColor="@color/off_black"
+                android:layout_height="wrap_content"/>
 
 
         </LinearLayout>

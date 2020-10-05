@@ -91,7 +91,7 @@ public class FragmentHomeHelper {
                 if (mAdapter!=null)
                     mAdapter.resetList();
 
-
+                fragmentHome.recyclerHome.onPausePlayer();
                 fragmentHome.recyclerHome.setVisibility(View.VISIBLE);
                 fragmentHome.tvNoDataFound.setVisibility(View.GONE);
                 fragmentHome.btnTryAgain.setVisibility(View.GONE);

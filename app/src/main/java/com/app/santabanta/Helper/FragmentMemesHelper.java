@@ -82,15 +82,15 @@ public class FragmentMemesHelper {
         this.context = context;
         pref = Utils.getSharedPref(mFragment.getActivity());
         findViews();
-//        if (Utils.isNetworkAvailable()){
-//            getApiData();
-//        }else {
-//            btnTryAgain.setVisibility(View.VISIBLE);
-//            tvNoDataFound.setVisibility(View.VISIBLE);
-//            tvNoDataFound.setText(ResUtils.getString(R.string.internet_error));
-//            recyclerMemes.setVisibility(View.GONE);
-//        }
-//        setAdapter();
+        if (Utils.isNetworkAvailable()){
+            getApiData();
+        }else {
+            btnTryAgain.setVisibility(View.VISIBLE);
+            tvNoDataFound.setVisibility(View.VISIBLE);
+            tvNoDataFound.setText(ResUtils.getString(R.string.internet_error));
+            recyclerMemes.setVisibility(View.GONE);
+        }
+        setAdapter();
     }
 
     private void setAdapter() {

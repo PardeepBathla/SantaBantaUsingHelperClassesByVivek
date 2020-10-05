@@ -155,7 +155,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void resetList(){
-        this.mList = new ArrayList<>();
+        this.mList.clear();
         notifyDataSetChanged();
     }
 

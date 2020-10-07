@@ -1,5 +1,6 @@
 package com.app.santabanta.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -102,7 +103,7 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
     private Webservices mInterface_method = AppController.getRetroInstance().create(Webservices.class);
     FragmentMemesHelper fragmentMemesHelper;
 
-    public PlayerViewHolder(Context mCtx, View memesVideoItemBinding, FragmentMemes memesFragment, FragmentMemesHelper fragmentMemesHelper) {
+    public PlayerViewHolder(Activity mCtx, View memesVideoItemBinding, FragmentMemes memesFragment, FragmentMemesHelper fragmentMemesHelper) {
         super(memesVideoItemBinding);
         this.memesVideoItemBinding = memesVideoItemBinding;
         this.memesFragment = memesFragment;

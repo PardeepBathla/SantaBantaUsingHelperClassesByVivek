@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import com.app.santabanta.Events.Events;
 import com.app.santabanta.Events.GlobalBus;
 import com.app.santabanta.Fragment.FragmentMemes;
 import com.app.santabanta.Helper.FragmentMemesHelper;
+import com.app.santabanta.Modals.HomeDetailList;
 import com.app.santabanta.Modals.SmsDetailModel;
 import com.app.santabanta.Modals.memesModel.MemesDetailModel;
 import com.app.santabanta.Modals.memesModel.MemesFavouriteModel;
@@ -124,6 +126,36 @@ public class MemesItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return VIDEO;
         else
             return IMAGE;
+    }
+
+    public void toggleFavourite(boolean isFavourite, String itemId, String favouriteId, String deviceId){
+
+        Log.e("isFav", String.valueOf(isFavourite));
+        Log.e("itemId", itemId);
+        Log.e("favouriteId", favouriteId);
+        Log.e("deviceId", deviceId);
+        for (int i=0; i<memesData.size() ;i++){
+            if (memesData.get(i).getId() == Integer.parseInt(itemId)){
+                if (isFavourite){
+                    MemesFavouriteModel favouriteModel = new MemesFavouriteModel();
+                    favouriteModel.setDeviceId(deviceId);
+                    favouriteModel.setItemId(itemId);
+                    favouriteModel.setId(Integer.parseInt(favouriteId));
+                    memesData.get(i).getFavourites().add(favouriteModel);
+
+                }else {
+                    for (int j = 0; j<memesData.get(i).getFavourites().size();i++){
+                        if (memesData.get(i).getFavourites().get(j).getId() == Integer.parseInt(favouriteId)){
+
+                            Log.e("removing", "Fav ID " + favouriteId + " id : " + memesData.get(i).getFavourites().get(j).getId());
+                            memesData.get(i).getFavourites().remove(j);
+                        }
+                    }
+                }
+
+            }
+        }
+        notifyDataSetChanged();
     }
 
     @Override

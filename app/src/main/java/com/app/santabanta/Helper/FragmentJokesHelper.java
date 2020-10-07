@@ -80,7 +80,7 @@ public class FragmentJokesHelper {
                 getJokes(AppController.LANGUAGE_SELECTED, fragmentJokes.slugName);
             }else {
                 fragmentJokes.swipeRefreshJokes.setRefreshing(false);
-                Toast.makeText(mActivity, ResUtils.getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -90,7 +90,7 @@ public class FragmentJokesHelper {
                 if (Utils.isNetworkAvailable()){
                     getJokes(AppController.LANGUAGE_SELECTED, fragmentJokes.slugName);
                 }else {
-                    Toast.makeText(mActivity, ResUtils.getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity,  mActivity.getResources().getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -100,7 +100,7 @@ public class FragmentJokesHelper {
         }else {
             fragmentJokes.btnTryAgain.setVisibility(View.VISIBLE);
             fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
-            fragmentJokes.tvNoDataFound.setText(ResUtils.getString(R.string.internet_error));
+            fragmentJokes.tvNoDataFound.setText( mActivity.getResources().getString(R.string.internet_error));
             fragmentJokes.recyclerJokes.setVisibility(View.GONE);
         }
 
@@ -186,17 +186,17 @@ public class FragmentJokesHelper {
                         } else {
                             fragmentJokes.recyclerJokes.setVisibility(View.GONE);
                             fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
-                            fragmentJokes.tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
+                            fragmentJokes.tvNoDataFound.setText( mActivity.getResources().getString(R.string.no_data_found));
                         }
                     }else{
                         fragmentJokes.recyclerJokes.setVisibility(View.GONE);
                         fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
-                        fragmentJokes.tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
+                        fragmentJokes.tvNoDataFound.setText(mActivity.getResources().getString(R.string.no_data_found));
                     }
                 }catch (Exception e){
                     e.printStackTrace();
                     fragmentJokes.recyclerJokes.setVisibility(View.GONE);
-                    fragmentJokes.tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
+                    fragmentJokes.tvNoDataFound.setText(mActivity.getResources().getString(R.string.no_data_found));
                     fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
                 }
             }
@@ -212,7 +212,7 @@ public class FragmentJokesHelper {
 
                     fragmentJokes.recyclerJokes.setVisibility(View.GONE);
                     fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
-                    fragmentJokes.tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
+                    fragmentJokes.tvNoDataFound.setText(mActivity.getResources().getString(R.string.no_data_found));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

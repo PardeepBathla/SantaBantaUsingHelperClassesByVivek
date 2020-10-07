@@ -99,33 +99,33 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
             if (currentPos == getAdapterPosition()){
                 layoutExpand.setVisibility(View.VISIBLE);
                 if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT,false)){
-                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_minus));
+                    viewMoreBtn.setImageDrawable(context.getDrawable(R.drawable.ic_minus));
                 }else {
-                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_minus_black_new));
+                    viewMoreBtn.setImageDrawable(context.getDrawable(R.drawable.ic_minus_black_new));
                 }
 
             }else {
                 layoutExpand.setVisibility(View.GONE);
                 if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT,false)){
-                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_icon_feather_plus));
+                    viewMoreBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_icon_feather_plus));
                 }else {
-                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_icon_feater_plus_black));
+                    viewMoreBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_icon_feater_plus_black));
                 }
             }
 
             if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
                 parent.setBackgroundColor(Color.parseColor("#B2B0B1"));
                 if (layoutExpand.getVisibility() == View.VISIBLE)
-                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_minus));
+                    viewMoreBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_minus));
                 else
-                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_icon_feather_plus));
+                    viewMoreBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_icon_feather_plus));
 
             } else {
                 parent.setBackgroundColor(Color.parseColor("#B2B0B1"));
                 if (layoutExpand.getVisibility() == View.VISIBLE)
-                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_minus_black_new));
+                    viewMoreBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_minus_black_new));
                 else
-                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_icon_feater_plus_black));
+                    viewMoreBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_icon_feater_plus_black));
 
             }
 

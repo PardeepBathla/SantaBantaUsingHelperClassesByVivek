@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="@dimen/_10sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools">
 
@@ -36,7 +37,7 @@
                     android:id="@+id/ivMeme"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_250sdp"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="fitXY"/>
 
             </RelativeLayout>
 
@@ -45,37 +46,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/rl_image"
-                android:layout_marginStart="@dimen/_20sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginEnd="@dimen/_20sdp"
-                android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:orientation="horizontal">
 
 
                 <LinearLayout
                     android:id="@+id/ll_like_dislike"
                     android:layout_width="wrap_content"
+                    android:layout_marginLeft="@dimen/_10sdp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingTop="@dimen/_10sdp"
-                    android:paddingEnd="@dimen/_10sdp"
-                    android:paddingBottom="@dimen/_10sdp">
+                    android:orientation="horizontal">
 
-
-                    <!-- <com.jackandphantom.androidlikebutton.AndroidLikeButton
-                         android:id="@+id/btn_like"
-                         android:layout_width="@dimen/_100sdp"
-                         android:layout_height="@dimen/_100sdp"
-                         android:layout_gravity="center"
-                         android:gravity="center"
-                         app:like_icon="@drawable/ic_santabanta_icon_heart_empty"
-                         app:unlike_icon="@drawable/ic_santabanta_icon_heart_filled"
-                         app:circle_startColor="#fcd229"
-                         app:circle_endColor="#f4ac1b"
-                         app:dot_color_1="#f5ce31"
-                         app:dot_color_2="#ed8128"
-                        />-->
 
                     <CheckBox
                         android:id="@+id/cb_like"
@@ -83,19 +65,14 @@
                         android:layout_height="@dimen/_16sdp"
                         android:background="@null"
                         android:button="@drawable/like_icon"
-                        android:checked="false"
-                        android:stateListAnimator="@animator/scale" />
+                        android:checked="false"/>
 
-                    <!--   <ImageView
-                           android:id="@+id/iv_like"
-                           android:layout_width="@dimen/_12sdp"
-                           android:layout_height="@dimen/_12sdp"
-                           android:src="@drawable/empty_heart"/>-->
 
                     <TextView
                         android:id="@+id/tv_like_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         android:layout_marginStart="@dimen/_5sdp"
                         android:fontFamily="@font/roboto_regular"
                         android:textSize="@dimen/_10ssp" />
@@ -109,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/ll_like_dislike"
                     android:orientation="horizontal"
-                    android:padding="@dimen/_10sdp">
+                    android:layout_marginLeft="@dimen/_10sdp">
 
 
                     <ImageView
@@ -145,8 +122,8 @@
                         android:layout_width="@dimen/_10sdp"
                         android:layout_height="@dimen/_10sdp"
                         android:layout_gravity="center_vertical"
-                        android:tint="?android:textColor"
-                        android:src="@drawable/ic_tag" />
+                        android:src="@drawable/ic_tag"
+                        app:tint="?android:textColor" />
 
                     <TextView
                         android:id="@+id/tv_categories"

@@ -2,16 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    app:cardBackgroundColor="?card_bg_color"
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"
-        android:layout_marginVertical="@dimen/_2sdp"
-        android:layout_marginBottom="@dimen/_3sdp"
         app:cardBackgroundColor="?card_bg_color"
-        app:cardCornerRadius="8dp"
         app:cardElevation="@dimen/_4sdp">
 
         <RelativeLayout
@@ -37,7 +35,7 @@
                     android:id="@+id/ivMeme"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_250sdp"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="fitXY" />
 
             </RelativeLayout>
 
@@ -69,8 +67,7 @@
                         android:layout_height="@dimen/_16sdp"
                         android:background="@null"
                         android:button="@drawable/like_icon"
-                        android:checked="false"
-                        android:stateListAnimator="@animator/scale" />
+                        android:checked="false"/>
 
 
                 </LinearLayout>
@@ -87,8 +84,7 @@
                     <ImageView
                         android:layout_width="@dimen/_16sdp"
                         android:layout_height="@dimen/_16sdp"
-                        android:src="@drawable/ic_share_alt"
-                        app:tint="?share_icon_color" />
+                        android:src="@drawable/ic_share_alt" />
 
                     <TextView
                         android:id="@+id/tv_share_count"

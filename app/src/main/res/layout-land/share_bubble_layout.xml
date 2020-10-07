@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.daasuu.bl.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/_10sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="12dp"
+    android:padding="8dp"
+    app:bl_arrowHeight="8dp"
+    app:bl_arrowPosition="12dp"
+    app:bl_arrowWidth="8dp"
+    app:bl_bubbleColor="?text_color_reverse"
+    app:bl_cornersRadius="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:weightSum="6"
+        android:layout_height="@dimen/_36sdp">
+
+        <ImageView
+            android:id="@+id/iv_whatsapp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_weight="1"
+            android:onClick="slideToBottom"
+            android:padding="@dimen/_8sdp"
+            android:src="@drawable/ic_santabanta_icon_whatsapp" />
+
+        <ImageView
+            android:id="@+id/iv_facebook"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_weight="1"
+            android:padding="@dimen/_8sdp"
+            android:src="@drawable/ic_facebook"
+            app:tint="@color/fb_blue" />
+
+        <ImageView
+            android:id="@+id/iv_twitter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_weight="1"
+            android:padding="@dimen/_8sdp"
+            android:src="@drawable/ic_twitter"
+            app:tint="@color/twitter_blue" />
+
+        <ImageView
+            android:id="@+id/iv_instagram"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_weight="1"
+            android:padding="@dimen/_8sdp"
+            android:src="@drawable/ic_santabanta_icon_instagram" />
+
+        <ImageView
+            android:id="@+id/iv_pintrest"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_weight="1"
+            android:padding="@dimen/_8sdp"
+            android:src="@drawable/ic_pinterest"
+            app:tint="@color/pintrest_red" />
+
+        <ImageView
+            android:id="@+id/iv_snapchat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_weight="1"
+            android:padding="@dimen/_8sdp"
+            android:src="@drawable/ic_snapchat" />
+
+
+    </LinearLayout>
+
+
+</com.daasuu.bl.BubbleLayout>

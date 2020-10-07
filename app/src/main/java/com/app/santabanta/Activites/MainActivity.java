@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,6 +43,8 @@ import com.app.santabanta.Utils.ResUtils;
 import com.app.santabanta.Utils.Utils;
 import com.app.santabanta.base.BaseActivity;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -112,7 +115,7 @@ public class MainActivity extends BaseActivity {
                     flSearch.setVisibility(View.VISIBLE);
                     container.setVisibility(View.GONE);
                     mHelper.searchText(searchText);
-                    tvNoDataFoundSearch.setText(ResUtils.getString(R.string.loading));
+                    tvNoDataFoundSearch.setText(getResources().getString(R.string.loading));
                 }else {
                     flSearch.setVisibility(View.GONE);
                     container.setVisibility(View.VISIBLE);
@@ -192,7 +195,8 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        etSearch.setTextColor(pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false) ? ResUtils.getColor(R.color.off_black) : ResUtils.getColor(R.color.off_black));
+        etSearch.setTextColor(pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false) ? getResources().getColor(R.color.off_black) :
+                getResources().getColor(R.color.off_black));
     }
 
     @Override
@@ -264,6 +268,7 @@ public class MainActivity extends BaseActivity {
             dialog.show();
         }
     }
+
 
 
     public void showCurrentPage(int pos) {

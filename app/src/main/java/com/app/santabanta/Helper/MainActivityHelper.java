@@ -148,6 +148,7 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
         iv_language.setOnClickListener(view -> {
             if (LANGUAGE_SELECTED.equalsIgnoreCase(GlobalConstants.COMMON.HINDI)) {
                 languageToLoad = "en";
+                LANGUAGE_SELECTED = GlobalConstants.COMMON.ENGLISH;
                 if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
                     iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_hindi_language));
                 } else {
@@ -156,7 +157,7 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
 
             } else {
                 languageToLoad = "hi";
-
+                LANGUAGE_SELECTED = GlobalConstants.COMMON.HINDI;
                 if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
                     iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_english_language_new));
                 } else {
@@ -240,7 +241,7 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
     public void searchText(String query) {
         mActivity.rvSearch.setVisibility(View.GONE);
         mActivity.pbSearch.setVisibility(View.VISIBLE);
-        mActivity.tvNoDataFoundSearch.setText(ResUtils.getString(R.string.loading));
+        mActivity.tvNoDataFoundSearch.setText(mActivity.getResources().getString(R.string.loading));
         mActivity.tvNoDataFoundSearch.setVisibility(View.VISIBLE);
         Call<SearchResponse> call = mInterface_method.search(query, LANGUAGE_SELECTED);
         call.enqueue(new Callback<SearchResponse>() {
@@ -253,7 +254,7 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
                         mActivity.tvNoDataFoundSearch.setVisibility(View.GONE);
                         mAdapter.setItems(response.body().getHits().getHits());
                     } else {
-                        mActivity.tvNoDataFoundSearch.setText(ResUtils.getString(R.string.no_data_found));
+                        mActivity.tvNoDataFoundSearch.setText(mActivity.getResources().getString(R.string.no_data_found));
                         mActivity.rvSearch.setVisibility(View.GONE);
                         mActivity.tvNoDataFoundSearch.setVisibility(View.VISIBLE);
                     }
@@ -263,7 +264,7 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
             @Override
             public void onFailure(Call<SearchResponse> call, Throwable t) {
                 mActivity.pbSearch.setVisibility(View.GONE);
-                mActivity.tvNoDataFoundSearch.setText(ResUtils.getString(R.string.no_data_found));
+                mActivity.tvNoDataFoundSearch.setText(mActivity.getResources().getString(R.string.no_data_found));
             }
         });
     }

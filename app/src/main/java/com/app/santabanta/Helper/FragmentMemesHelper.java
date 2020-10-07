@@ -76,6 +76,10 @@ public class FragmentMemesHelper {
     private boolean isLoading = false;
     private Button btnTryAgain;
 
+    public MemesItemAdapter getMemesItemAdapter(){
+        return memesItemAdapter;
+    }
+
     public FragmentMemesHelper(Activity context, FragmentMemes mFragment, View view) {
         this.mFragment = mFragment;
         this.view = view;
@@ -87,7 +91,7 @@ public class FragmentMemesHelper {
         }else {
             btnTryAgain.setVisibility(View.VISIBLE);
             tvNoDataFound.setVisibility(View.VISIBLE);
-            tvNoDataFound.setText(ResUtils.getString(R.string.internet_error));
+            tvNoDataFound.setText(context.getResources().getString(R.string.internet_error));
             recyclerMemes.setVisibility(View.GONE);
         }
         setAdapter();
@@ -201,7 +205,7 @@ public class FragmentMemesHelper {
                 }else {
                     recyclerMemes.setVisibility(View.GONE);
                     tvNoDataFound.setVisibility(View.VISIBLE);
-                    tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
+                    tvNoDataFound.setText(context.getResources().getString(R.string.internet_error));
                 }
 
 
@@ -225,7 +229,7 @@ public class FragmentMemesHelper {
             if (Utils.isNetworkAvailable()){
                 getApiData();
             }else {
-                Toast.makeText(mFragment.getActivity(), ResUtils.getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mFragment.getActivity(), context.getResources().getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -242,7 +246,7 @@ public class FragmentMemesHelper {
                 getApiData();
             }else {
                 swipeContainer.setRefreshing(false);
-                Toast.makeText(mFragment.getActivity(), ResUtils.getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mFragment.getActivity(), context.getResources().getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
             }
 
         });

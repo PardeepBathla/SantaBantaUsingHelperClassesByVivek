@@ -4,19 +4,18 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.santabanta.Adapter.HomeCategoriesAdapter;
 import com.app.santabanta.Adapter.HomeItemAdapter;
 import com.app.santabanta.AppController;
+import com.app.santabanta.Events.Events;
+import com.app.santabanta.Events.GlobalBus;
 import com.app.santabanta.Fragment.FragmentHome;
 import com.app.santabanta.Modals.AddFavouriteRequest;
 import com.app.santabanta.Modals.Favourite;
@@ -60,13 +59,8 @@ public class FragmentHomeHelper {
     public FragmentHomeHelper(Activity mActivity, FragmentHome fragmentHome) {
         this.mActivity = mActivity;
         this.fragmentHome = fragmentHome;
-        mAdapter = new HomeItemAdapter(mActivity,FragmentHomeHelper.this);
+        mAdapter = new HomeItemAdapter(mActivity, FragmentHomeHelper.this);
         mAdapter.setHasStableIds(true);
-                      /*  } else {
-                            mAdapter.notifyDataSetChanged();
-                        }*/
-//        fragmentHome.recyclerHome.setNestedScrollingEnabled(false);
-//        fragmentHome.recyclerHome.setHasFixedSize(true);
         mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
         fragmentHome.recyclerHome.setLayoutManager(mLinearLayoutManager);
         fragmentHome.recyclerHome.setAdapter(mAdapter);
@@ -75,20 +69,17 @@ public class FragmentHomeHelper {
 
     private void initViews() {
 
-        fragmentHome.btnTryAgain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Utils.isNetworkAvailable()){
-                    getHomeData(AppController.LANGUAGE_SELECTED);
-                }else {
-                    Toast.makeText(mActivity, ResUtils.getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
-                }
+        fragmentHome.btnTryAgain.setOnClickListener(view -> {
+            if (Utils.isNetworkAvailable()) {
+                getHomeData(AppController.LANGUAGE_SELECTED);
+            } else {
+                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
             }
         });
 
         fragmentHome.swipeRefreshLayout.setOnRefreshListener(() -> {
-            if (Utils.isNetworkAvailable()){
-                if (mAdapter!=null)
+            if (Utils.isNetworkAvailable()) {
+                if (mAdapter != null)
                     mAdapter.resetList();
 
                 fragmentHome.recyclerHome.onPausePlayer();
@@ -97,18 +88,18 @@ public class FragmentHomeHelper {
                 fragmentHome.btnTryAgain.setVisibility(View.GONE);
                 currentPage = PAGE_START;
                 getHomeData(AppController.LANGUAGE_SELECTED);
-            }else {
+            } else {
                 fragmentHome.swipeRefreshLayout.setRefreshing(false);
-                Toast.makeText(mActivity, ResUtils.getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity,  mActivity.getResources().getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
             }
         });
 
         if (Utils.isNetworkAvailable()) {
             getHomeData(AppController.LANGUAGE_SELECTED);
-        }else {
+        } else {
             fragmentHome.btnTryAgain.setVisibility(View.VISIBLE);
             fragmentHome.tvNoDataFound.setVisibility(View.VISIBLE);
-            fragmentHome.tvNoDataFound.setText(ResUtils.getString(R.string.internet_error));
+            fragmentHome.tvNoDataFound.setText( mActivity.getResources().getString(R.string.internet_error));
             fragmentHome.recyclerHome.setVisibility(View.GONE);
         }
 
@@ -119,7 +110,7 @@ public class FragmentHomeHelper {
         AddFavouriteRequest addFavouriteRequest = new AddFavouriteRequest();
         addFavouriteRequest.setDeviceId(Utils.getMyDeviceId(mActivity));
         addFavouriteRequest.setType(type);
-        addFavouriteRequest.setItemId(obj.getId().intValue());
+        addFavouriteRequest.setItemId(obj.getId());
 
         Call<ResponseBody> call;
         call = mInterface_method.saveFavouriteJoke(addFavouriteRequest);
@@ -132,6 +123,7 @@ public class FragmentHomeHelper {
                         JSONObject jsonObject = new JSONObject(response.body().string());
                         if (jsonObject.has("status")) {
                             String status = jsonObject.getString("status");
+                            String favId = jsonObject.getString("fav_id");
 
                             if (status.equals("success")) {
                                 progressBar.dismiss();
@@ -139,6 +131,19 @@ public class FragmentHomeHelper {
                                 obj.setFavCount(obj.getFavCount() + 1);
                                 setFavItemToModel(position, addFavouriteRequest, obj, jsonObject.getInt("fav_id"));
                                 Toast.makeText(mActivity, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                switch (type) {
+                                    case "sms":
+                                        break;
+
+                                    case "memes":
+                                        Events.ToggleMemeFavourite toggleMemeFavourite = new Events.ToggleMemeFavourite(true, String.valueOf(obj.getId()), favId, Utils.getMyDeviceId(mActivity));
+                                        GlobalBus.getBus().post(toggleMemeFavourite);
+                                        break;
+
+                                    case "jokes":
+                                        break;
+                                }
                             }
                         }
 
@@ -192,6 +197,8 @@ public class FragmentHomeHelper {
                                 progressBar.dismiss();
                                 removeFavItemFromModel(position, obj);
                                 Toast.makeText(mActivity, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                                Events.ToggleMemeFavourite toggleMemeFavourite = new Events.ToggleMemeFavourite(false,obj.getId().toString(), String.valueOf(id), Utils.getMyDeviceId(mActivity) );
+                                GlobalBus.getBus().post(toggleMemeFavourite);
                             }
                         }
 
@@ -262,7 +269,6 @@ public class FragmentHomeHelper {
                     currentPage = next_page;
 
                     if (response.body().getData() != null && response.body().getData().size() > 0) {
-                        // if (mAdapter == null) {
                         mAdapter.addAll(response.body().getData());
                         fragmentHome.recyclerHome.setMediaObjects(response.body().getData());
                         fragmentHome.recyclerHome.addOnScrollListener(new PaginationScrollListener(mLinearLayoutManager) {
@@ -293,18 +299,15 @@ public class FragmentHomeHelper {
                             }
                         });
 
-
                         fragmentHome.ivNext.setOnClickListener(view -> fragmentHome.rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findLastVisibleItemPosition() + 1));
-
                         fragmentHome.ivPrevious.setOnClickListener(view -> fragmentHome.rvSubCategory.getLayoutManager().scrollToPosition(mSubListLayoutManager.findFirstVisibleItemPosition() - 1));
 
                         fragmentHome.recyclerHome.setVisibility(View.VISIBLE);
                         fragmentHome.tvNoDataFound.setVisibility(View.GONE);
-//                        Utils.fixRecyclerScroll(fragmentHome.recyclerHome, fragmentHome.swipeRefreshLayout, mLinearLayoutManager);
                     } else {
                         fragmentHome.recyclerHome.setVisibility(View.GONE);
                         fragmentHome.tvNoDataFound.setVisibility(View.VISIBLE);
-                        fragmentHome.tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
+                        fragmentHome.tvNoDataFound.setText( mActivity.getResources().getString(R.string.no_data_found));
                     }
                 }
             }

@@ -82,7 +82,7 @@ public class FragmentSmsHelper {
                 if (Utils.isNetworkAvailable()){
                     getSms(GlobalConstants.COMMON.LANGUAGE_SELECTED, "", "");
                 }else {
-                    Toast.makeText(mActivity, ResUtils.getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity,mActivity.getResources().getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -97,7 +97,7 @@ public class FragmentSmsHelper {
                 getSms(GlobalConstants.COMMON.LANGUAGE_SELECTED, "", "");
             }else {
                 fragmentSms.swipeRefreshSms.setRefreshing(false);
-                Toast.makeText(mActivity, ResUtils.getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_error), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -108,7 +108,7 @@ public class FragmentSmsHelper {
         }else {
             fragmentSms.btnTryAgain.setVisibility(View.VISIBLE);
             fragmentSms.tvNoDataFound.setVisibility(View.VISIBLE);
-            fragmentSms.tvNoDataFound.setText(ResUtils.getString(R.string.internet_error));
+            fragmentSms.tvNoDataFound.setText(mActivity.getResources().getString(R.string.internet_error));
             fragmentSms.recyclerSms.setVisibility(View.GONE);
         }
 
@@ -202,13 +202,13 @@ public class FragmentSmsHelper {
                     }else {
                         fragmentSms.recyclerSms.setVisibility(View.GONE);
                         fragmentSms.tvNoDataFound.setVisibility(View.VISIBLE);
-                        fragmentSms.tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
+                        fragmentSms.tvNoDataFound.setText(mActivity.getResources().getString(R.string.no_data_found));
                     }
 
                 }else{
                     fragmentSms.recyclerSms.setVisibility(View.GONE);
                     fragmentSms.tvNoDataFound.setVisibility(View.VISIBLE);
-                    fragmentSms.tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
+                    fragmentSms.tvNoDataFound.setText(mActivity.getResources().getString(R.string.no_data_found));
                 }
             }
 
@@ -222,7 +222,7 @@ public class FragmentSmsHelper {
 
                 fragmentSms.recyclerSms.setVisibility(View.GONE);
                 fragmentSms.tvNoDataFound.setVisibility(View.VISIBLE);
-                fragmentSms.tvNoDataFound.setText(ResUtils.getString(R.string.no_data_found));
+                fragmentSms.tvNoDataFound.setText(mActivity.getResources().getString(R.string.no_data_found));
             }
         });
     }

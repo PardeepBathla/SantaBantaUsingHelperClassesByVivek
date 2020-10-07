@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -63,9 +64,9 @@ public class Utils {
         Button btnYes = dialog.findViewById(R.id.btn_yes);
         Button btnNo = dialog.findViewById(R.id.btn_no);
 
-        tvMessage.setText(ResUtils.getString(R.string.save_image));
-        btnYes.setText(ResUtils.getString(R.string.yes));
-        btnNo.setText(ResUtils.getString(R.string.no));
+        tvMessage.setText(mActivity.getResources().getString(R.string.save_image));
+        btnYes.setText(mActivity.getResources().getString(R.string.yes));
+        btnNo.setText(mActivity.getResources().getString(R.string.no));
 
         btnYes.setOnClickListener(v1 -> {
             Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
@@ -203,6 +204,15 @@ public class Utils {
                 }
             }
         });
+    }
+
+    public static boolean isPackageInstalled(String packageName, PackageManager packageManager) {
+        try {
+            packageManager.getPackageInfo(packageName, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 
     public static boolean isNetworkAvailable() {

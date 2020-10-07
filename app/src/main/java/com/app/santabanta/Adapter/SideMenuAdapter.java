@@ -134,11 +134,11 @@ public class SideMenuAdapter extends RecyclerView.Adapter<SideMenuAdapter.ViewHo
 
             if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
                 if (currentSelectedItem == getAdapterPosition()) {
-                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_minus));
+                    viewMoreBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_minus));
                     layoutExpand.setVisibility(View.VISIBLE);
 
                 } else {
-                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_icon_feather_plus));
+                    viewMoreBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_icon_feather_plus));
                     layoutExpand.setVisibility(View.GONE);
                 }
 
@@ -148,7 +148,7 @@ public class SideMenuAdapter extends RecyclerView.Adapter<SideMenuAdapter.ViewHo
                     layoutExpand.setVisibility(View.VISIBLE);
 
                 } else {
-                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_icon_feater_plus_black));
+                    viewMoreBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_icon_feater_plus_black));
                     layoutExpand.setVisibility(View.GONE);
                 }
             }

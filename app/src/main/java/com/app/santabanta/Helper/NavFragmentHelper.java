@@ -56,19 +56,19 @@ public class NavFragmentHelper {
 
                 switch (tab.getPosition()){
                     case 0:
-                        ((MainActivity)mActivity).getTitleView().setText(ResUtils.getString(R.string.HomeTab));
+                        ((MainActivity)mActivity).getTitleView().setText(mActivity.getResources().getString(R.string.HomeTab));
                         break;
 
                     case 1:
-                        ((MainActivity)mActivity).getTitleView().setText(ResUtils.getString(R.string.SmsTab));
+                        ((MainActivity)mActivity).getTitleView().setText(mActivity.getResources().getString(R.string.SmsTab));
                         break;
 
                     case 2:
-                        ((MainActivity)mActivity).getTitleView().setText(ResUtils.getString(R.string.JokesTab));
+                        ((MainActivity)mActivity).getTitleView().setText(mActivity.getResources().getString(R.string.JokesTab));
                         break;
 
                     case 3:
-                        ((MainActivity)mActivity).getTitleView().setText(ResUtils.getString(R.string.MemesTab));
+                        ((MainActivity)mActivity).getTitleView().setText(mActivity.getResources().getString(R.string.MemesTab));
                         break;
                 }
                 try {
@@ -130,15 +130,15 @@ public class NavFragmentHelper {
 
         switch (position){
             case 1:
-                tvMenuTitle.setText(ResUtils.getString(R.string.SmsTab));
+                tvMenuTitle.setText(mActivity.getResources().getString(R.string.SmsTab));
                 break;
 
             case 2:
-                tvMenuTitle.setText(ResUtils.getString(R.string.JokesTab));
+                tvMenuTitle.setText(mActivity.getResources().getString(R.string.JokesTab));
                 break;
 
             case 3:
-                tvMenuTitle.setText(ResUtils.getString(R.string.MemesTab));
+                tvMenuTitle.setText(mActivity.getResources().getString(R.string.MemesTab));
                 break;
         }
 

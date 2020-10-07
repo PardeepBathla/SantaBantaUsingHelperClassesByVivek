@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rlFeaturedItem"
     android:layout_width="wrap_content"
+    android:layout_marginRight="@dimen/_20sdp"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/_2sdp"
+    android:layout_marginLeft="@dimen/_2sdp"
     android:gravity="center_vertical">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -33,6 +34,6 @@
         android:singleLine="true"
         android:textAllCaps="true"
         android:textColor="?text_color"
-        android:textSize="@dimen/_9sdp" />
+        android:textSize="@dimen/_7sdp" />
 
 </RelativeLayout>

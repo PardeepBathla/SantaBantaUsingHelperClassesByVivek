@@ -325,7 +325,6 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             imageTOBeShared = model;
 
-
             ivMeme.setOnLongClickListener(v -> {
                 Utils.showImageSaveDialog(mActivity,ivMeme);
                 return true;
@@ -411,16 +410,17 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 dialog.show();
                 cb_like.setClickable(false);
                 if (isChecked) {
-                    fragmentHomeHelper.addToFav(obj, position, "sms", cb_like, dialog);
+                    fragmentHomeHelper.addToFav(obj, position, "memes", cb_like, dialog);
+
                 } else {
                     for (Favourite favouriteModel : obj.getFavourites()) {
                         if (favouriteModel.getDeviceId().equals(Utils.getMyDeviceId(mActivity))) {
                             fragmentHomeHelper.removeFromFav(obj, favouriteModel.getId(), position, cb_like, dialog);
+
                             break;
 
                         }
                     }
-
                 }
                 //FUNCTIONALITY NOT IN SCOPE FOR THE TIME BEING
 //                    SmsRepository.getInstance().InsertFavourite(obj,fragmentSms);

@@ -74,6 +74,15 @@ public class FragmentMemes extends BaseFragment {
     }
 
     @Subscribe
+    public void onEvent(Events.ToggleMemeFavourite toggleMemeFavourite){
+//        if (mHelper.getMemesItemAdapter()!=null){
+//            mHelper.getMemesItemAdapter().toggleFavourite(toggleMemeFavourite.isChecked(), toggleMemeFavourite.getItemId(),
+//                    toggleMemeFavourite.getFavId(),toggleMemeFavourite.getDeviceId());
+//        }
+
+    }
+
+    @Subscribe
     public void onEvent(Events.MemesEvent memesEvent) {
         enterSubCategoryMemes(true,memesEvent.getSlug());
     }

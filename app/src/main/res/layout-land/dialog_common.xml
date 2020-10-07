@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_180sdp"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/_10sdp"
+    android:gravity="center"
+    android:background="?card_bg_color"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/txt_dia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:textColor="?text_color"
+        android:text="@string/are_you_sure"
+        android:textSize="@dimen/_12sdp"/>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_gravity="center"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_yes"
+            android:layout_width="@dimen/_60sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:clickable="true"
+            android:textColor="?text_color"
+            android:background="@color/light_mode_title_color"
+            android:text="@string/yes"
+            android:textSize="@dimen/_12sdp"
+            android:textAllCaps="false"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_no"
+            android:layout_width="@dimen/_60sdp"
+            android:textAllCaps="false"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_marginLeft="5dp"
+            android:clickable="true"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="?text_color"
+            android:background="@color/light_mode_title_color"
+            android:text="@string/no"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

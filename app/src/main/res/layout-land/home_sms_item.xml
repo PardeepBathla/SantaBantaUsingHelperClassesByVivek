@@ -2,15 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    app:cardBackgroundColor="?card_bg_color"
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"
-        android:layout_marginVertical="@dimen/_2sdp"
         app:cardBackgroundColor="?card_bg_color"
-        app:cardCornerRadius="8dp"
         app:cardElevation="@dimen/_4sdp">
 
         <RelativeLayout
@@ -36,7 +35,7 @@
                     android:id="@+id/ivMeme"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_250sdp"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="fitXY"/>
 
             </RelativeLayout>
 
@@ -46,7 +45,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/rl_image"
                 android:layout_marginStart="@dimen/_20sdp"
-                android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:orientation="horizontal">
 
@@ -61,23 +59,14 @@
                     android:paddingEnd="@dimen/_10sdp"
                     android:paddingBottom="@dimen/_10sdp">
 
-
                     <CheckBox
                         android:id="@+id/cb_like"
                         android:layout_width="@dimen/_16sdp"
                         android:layout_height="@dimen/_16sdp"
+                        android:background="@null"
                         android:button="@drawable/like_icon"
-                        android:checked="false"
-                        android:stateListAnimator="@animator/scale" />
+                        android:checked="false"/>
 
-
-                    <TextView
-                        android:id="@+id/tv_like_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_5sdp"
-                        android:fontFamily="@font/roboto_regular"
-                        android:textSize="@dimen/_10ssp" />
 
                 </LinearLayout>
 
@@ -95,7 +84,6 @@
                         android:layout_height="@dimen/_16sdp"
                         android:src="@drawable/ic_share_alt"
                         app:tint="?share_icon_color" />
-
 
                     <TextView
                         android:id="@+id/tv_share_count"
@@ -116,8 +104,8 @@
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:gravity="center_vertical|end"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/share"
@@ -125,7 +113,7 @@
                         android:layout_height="@dimen/_10sdp"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/ic_tag"
-                        app:tint="@color/dark_mode_text_color" />
+                        app:tint="@android:color/white" />
 
                     <TextView
                         android:id="@+id/tv_categories"
@@ -146,7 +134,7 @@
             <LinearLayout
                 android:id="@+id/ll_share_options_home"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_36sdp"
+                android:layout_height="@dimen/_35sdp"
                 android:layout_above="@+id/rl_fav_and_share"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="@dimen/_20sdp"
@@ -154,6 +142,8 @@
                 android:layout_marginBottom="-10dp"
                 android:background="?share_round_icon"
                 android:gravity="center_vertical"
+
+
                 android:orientation="horizontal"
                 android:visibility="gone"
                 android:weightSum="6">
@@ -162,7 +152,7 @@
                 <ImageView
                     android:id="@+id/iv_whatsapp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_weight="1"
                     android:onClick="slideToBottom"
@@ -172,7 +162,7 @@
                 <ImageView
                     android:id="@+id/iv_facebook"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_weight="1"
                     android:padding="@dimen/_8sdp"
@@ -182,7 +172,7 @@
                 <ImageView
                     android:id="@+id/iv_twitter"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_weight="1"
                     android:padding="@dimen/_8sdp"
@@ -192,7 +182,7 @@
                 <ImageView
                     android:id="@+id/iv_instagram"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_weight="1"
                     android:padding="@dimen/_8sdp"
@@ -201,7 +191,7 @@
                 <ImageView
                     android:id="@+id/iv_pintrest"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_weight="1"
                     android:padding="@dimen/_8sdp"
@@ -211,14 +201,13 @@
                 <ImageView
                     android:id="@+id/iv_snapchat"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_weight="1"
                     android:padding="@dimen/_8sdp"
                     android:src="@drawable/ic_snapchat" />
 
             </LinearLayout>
-
             <ProgressBar
                 android:id="@+id/progress_bar"
                 android:layout_width="@dimen/_50sdp"

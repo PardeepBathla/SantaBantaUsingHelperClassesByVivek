@@ -12,20 +12,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.app.santabanta.Activites.MainActivity;
 import com.app.santabanta.AppController;
 import com.app.santabanta.Callbacks.DrawerMenuClickListener;
 import com.app.santabanta.Modals.NavMenuResponse;
 import com.app.santabanta.R;
-import com.app.santabanta.Utils.CheckPermissions;
 import com.app.santabanta.Utils.GlobalConstants;
-import com.app.santabanta.Utils.ResUtils;
 import com.app.santabanta.Utils.SimpleDividerItemDecoration;
 import com.app.santabanta.Utils.Utils;
 
@@ -101,7 +97,7 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
                 if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT,false)){
                     viewMoreBtn.setImageDrawable(context.getDrawable(R.drawable.ic_minus));
                 }else {
-                    viewMoreBtn.setImageDrawable(context.getDrawable(R.drawable.ic_minus_black_new));
+                    viewMoreBtn.setImageDrawable(context.getDrawable(R.drawable.ic_minus_black_new_));
                 }
 
             }else {
@@ -123,7 +119,7 @@ public class ExpandableViewAdapter extends RecyclerView.Adapter<ExpandableViewAd
             } else {
                 parent.setBackgroundColor(Color.parseColor("#B2B0B1"));
                 if (layoutExpand.getVisibility() == View.VISIBLE)
-                    viewMoreBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_minus_black_new));
+                    viewMoreBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_minus_black_new_));
                 else
                     viewMoreBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_icon_feater_plus_black));
 

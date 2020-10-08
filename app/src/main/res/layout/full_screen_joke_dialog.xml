@@ -185,6 +185,7 @@
 
 
             <ImageView
+                android:id="@+id/iv_whatsapp"
                 android:layout_width="@dimen/_16sdp"
                 android:layout_height="@dimen/_16sdp"
                 android:adjustViewBounds="true"
@@ -193,6 +194,7 @@
                 android:src="@drawable/ic_santabanta_icon_whatsapp" />
 
             <ImageView
+                android:id="@+id/iv_facebook"
                 android:layout_width="@dimen/_16sdp"
                 android:layout_height="@dimen/_16sdp"
                 android:layout_marginStart="@dimen/_20sdp"
@@ -200,6 +202,7 @@
                 app:tint="@color/fb_blue" />
 
             <ImageView
+                android:id="@+id/iv_twitter"
                 android:layout_width="@dimen/_16sdp"
                 android:layout_height="@dimen/_16sdp"
                 android:layout_marginStart="@dimen/_20sdp"
@@ -207,6 +210,7 @@
                 app:tint="@color/twitter_blue" />
 
             <ImageView
+                android:id="@+id/iv_instagram"
                 android:layout_width="@dimen/_16sdp"
                 android:layout_height="@dimen/_16sdp"
                 android:adjustViewBounds="true"
@@ -215,6 +219,7 @@
                 android:src="@drawable/ic_santabanta_icon_instagram" />
 
             <ImageView
+                android:id="@+id/iv_pintrest"
                 android:layout_width="@dimen/_16sdp"
                 android:layout_height="@dimen/_16sdp"
                 android:layout_marginStart="@dimen/_20sdp"
@@ -222,6 +227,7 @@
                 app:tint="@color/pintrest_red" />
 
             <ImageView
+                android:id="@+id/iv_snapchat"
                 android:layout_width="@dimen/_16sdp"
                 android:layout_height="@dimen/_16sdp"
                 android:layout_marginStart="@dimen/_20sdp"

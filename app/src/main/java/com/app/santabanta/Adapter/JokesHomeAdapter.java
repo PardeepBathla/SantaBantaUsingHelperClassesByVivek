@@ -30,6 +30,7 @@ import com.app.santabanta.Modals.JokesDetailModel;
 import com.app.santabanta.Modals.JokesFavouriteModel;
 import com.app.santabanta.Modals.SmsDetailModel;
 import com.app.santabanta.R;
+import com.app.santabanta.Utils.CheckPermissions;
 import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.Utils;
 import com.app.santabanta.Utils.GlobalConstants;
@@ -113,7 +114,7 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
                     public void onClick(View v) {
 //                        Events.JokesEvent jokesEvent= new Events.JokesEvent(slug);
 //                        GlobalBus.getBus().post(jokesEvent);
-                        fragmentJokes.enterSubCategoryJoke(true,slug);
+                        fragmentJokes.enterSubCategoryJoke(true, slug);
 //                        mActivity.sendBroadcast(new Intent().setAction(GlobalConstants.INTENT_PARAMS.NAVIGATE_FROM_HOME)
 //                                .putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_TYPE,"jokes").putExtra(GlobalConstants.INTENT_PARAMS.NAVIGATE_SLUG,slug));
                     }
@@ -127,11 +128,11 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
     }
 
     public void updateList(ArrayList<JokesDetailModel> pagedLists) {
-       mData = pagedLists;
-       notifyDataSetChanged();
+        mData = pagedLists;
+        notifyDataSetChanged();
     }
 
-    public void addAll(List<JokesDetailModel> list){
+    public void addAll(List<JokesDetailModel> list) {
         for (JokesDetailModel mc : list) {
             add(mc);
         }
@@ -143,8 +144,8 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
         notifyDataSetChanged();
     }
 
-    public void resetList(){
-        if (this.mData!=null){
+    public void resetList() {
+        if (this.mData != null) {
             this.mData = new ArrayList<>();
             notifyDataSetChanged();
         }
@@ -254,50 +255,19 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
             jokesItemListener(model, position);
 
 
-
         }
 
         private void jokesItemListener(JokesDetailModel obj, int position) {
 
-            iv_whatsapp.setOnClickListener(v -> {
-                shareLayoutGone();
-                Utils.vibrate(mActivity);
-                shareableIntents.shareOnWhatsapp(obj.getContent());
-
-            });
-            iv_facebook.setOnClickListener(v -> {
-                shareLayoutGone();
-                Utils.vibrate(mActivity);
-                shareableIntents.shareOnFbMesenger(obj.getContent());
-
-            });
-            iv_twitter.setOnClickListener(v -> {
-                shareableIntents.shareOnTwitter(v, obj.getContent());
-                Utils.vibrate(mActivity);
-                shareLayoutGone();
-            });
-            iv_instagram.setOnClickListener(v -> {
-                shareableIntents.shareOnInstagram(obj.getContent());
-                Utils.vibrate(mActivity);
-                shareLayoutGone();
-            });
-            iv_pintrest.setOnClickListener(v -> {
-                shareableIntents.shareOnPintrest(v, obj.getContent());
-                Utils.vibrate(mActivity);
-                shareLayoutGone();
-            });
-            iv_snapchat.setOnClickListener(v -> {
-                shareableIntents.shareOnSnapChat(obj.getContent());
-                Utils.vibrate(mActivity);
-                shareLayoutGone();
-            });
-
+            socialSharing(obj, iv_whatsapp, iv_facebook, iv_twitter, iv_instagram, iv_pintrest, iv_snapchat);
 
 
             tvContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
+
+                    boolean is_checked = cb_like.isChecked();
                     Dialog dialog = new Dialog(mActivity, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
                     dialog.setCancelable(true);
                     dialog.setContentView(R.layout.full_screen_joke_dialog);
@@ -312,15 +282,53 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
                     ProgressBar progress_bar = dialog.findViewById(R.id.progress_bar);
                     ScrollView content_scroll = dialog.findViewById(R.id.content_scroll);
 
+
+
+
+                    if (obj.getFav_count() != -1 && obj.getFav_count() != 0) {
+                        tv_fav_count.setVisibility(View.GONE);
+                        tv_fav_count.setText(String.valueOf(obj.getFav_count()));
+                    } else {
+                        tv_fav_count.setVisibility(View.GONE);
+                    }
+
+
+                    ImageView iv_whatsapp = dialog.findViewById(R.id.iv_whatsapp);
+                    ImageView iv_facebook = dialog.findViewById(R.id.iv_facebook);
+                    ImageView iv_twitter = dialog.findViewById(R.id.iv_twitter);
+                    ImageView iv_instagram = dialog.findViewById(R.id.iv_instagram);
+                    ImageView iv_pintrest = dialog.findViewById(R.id.iv_pintrest);
+                    ImageView iv_snapchat = dialog.findViewById(R.id.iv_snapchat);
+
                     tv_fav_count.setText(String.valueOf(obj.getFav_count()));
                     iv_close.setOnClickListener(v -> dialog.dismiss());
                     CheckBox cb_like = dialog.findViewById(R.id.cb_like);
+                    cb_like.setChecked(is_checked);
+
+
                     tv_content.setText(Html.fromHtml(obj.getContent().replaceAll("<br/><br/>", "")));
                     tv_title.setText(Html.fromHtml(obj.getTitle()));
 
                     if (obj.getCategories() != null && obj.getCategories().size() != 0) {
                         tv_categories.setText(Html.fromHtml(obj.getCategories().get(0).getName()));
                     }
+
+
+                    ll_share_joke.setOnClickListener(v -> {
+                        if (isSharelayoutVisible) {
+                            DialogshareLayoutGone(ll_share_joke, ll_share_options_joke);
+                        } else {
+                            ll_share_joke.setBackgroundDrawable(mActivity.getDrawable(R.drawable.bottom_round_corner_bg));
+                            int padding = (int) mActivity.getResources().getDimension(R.dimen._10sdp);
+                            ll_share_joke.setPadding(padding, padding, padding, padding);
+                            ll_share_options_joke.setVisibility(View.VISIBLE);
+                            isSharelayoutVisible = true;
+                        }
+                    });
+                    socialSharing(obj, iv_whatsapp, iv_facebook, iv_twitter, iv_instagram, iv_pintrest, iv_snapchat);
+                    content_scroll.setOnClickListener(v -> shareLayoutGone());
+                    iv_close.setOnClickListener(v -> dialog.dismiss());
+
 
                     cb_like.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
@@ -376,21 +384,66 @@ public class JokesHomeAdapter extends RecyclerView.Adapter<JokesHomeAdapter.View
             });
         }
 
-        private void shareLayoutGone() {
+
+        private void DialogshareLayoutGone(LinearLayout ll_share_joke, LinearLayout ll_share_options_joke) {
+            isSharelayoutVisible = false;
+            ll_share_joke.setBackground(null);
+            ll_share_options_joke.setVisibility(View.GONE);
+        }
+
+
+        public void shareLayoutGone() {
 
             isSharelayoutVisible = false;
             ll_share_home.setBackground(null);
             ll_share_options_home.setVisibility(View.GONE);
         }
 
+
+
+        private void socialSharing(JokesDetailModel obj, ImageView iv_whatsapp, ImageView iv_facebook, ImageView iv_twitter, ImageView iv_instagram, ImageView iv_pintrest, ImageView iv_snapchat) {
+            iv_whatsapp.setOnClickListener(v -> {
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+                shareableIntents.shareOnWhatsapp(obj.getContent());
+
+            });
+            iv_facebook.setOnClickListener(v -> {
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+                shareableIntents.shareOnFbMesenger(obj.getContent());
+
+            });
+            iv_twitter.setOnClickListener(v -> {
+                shareableIntents.shareOnTwitter(v, obj.getContent());
+                Utils.vibrate(mActivity);
+                shareLayoutGone();
+            });
+            iv_instagram.setOnClickListener(v -> {
+                shareableIntents.shareOnInstagram(obj.getContent());
+                Utils.vibrate(mActivity);
+                shareLayoutGone();
+            });
+            iv_pintrest.setOnClickListener(v -> {
+                shareableIntents.shareOnPintrest(v, obj.getContent());
+                Utils.vibrate(mActivity);
+                shareLayoutGone();
+            });
+            iv_snapchat.setOnClickListener(v -> {
+                shareableIntents.shareOnSnapChat(obj.getContent());
+                Utils.vibrate(mActivity);
+                shareLayoutGone();
+            });
+        }
+
         private void onFavCheckChanged(boolean isChecked, JokesDetailModel obj, int position, CheckBox cbLike, Dialog progress_bar) {
             if (isChecked) {
-                fragmentJokesHelper.addJokeTOFav(obj, position,progress_bar, cbLike);
+                fragmentJokesHelper.addJokeTOFav(obj, position, progress_bar, cbLike);
             } else {
                 if (obj.getmFavourite() != null) {
                     for (JokesFavouriteModel favouriteModel : obj.getmFavourite()) {
                         if (favouriteModel.getDeviceId().equals(Utils.getMyDeviceId(mActivity))) {
-                            fragmentJokesHelper.removeFromFav(obj, position,favouriteModel.getId(), progress_bar,cbLike );
+                            fragmentJokesHelper.removeFromFav(obj, position, favouriteModel.getId(), progress_bar, cbLike);
                             break;
 
                         }

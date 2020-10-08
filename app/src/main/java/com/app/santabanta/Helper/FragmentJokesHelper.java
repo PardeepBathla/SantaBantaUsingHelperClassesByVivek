@@ -184,20 +184,14 @@ public class FragmentJokesHelper {
 
                             fragmentJokes.ivPrevious.setOnClickListener(view -> fragmentJokes.rvSubCategoryJokes.getLayoutManager().scrollToPosition(mSubListLayoutManager.findFirstVisibleItemPosition() - 1));
                         } else {
-                            fragmentJokes.recyclerJokes.setVisibility(View.GONE);
-                            fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
-                            fragmentJokes.tvNoDataFound.setText( mActivity.getResources().getString(R.string.no_data_found));
+                            _noDataFound();
                         }
                     }else{
-                        fragmentJokes.recyclerJokes.setVisibility(View.GONE);
-                        fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
-                        fragmentJokes.tvNoDataFound.setText(mActivity.getResources().getString(R.string.no_data_found));
+                        _noDataFound();
                     }
                 }catch (Exception e){
                     e.printStackTrace();
-                    fragmentJokes.recyclerJokes.setVisibility(View.GONE);
-                    fragmentJokes.tvNoDataFound.setText(mActivity.getResources().getString(R.string.no_data_found));
-                    fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
+                    _noDataFound();
                 }
             }
 
@@ -210,14 +204,18 @@ public class FragmentJokesHelper {
                     if (fragmentJokes.swipeRefreshJokes != null && fragmentJokes.swipeRefreshJokes.isRefreshing())
                         fragmentJokes.swipeRefreshJokes.setRefreshing(false);
 
-                    fragmentJokes.recyclerJokes.setVisibility(View.GONE);
-                    fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
-                    fragmentJokes.tvNoDataFound.setText(mActivity.getResources().getString(R.string.no_data_found));
+                    _noDataFound();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
+    }
+
+    private void _noDataFound() {
+        fragmentJokes.recyclerJokes.setVisibility(View.GONE);
+        fragmentJokes.tvNoDataFound.setVisibility(View.VISIBLE);
+        fragmentJokes.tvNoDataFound.setText(mActivity.getResources().getString(R.string.no_data_found));
     }
 
     public void addJokeTOFav(JokesDetailModel obj, int position, Dialog progressBar, CheckBox cbLike) {

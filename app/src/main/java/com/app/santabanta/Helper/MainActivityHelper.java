@@ -130,7 +130,7 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
             if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
                 iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_hindi_language));
             } else {
-                iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_hindi_language_black));
+                iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_hindi_language_black_));
 
             }
 
@@ -141,7 +141,7 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
             if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
                 iv_language.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_english_language_new));
             } else {
-                iv_language.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_english_language_blackjpg));
+                iv_language.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_english_language_blackjpg__));
             }
 
         }
@@ -152,7 +152,7 @@ public class MainActivityHelper implements SearchAdapter.SearchClickListener {
                 if (pref.getBoolean(GlobalConstants.COMMON.THEME_MODE_LIGHT, false)) {
                     iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_hindi_language));
                 } else {
-                    iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_hindi_language_black));
+                    iv_language.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.ic_hindi_language_black_));
                 }
 
             } else {

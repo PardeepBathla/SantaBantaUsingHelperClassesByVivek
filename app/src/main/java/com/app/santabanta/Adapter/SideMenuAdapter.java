@@ -1,7 +1,6 @@
 package com.app.santabanta.Adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.text.Html;
@@ -24,8 +23,6 @@ import com.app.santabanta.Utils.GlobalConstants;
 import com.app.santabanta.Utils.ResUtils;
 import com.app.santabanta.Utils.SimpleDividerItemDecoration;
 import com.app.santabanta.Utils.Utils;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -144,7 +141,7 @@ public class SideMenuAdapter extends RecyclerView.Adapter<SideMenuAdapter.ViewHo
 
             } else {
                 if (currentSelectedItem == getAdapterPosition()) {
-                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_minus_black_new));
+                    viewMoreBtn.setImageDrawable(ResUtils.getDrawable(R.drawable.ic_minus_black_new_));
                     layoutExpand.setVisibility(View.VISIBLE);
 
                 } else {

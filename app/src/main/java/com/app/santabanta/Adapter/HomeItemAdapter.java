@@ -844,38 +844,7 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         private void jokesItemListener(HomeDetailList obj, int position) {
 
-            iv_whatsapp.setOnClickListener(v -> {
-                shareLayoutGone();
-                Utils.vibrate(mActivity);
-                shareableIntents.shareOnWhatsapp(obj.getContent());
-
-            });
-            iv_facebook.setOnClickListener(v -> {
-                shareLayoutGone();
-                Utils.vibrate(mActivity);
-                shareableIntents.shareOnFbMesenger(obj.getContent());
-
-            });
-            iv_twitter.setOnClickListener(v -> {
-                shareableIntents.shareOnTwitter(v, obj.getContent());
-                Utils.vibrate(mActivity);
-                shareLayoutGone();
-            });
-            iv_instagram.setOnClickListener(v -> {
-                shareableIntents.shareOnInstagram(obj.getContent());
-                Utils.vibrate(mActivity);
-                shareLayoutGone();
-            });
-            iv_pintrest.setOnClickListener(v -> {
-                shareableIntents.shareOnPintrest(v, obj.getContent());
-                Utils.vibrate(mActivity);
-                shareLayoutGone();
-            });
-            iv_snapchat.setOnClickListener(v -> {
-                shareableIntents.shareOnSnapChat(obj.getContent());
-                Utils.vibrate(mActivity);
-                shareLayoutGone();
-            });
+            socialSharing(obj, iv_whatsapp, iv_facebook, iv_twitter, iv_instagram, iv_pintrest, iv_snapchat);
 
             tvContent.setOnClickListener(v -> {
                 shareLayoutGone();
@@ -941,6 +910,14 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ProgressBar progress_bar = dialog.findViewById(R.id.progress_bar);
             ScrollView content_scroll = dialog.findViewById(R.id.content_scroll);
 
+            ImageView iv_whatsapp = dialog.findViewById(R.id.iv_whatsapp);
+            ImageView iv_facebook = dialog.findViewById(R.id.iv_facebook);
+            ImageView iv_twitter = dialog.findViewById(R.id.iv_twitter);
+            ImageView iv_instagram = dialog.findViewById(R.id.iv_instagram);
+            ImageView iv_pintrest = dialog.findViewById(R.id.iv_pintrest);
+            ImageView iv_snapchat = dialog.findViewById(R.id.iv_snapchat);
+
+
             if (model.getFavCount() != null && !model.getFavCount().equals(0)) {
                 tv_fav_count.setVisibility(View.GONE);
                 tv_fav_count.setText(String.valueOf(model.getFavCount()));
@@ -964,6 +941,8 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             CheckBox cb_like = dialog.findViewById(R.id.cb_like);
             cb_like.setChecked(ischecked);
 
+            socialSharing(model, iv_whatsapp, iv_facebook, iv_twitter, iv_instagram, iv_pintrest, iv_snapchat);
+
             tv_content.setText(Html.fromHtml(model.getContent().replaceAll("<br/><br/>", "")));
             if (model.getTitle() != null && !model.getTitle().equals(""))
                 tv_title.setText(Html.fromHtml(model.getTitle()));
@@ -983,6 +962,41 @@ public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //                    SmsRepository.getInstance().InsertFavourite(obj,fragmentSms);
             });
             dialog.show();
+        }
+
+        private void socialSharing(HomeDetailList model, ImageView iv_whatsapp, ImageView iv_facebook, ImageView iv_twitter, ImageView iv_instagram, ImageView iv_pintrest, ImageView iv_snapchat) {
+            iv_whatsapp.setOnClickListener(v -> {
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+                shareableIntents.shareOnWhatsapp(model.getContent());
+
+            });
+            iv_facebook.setOnClickListener(v -> {
+                shareLayoutGone();
+                Utils.vibrate(mActivity);
+                shareableIntents.shareOnFbMesenger(model.getContent());
+
+            });
+            iv_twitter.setOnClickListener(v -> {
+                shareableIntents.shareOnTwitter(v, model.getContent());
+                Utils.vibrate(mActivity);
+                shareLayoutGone();
+            });
+            iv_instagram.setOnClickListener(v -> {
+                shareableIntents.shareOnInstagram(model.getContent());
+                Utils.vibrate(mActivity);
+                shareLayoutGone();
+            });
+            iv_pintrest.setOnClickListener(v -> {
+                shareableIntents.shareOnPintrest(v, model.getContent());
+                Utils.vibrate(mActivity);
+                shareLayoutGone();
+            });
+            iv_snapchat.setOnClickListener(v -> {
+                shareableIntents.shareOnSnapChat(model.getContent());
+                Utils.vibrate(mActivity);
+                shareLayoutGone();
+            });
         }
 
         private void DialogshareLayoutGone(LinearLayout ll_share_joke, LinearLayout ll_share_options_joke) {
